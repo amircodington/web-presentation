@@ -23,7 +23,7 @@ export function QuizQuestionScene({ state, camera, props }: SceneComponentProps)
   const total = content.quiz.questions.length
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col justify-center gap-12 rounded-[48px] px-24 py-16">
+    <div className="scene-surface flex h-full w-full flex-col justify-center gap-12 rounded-[48px] px-24 pt-16 pb-52">
       <div className="flex flex-col gap-6">
         <div className="flex items-center gap-5">
           <span className="text-[26px] font-semibold text-[var(--kiosk-accent)]">

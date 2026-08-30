@@ -12,7 +12,16 @@ export interface CameraApi {
   goTo(sceneId: string, transition?: TransitionName): void
   next(): void
   back(): void
+  /** Goes to the hub — the scene marked `meta.hub`. The visitor-facing "home". */
   home(): void
+  /**
+   * Returns to the attract loop, the scene marked `meta.idleReturn`.
+   *
+   * Deliberately separate from `home()`: the idle timer must land on the attract
+   * screen, but a visitor pressing "home" expects the hub they navigate from, not
+   * the screensaver.
+   */
+  attract(): void
   /** Applies a free pan/zoom delta from the gesture layer, bypassing scene framing. */
   nudge(delta: Partial<CameraTransform>): void
   /** Eases back to the current scene's authored framing. */
@@ -56,7 +65,11 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
   )
 
   const current = byId.get(currentId) ?? scenes[0]!
-  const homeId = useMemo(
+  const hubId = useMemo(
+    () => scenes.find((scene) => scene.meta?.hub)?.id ?? scenes[0]!.id,
+    [scenes],
+  )
+  const attractId = useMemo(
     () => scenes.find((scene) => scene.meta?.idleReturn)?.id ?? scenes[0]!.id,
     [scenes],
   )
@@ -128,7 +141,8 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
     if (current.back) goTo(current.back)
   }, [current.back, goTo])
 
-  const home = useCallback(() => goTo(homeId, "home"), [goTo, homeId])
+  const home = useCallback(() => goTo(hubId, "home"), [goTo, hubId])
+  const attract = useCallback(() => goTo(attractId, "home"), [attractId, goTo])
 
   const recenter = useCallback(() => {
     setIsFreeform(false)
@@ -190,6 +204,7 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
     next,
     back,
     home,
+    attract,
     nudge,
     recenter,
     overview,

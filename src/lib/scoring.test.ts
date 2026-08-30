@@ -58,10 +58,32 @@ describe("recommendFor", () => {
     }
   })
 
-  it("promotes products matching the declared audience", () => {
-    const ranked = recommendFor(maxScore(), "organization")
-    const unranked = recommendFor(maxScore())
-    expect([...ranked].sort()).toEqual([...unranked].sort())
-    expect(ranked[0]).toBe("org-program")
+  it("returns the same set whatever the audience, only reordered", () => {
+    for (const audience of content.audiences) {
+      const ranked = recommendFor(maxScore(), audience.id)
+      const unranked = recommendFor(maxScore())
+      expect([...ranked].sort(), audience.id).toEqual([...unranked].sort())
+    }
+  })
+
+  it("promotes products matching the declared audience ahead of the rest", () => {
+    // Asserted as a property rather than against a fixed id, so editing the
+    // catalogue does not break the test.
+    for (const audience of content.audiences) {
+      for (let score = 0; score <= maxScore(); score += 1) {
+        const ranked = recommendFor(score, audience.id)
+        const matches = ranked.map((id) =>
+          content.courses.some(
+            (course) => course.id === id && course.audiences.includes(audience.id),
+          ),
+        )
+        const firstNonMatch = matches.indexOf(false)
+        if (firstNonMatch === -1) continue
+        expect(
+          matches.slice(firstNonMatch).every((isMatch) => !isMatch),
+          `${audience.id} @ ${score}: ${ranked.join(",")}`,
+        ).toBe(true)
+      }
+    }
   })
 })

@@ -18,7 +18,7 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
     <button
       type="button"
       onClick={() => camera.next()}
-      className="scene-surface relative flex h-full w-full flex-col items-center justify-center gap-14 overflow-hidden rounded-[48px] text-center"
+      className="scene-surface relative flex h-full w-full flex-col items-center justify-center gap-14 overflow-hidden rounded-[48px] pb-52 text-center"
     >
       <AmbientField animate={state !== "far"} />
 

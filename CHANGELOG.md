@@ -22,7 +22,17 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `process.env` lint rules
 - Project documentation, ADRs 0001–0004, implementation plan and task breakdown
 
+- **content:** real course, collaboration and live-activity content from the
+  slides-content briefs; real contact details and QR destinations
+- **scenes:** course detail, live booth activities, and B2B/B2G collaboration scenes
+- **engine:** uniform stage scaling, overview map, `meta.hub` separate from
+  `meta.idleReturn`
+- **ops:** content validation now rejects overlapping scenes and unknown `qrKey`s
+
 ### Fixed
 - **engine:** canvas coordinate space no longer mirrors under `dir="rtl"`; scaled scenes were
   offset by their own scale factor
 - **engine:** single-pointer capture on the viewport swallowed clicks on scene buttons
+- **kiosk:** the "home" control returned to the attract loop instead of the hub
+- **kiosk:** the chrome bar covered the bottom of scene content
+- **engine:** the overview map held a stale camera and never showed its close control

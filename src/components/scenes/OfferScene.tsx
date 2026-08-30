@@ -20,7 +20,7 @@ export function OfferScene({ state, camera }: SceneComponentProps) {
   }
 
   return (
-    <div className="relative flex h-full w-full flex-col items-center justify-center gap-12 overflow-hidden rounded-[48px] bg-[var(--kiosk-accent)] px-24 text-center text-[#12160f]">
+    <div className="relative flex h-full w-full flex-col items-center justify-center gap-12 overflow-hidden rounded-[48px] bg-[var(--kiosk-accent)] px-24 pb-52 text-center text-[#12160f]">
       <motion.div
         aria-hidden
         animate={isActive ? { rotate: 360 } : {}}

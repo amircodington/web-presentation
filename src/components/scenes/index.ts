@@ -1,14 +1,16 @@
 import type { SceneRegistry } from "@/engine"
 import { AttractScene } from "./AttractScene"
 import { AudienceScene } from "./AudienceScene"
+import { CollaborationScene } from "./CollaborationScene"
 import { ConnectScene } from "./ConnectScene"
+import { CourseDetailScene } from "./CourseDetailScene"
 import { CoursesScene } from "./CoursesScene"
 import { HomeScene } from "./HomeScene"
+import { LiveActivitiesScene } from "./LiveActivitiesScene"
 import { OfferScene } from "./OfferScene"
 import { QuizIntroScene } from "./QuizIntroScene"
 import { QuizQuestionScene } from "./QuizQuestionScene"
 import { QuizResultScene } from "./QuizResultScene"
-import { WorkshopsScene } from "./WorkshopsScene"
 
 /**
  * Maps the `component` field in `scenes.json` to a React component. A scene that
@@ -19,7 +21,9 @@ export const sceneRegistry: SceneRegistry = {
   HomeScene,
   AudienceScene,
   CoursesScene,
-  WorkshopsScene,
+  CourseDetailScene,
+  LiveActivitiesScene,
+  CollaborationScene,
   OfferScene,
   QuizIntroScene,
   QuizQuestionScene,

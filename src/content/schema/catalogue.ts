@@ -1,10 +1,29 @@
 import { z } from "zod"
 import { AudienceIdSchema, IsoDateSchema, MediaRefSchema, PriceSchema } from "./common"
 
+/** One themed block of a course syllabus. */
+export const CurriculumBlockSchema = z.object({
+  title: z.string().min(1),
+  items: z.array(z.string().min(1)).min(1),
+})
+
+/** Practical details a visitor asks about at the booth: when, where, how. */
+export const LogisticsSchema = z.object({
+  startDate: z.string().optional(),
+  weekday: z.string().optional(),
+  time: z.string().optional(),
+  deliveryModes: z.array(z.string().min(1)).default([]),
+  location: z.string().optional(),
+  capacityDisplay: z.string().optional(),
+  instructors: z.string().optional(),
+})
+
 /** A course in the catalogue. Inactive courses are excluded from every view. */
 export const CourseSchema = z.object({
   id: z.string().min(1),
   title: z.string().min(1),
+  /** Campaign line from the poster, when the course is marketed under one. */
+  campaignTitle: z.string().optional(),
   heroTitle: z.string().min(1),
   heroSubtitle: z.string().optional(),
   summary: z.string().optional(),
@@ -15,6 +34,10 @@ export const CourseSchema = z.object({
   priceFestival: PriceSchema.optional(),
   registrationUrl: z.url().optional(),
   media: MediaRefSchema.optional(),
+  curriculum: z.array(CurriculumBlockSchema).default([]),
+  logistics: LogisticsSchema.optional(),
+  /** Key into qr.json. Validated against that file by the loader. */
+  qrKey: z.string().optional(),
   audiences: z.array(AudienceIdSchema).default([]),
   active: z.boolean(),
 })

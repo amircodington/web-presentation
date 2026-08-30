@@ -12,7 +12,7 @@ export function QuizIntroScene({ state, camera }: SceneComponentProps) {
   const reset = useSession((store) => store.reset)
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col items-center justify-center gap-12 rounded-[48px] px-24 text-center">
+    <div className="scene-surface flex h-full w-full flex-col items-center justify-center gap-12 rounded-[48px] px-24 pb-52 text-center">
       <motion.span
         animate={isActive ? { y: [0, -18, 0] } : {}}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}

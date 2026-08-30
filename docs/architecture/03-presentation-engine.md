@@ -93,7 +93,8 @@ edit.
 | `camera.rotate` | Degrees. Use sparingly — beyond ±8° it reads as a gimmick, not a flourish |
 | `transition` | Named preset from `transitions.ts` |
 | `next` / `back` | Default navigation targets |
-| `meta.idleReturn` | Marks the scene the idle timer resets to. Exactly one scene must set it |
+| `meta.idleReturn` | The attract loop — where the idle timer returns to. Exactly one |
+| `meta.hub` | The hub — where the "home" control goes. Exactly one, and **not** the same scene as `idleReturn`: a visitor pressing home expects the hub they navigate from, not the screensaver |
 | `props` | Passed verbatim to the scene component, so one component can serve many scenes — the four quiz questions are one `QuizQuestionScene` differing only by `questionIndex` |
 
 Validated by `scenes.schema.ts`. Unreachable scenes, duplicate ids, and dangling `next`
@@ -234,6 +235,22 @@ Scenes therefore clip to their own bounds (`overflow: hidden`). Without that,
 decorative layers that deliberately overflow — the attract scene's ambient orbs, the
 offer scene's radial rays — would paint outside the box `sceneExtent` computes, and
 the outermost scenes would be clipped by the stage.
+
+## Canvas layout rules
+
+Two invariants are enforced by `scripts/validate-content.ts` rather than left to
+review, because both fail in ways that are easy to miss until the map is opened:
+
+**Scenes must not overlap in canvas space.** Overlapping scenes look broken in the
+overview map, and a `dive` transition flies *through* content it should be passing
+over. The check computes each scene's rotated axis-aligned box and reports every
+colliding pair.
+
+**Every scene reserves clearance for the chrome bar.** The persistent controls sit
+outside the stage at a fixed pixel size, occupying roughly 170 design pixels at the
+bottom. Scenes therefore carry `pb-52`; without it, the last row of content sits
+underneath the navigation. Verified by measuring, for each scene, whether any leaf
+element intersects the chrome's bounding box.
 
 ## The RTL trap
 

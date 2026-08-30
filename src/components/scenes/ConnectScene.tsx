@@ -9,6 +9,8 @@ import type { SceneComponentProps } from "@/engine"
 
 const CHANNELS = [
   { key: "general", label: "سایت و ثبت‌نام", icon: "🌐" },
+  { key: "telegram", label: "تلگرام باشگاه ثروت", icon: "✈️" },
+  { key: "bale", label: "بله باشگاه ثروت", icon: "💬" },
   { key: "school", label: "همکاری با مدرسه", icon: "🏫" },
   { key: "organization", label: "همکاری سازمانی", icon: "🏢" },
 ] as const
@@ -23,29 +25,29 @@ export function ConnectScene({ state, camera }: SceneComponentProps) {
   const [selected, setSelected] = useState<string>("general")
 
   return (
-    <div className="scene-surface flex h-full w-full items-center gap-16 rounded-[48px] px-24 py-16">
-      <div className="flex flex-1 flex-col gap-9">
+    <div className="scene-surface flex h-full w-full items-center gap-14 rounded-[48px] px-20 pt-12 pb-52">
+      <div className="flex flex-1 flex-col gap-6">
         <div className="flex flex-col gap-4">
           <p className="text-[28px] font-medium text-[var(--kiosk-accent)]">قدم بعدی</p>
-          <h2 className="text-[68px] leading-[1.15] font-bold">با موبایلت کد را اسکن کن</h2>
-          <p className="text-[30px] text-[var(--kiosk-muted)]">
+          <h2 className="text-[58px] leading-[1.15] font-bold">با موبایلت کد را اسکن کن</h2>
+          <p className="text-[27px] text-[var(--kiosk-muted)]">
             {content.contact.website} · {content.contact.phone}
           </p>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           {CHANNELS.map((channel) => (
             <button
               key={channel.key}
               type="button"
               onClick={() => setSelected(channel.key)}
-              className={`flex min-h-[100px] items-center gap-6 rounded-2xl border-2 px-9 text-start text-[34px] font-semibold transition-colors duration-[var(--duration-instant)] ${
+              className={`flex min-h-[78px] cursor-pointer items-center gap-5 rounded-2xl border-2 px-8 text-start text-[29px] font-semibold transition-colors duration-[var(--duration-instant)] ${
                 selected === channel.key
                   ? "border-[var(--kiosk-accent)] bg-[var(--kiosk-accent)]/12 text-[var(--kiosk-accent)]"
                   : "border-white/10 bg-white/[0.04]"
               }`}
             >
-              <span className="text-[44px]">{channel.icon}</span>
+              <span className="text-[40px]">{channel.icon}</span>
               {channel.label}
             </button>
           ))}
