@@ -80,21 +80,30 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
     <div
       ref={viewportRef}
       data-viewport
-      className="relative grid h-dvh w-dvw place-items-center overflow-hidden bg-[var(--kiosk-bg)]"
+      className="absolute inset-0 overflow-hidden bg-[var(--kiosk-bg)]"
       style={{ touchAction: "none", overscrollBehavior: "none" }}
     >
       {/*
         The stage is exactly one design frame, scaled uniformly to the screen. This
         is what guarantees a 13" laptop and a 55" TV render proportionally identical
         frames: one scale on one element, never a reflow.
+
+        Centred geometrically (left/top 50% plus a translate), never by grid or flex
+        alignment. `transform` does not affect layout, so the stage is still 1920px
+        wide to the layout engine and overflows any narrower screen — and centring an
+        overflowing item inside an RTL `overflow: hidden` box shifts it sideways.
+        Physical offsets under an explicit LTR direction avoid that entirely.
       */}
       <div
         data-stage
         style={{
-          position: "relative",
+          position: "absolute",
+          direction: "ltr",
+          left: "50%",
+          top: "50%",
           width: design.width,
           height: design.height,
-          transform: `scale(${scale})`,
+          transform: `translate(-50%, -50%) scale(${scale})`,
           transformOrigin: "center center",
           overflow: "hidden",
         }}

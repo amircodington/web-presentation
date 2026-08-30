@@ -214,6 +214,14 @@ and different relative type sizes. The cost of the stage approach is letterbox b
 when the aspect ratios differ; they are painted in the kiosk background and are
 invisible in practice.
 
+The stage is centred **geometrically** — `left/top: 50%` plus a `translate(-50%, -50%)`
+under an explicit `direction: ltr` — never by grid or flex alignment. `transform` does
+not affect layout, so the stage is still a full 1920px wide to the layout engine and
+overflows any narrower screen; centring an overflowing item inside an RTL
+`overflow: hidden` container shifts it sideways. This is the same lesson as the RTL
+trap below: anything geometric must be expressed as a transform, not as layout
+alignment.
+
 Because the camera always works in design space, its maths is resolution
 independent. Only the gesture layer needs the stage scale, so a drag moves the
 canvas by the distance the finger actually travelled.
