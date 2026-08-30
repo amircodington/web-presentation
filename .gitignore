@@ -26,3 +26,6 @@ test-results/
 # Logs
 *.log
 npm-debug.log*
+
+# Playwright browsers cache
+.cache/

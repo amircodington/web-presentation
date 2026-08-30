@@ -1,0 +1,28 @@
+# Development. Source is bind-mounted for hot reload.
+services:
+  kiosk:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: deps
+    image: ${DOCKER_IMAGE}:dev
+    command: npm run dev -- --port 3000 --hostname 0.0.0.0
+    working_dir: /app
+    ports:
+      - "${DEV_PORT}:3000"
+    environment:
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      # A host node_modules built on macOS ARM will not run inside a Linux
+      # container. Keeping it in a named volume is what stops that collision —
+      # the single most common way this setup breaks.
+      - kiosk_node_modules:/app/node_modules
+      - kiosk_next_cache:/app/.next
+
+volumes:
+  kiosk_node_modules:
+  kiosk_next_cache:

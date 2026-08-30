@@ -9,8 +9,20 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
-- Project documentation: architecture, presentation engine spec, content model, motion design
-- Operations documentation: Docker, versioning, git workflow, changelogs, kiosk deployment
-- `AGENTS.md` — rules for agents and developers
-- ADRs 0001–0004 covering the four locked technical decisions
-- Implementation plan and task breakdown in `tasks/`
+- **engine:** Prezi-style camera over a single transforming canvas — pure `projection.ts`,
+  `Camera`, `Scene`, `SceneGraph`, six named transition presets, pointer gestures, and
+  three-state scene lifecycle
+- **content:** Zod schemas, validating loader, selectors, and build-time gate over `content/`
+- **scenes:** attract, home, audiences, courses, workshops, offer, quiz (intro, questions,
+  result) and connect, all driven by `content/scenes.json`
+- **kiosk:** idle reset with full session wipe, persistent chrome, brand theming from JSON
+- **docker:** multi-stage Dockerfile on `node:22-bookworm-slim`, dev and prod compose files,
+  `/api/health` liveness route
+- **ops:** committed root `.env` as version SSOT, typed `kiosk.config.ts`, RTL and
+  `process.env` lint rules
+- Project documentation, ADRs 0001–0004, implementation plan and task breakdown
+
+### Fixed
+- **engine:** canvas coordinate space no longer mirrors under `dir="rtl"`; scaled scenes were
+  offset by their own scale factor
+- **engine:** single-pointer capture on the viewport swallowed clicks on scene buttons

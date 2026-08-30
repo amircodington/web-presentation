@@ -1,0 +1,73 @@
+[
+  {
+    "id": "teen-money",
+    "title": "پول و نوجوان",
+    "heroTitle": "قبل از اینکه اولین حقوقت را بگیری، بدان با آن چه کنی",
+    "heroSubtitle": "دوره پایه سواد مالی برای ۱۲ تا ۱۵ سال",
+    "summary": "نوجوان یاد می‌گیرد پول از کجا می‌آید، چطور نگه داشته می‌شود و چرا پس‌انداز بدون هدف کار نمی‌کند.",
+    "highlights": ["۸ جلسه کارگاهی", "بازی شبیه‌سازی بازار", "دفترچه تمرین خانگی"],
+    "targetAge": "۱۲ تا ۱۵ سال",
+    "duration": "۸ جلسه",
+    "priceRegular": 4800000,
+    "priceFestival": 3400000,
+    "registrationUrl": "https://wealthclub.ir/courses/teen-money",
+    "audiences": ["student", "parent"],
+    "active": true
+  },
+  {
+    "id": "plus18",
+    "title": "دوره ۱۸+",
+    "heroTitle": "۱۸ سالت شده؛ برای تصمیم‌های مالی واقعی آماده‌ای؟",
+    "heroSubtitle": "از اولین درآمد تا اولین سرمایه‌گذاری",
+    "summary": "مدیریت درآمد، بودجه‌بندی شخصی، شناخت بازارهای مالی و اولین قدم‌های سرمایه‌گذاری بدون شعار.",
+    "highlights": ["۱۲ جلسه", "تمرین با پول واقعی", "بررسی بازارها به زبان ساده"],
+    "targetAge": "۱۸ سال به بالا",
+    "duration": "۱۲ جلسه",
+    "priceRegular": 9800000,
+    "priceFestival": 6900000,
+    "registrationUrl": "https://wealthclub.ir/courses/plus18",
+    "audiences": ["young-adult"],
+    "active": true
+  },
+  {
+    "id": "business-school",
+    "title": "مدرسه کسب‌وکار",
+    "heroTitle": "از یک ایده تا یک کسب‌وکار واقعی",
+    "heroSubtitle": "برای نوجوانانی که می‌خواهند بسازند، نه فقط بخوانند",
+    "summary": "تیم‌ها یک ایده را از صفر تا فروش اول جلو می‌برند: مشتری، قیمت، هزینه، سود.",
+    "highlights": ["۱۶ جلسه پروژه‌محور", "ارائه نهایی مقابل داوران", "منتور اختصاصی هر تیم"],
+    "targetAge": "۱۴ تا ۱۸ سال",
+    "duration": "۱۶ جلسه",
+    "priceRegular": 14500000,
+    "priceFestival": 10900000,
+    "registrationUrl": "https://wealthclub.ir/courses/business-school",
+    "audiences": ["student", "parent", "school"],
+    "active": true
+  },
+  {
+    "id": "family-finance",
+    "title": "خانواده و پول",
+    "heroTitle": "گفت‌وگو درباره پول را در خانه شروع کنید",
+    "heroSubtitle": "برای والدینی که می‌خواهند الگوی درست باشند",
+    "summary": "چطور با فرزند درباره پول حرف بزنیم، چه زمانی پول توجیبی، و چگونه عادت مالی ساخته می‌شود.",
+    "highlights": ["۶ جلسه", "کاربرگ خانوادگی", "جلسه پرسش و پاسخ"],
+    "targetAge": "والدین",
+    "duration": "۶ جلسه",
+    "priceRegular": 3900000,
+    "priceFestival": 2700000,
+    "registrationUrl": "https://wealthclub.ir/courses/family-finance",
+    "audiences": ["parent"],
+    "active": true
+  },
+  {
+    "id": "org-program",
+    "title": "برنامه سازمانی",
+    "heroTitle": "کارکنانی که با پول بهتر تصمیم می‌گیرند",
+    "heroSubtitle": "دوره‌های درون‌سازمانی و خانواده کارکنان",
+    "summary": "برنامه‌ای که متناسب با اندازه و نیاز سازمان طراحی می‌شود؛ از یک کارگاه یک‌روزه تا دوره کامل.",
+    "highlights": ["طراحی اختصاصی", "برگزاری در محل سازمان", "گزارش نتیجه"],
+    "targetAge": "بزرگسال",
+    "audiences": ["organization", "government"],
+    "active": true
+  }
+]

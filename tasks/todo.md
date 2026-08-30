@@ -8,7 +8,7 @@ Every task additionally inherits the Definition of Done in [`AGENTS.md`](../AGEN
 
 ## Phase 0 — Foundation
 
-### - [ ] Task 1 · Next.js scaffold
+### - [x] Task 1 · Next.js scaffold
 `chore/scaffold` · M · deps: none
 Next.js App Router + TypeScript strict + Tailwind. RTL root layout. ESLint with the
 physical-CSS-property ban and the no-narration-comment rule. Vitest + Playwright configured.
@@ -16,14 +16,14 @@ physical-CSS-property ban and the no-narration-comment rule. Vitest + Playwright
 - [ ] `lint`, `typecheck`, `test` scripts exist and pass
 - [ ] Lint fails on `ml-4` and passes on `ms-4`
 
-### - [ ] Task 2 · `.env` and typed config
+### - [x] Task 2 · `.env` and typed config
 `chore/env-config` · S · deps: 1
 `.env`, `.env.example`, `src/config/kiosk.config.ts` parsing into a frozen typed object.
 - [ ] Every key in `docs/operations/02-versioning-and-releases.md` present in both files
 - [ ] Config throws at startup on a missing or unparseable key
 - [ ] No `process.env` reference outside `kiosk.config.ts`
 
-### - [ ] Task 3 · Docker dev and prod
+### - [x] Task 3 · Docker dev and prod
 `chore/docker` · M · deps: 2
 Multi-stage Dockerfile on `node:22-bookworm-slim`, both compose files, `.dockerignore`.
 - [ ] `docker compose up` hot-reloads on a source edit
@@ -39,7 +39,7 @@ type scale from `docs/architecture/05-motion-and-visual-design.md`.
 - [ ] Type scale renders correctly at 1920×1080
 - [ ] Persian digits render via the formatter, not a font swap
 
-### - [ ] Task 5 · Release tooling and CI
+### - [x] Task 5 · Release tooling and CI
 `chore/release-tooling` · M · deps: 2
 `scripts/release.ts`, commit linting, both changelog files seeded, CI running lint + typecheck +
 test + content validation + bundle budget.
@@ -57,7 +57,7 @@ test + content validation + bundle budget.
 
 ## Phase 1 — Content
 
-### - [ ] Task 6 · Content schemas
+### - [x] Task 6 · Content schemas
 `feat/content-schemas` · L · deps: 1
 A Zod schema per file in `content/`, per `docs/architecture/04-content-model.md`.
 - [ ] Types inferred from schemas, never hand-written
@@ -65,7 +65,7 @@ A Zod schema per file in `content/`, per `docs/architecture/04-content-model.md`
       gap or overlap; `next`/`back` scene references resolve
 - [ ] Fixture tests cover valid and invalid cases per schema
 
-### - [ ] Task 7 · Loader, selectors, validation script
+### - [x] Task 7 · Loader, selectors, validation script
 `feat/content-loader` · M · deps: 6
 `content/load.ts` (validate, freeze, last-known-good fallback), `content/select.ts`,
 `scripts/validate-content.ts` wired into build, CI, and pre-commit.
@@ -81,35 +81,35 @@ A Zod schema per file in `content/`, per `docs/architecture/04-content-model.md`
 
 ## Phase 2 — Engine
 
-### - [ ] Task 8 · Projection maths
+### - [x] Task 8 · Projection maths
 `feat/engine-projection` · S · deps: 1
 Pure `projection.ts`. **The riskiest code in the project — it lands first and alone.**
 - [ ] Identity, translation, scale, rotation and composition-order cases covered
 - [ ] Property test: `project()` always centres the scene in the viewport
 - [ ] Zero imports outside `engine/`
 
-### - [ ] Task 9 · Camera, Scene, SceneGraph
+### - [x] Task 9 · Camera, Scene, SceneGraph
 `feat/engine-camera` · M · deps: 8, 7
 The transforming node, scene positioning, graph rendered from `scenes.json`.
 - [ ] Camera moves between two scenes at 60fps
 - [ ] Only `transform` and `opacity` animate — verified in a performance trace
 - [ ] `engine/` imports nothing from `content/`, `components/scenes/`, or `store/`
 
-### - [ ] Task 10 · Transitions
+### - [x] Task 10 · Transitions
 `feat/engine-transitions` · M · deps: 9
 All six presets. `dive` as a three-keyframe GSAP timeline with the zoom-out apex.
 - [ ] Each preset selectable from `scenes.json`
 - [ ] A long jump using `dive` reads as legible, not as a glitch
 - [ ] Mid-flight retarget continues from the current position with preserved velocity
 
-### - [ ] Task 11 · Gestures
+### - [x] Task 11 · Gestures
 `feat/engine-gestures` · M · deps: 9
 Pointer Events: swipe, pinch, two-finger pan, double-tap re-centre, idle re-centre.
 - [ ] Zoom clamped to `ENGINE_MIN_ZOOM`/`MAX_ZOOM`; pan clamped to canvas bounds + 20%
 - [ ] Free pan or zoom eases back after `KIOSK_GESTURE_RECENTER_MS`
 - [ ] Browser pinch-zoom, double-tap-zoom, long-press menu and overscroll-back all suppressed
 
-### - [ ] Task 12 · Scene lifecycle
+### - [x] Task 12 · Scene lifecycle
 `feat/engine-lifecycle` · M · deps: 10
 `active` / `near` / `far` states; entrance timeline factories played on activation.
 - [ ] Non-active scenes have media paused and `pointer-events: none`

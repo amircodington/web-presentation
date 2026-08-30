@@ -1,0 +1,14 @@
+{
+  "nameFa": "باشگاه ثروت",
+  "nameEn": "Wealth Club",
+  "tagline": "سواد مالی، از نوجوانی تا تصمیم‌های بزرگ",
+  "logo": "/media/logo.svg",
+  "colors": {
+    "background": "#070B14",
+    "surface": "#0F1626",
+    "accent": "#F2B33D",
+    "accentSoft": "#7A5C1E",
+    "text": "#F5F7FA",
+    "textMuted": "#93A1B8"
+  }
+}

@@ -93,7 +93,8 @@ edit.
 | `camera.rotate` | Degrees. Use sparingly — beyond ±8° it reads as a gimmick, not a flourish |
 | `transition` | Named preset from `transitions.ts` |
 | `next` / `back` | Default navigation targets |
-| `meta.idleReturn` | Marks the scene the idle timer resets to |
+| `meta.idleReturn` | Marks the scene the idle timer resets to. Exactly one scene must set it |
+| `props` | Passed verbatim to the scene component, so one component can serve many scenes — the four quiz questions are one `QuizQuestionScene` differing only by `questionIndex` |
 
 Validated by `scenes.schema.ts`. Unreachable scenes, duplicate ids, and dangling `next`
 references fail the build.
@@ -186,6 +187,19 @@ export function timeline(root: HTMLElement): gsap.core.Timeline
 The engine plays it on activation and reverses it on deactivation. This split is deliberate:
 the camera never needs to know what is inside a scene, and a scene never needs to know where
 it sits on the canvas.
+
+## The RTL trap
+
+The canvas is a coordinate space, not a layout. Positioning it with logical
+properties puts its origin at the viewport's **right** edge under `dir="rtl"`, and
+the scene wrapper's own logical inset then adds a compensating offset in the
+opposite direction. The two cancel exactly at `scale: 1` — so the first scene looks
+perfect and every scaled scene is wrong by a factor of its own scale.
+
+The camera and scene wrappers therefore use physical `left`/`top` with an explicit
+`direction: ltr`, and each scene sets `direction: rtl` back on its own content. This
+is the one place in the codebase where physical properties are correct, and lint is
+configured to allow them under `src/engine/` only.
 
 ## Testing the engine
 

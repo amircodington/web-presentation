@@ -30,7 +30,7 @@ Do not relitigate these. To change one, write an ADR in `docs/architecture/adr/`
 | Area | Decision |
 |---|---|
 | Framework | Next.js (App Router) + TypeScript strict |
-| Styling | Tailwind CSS, logical properties only (`ms-`/`me-`, never `ml-`/`mr-`) |
+| Styling | Tailwind CSS, logical properties only (`ms-`/`me-`, never `ml-`/`mr-`) — except inside `src/engine/`, see §3 |
 | Motion | Motion (`motion/react`) for UI enter/exit + layout; GSAP timelines for scene choreography |
 | Zoom engine | Custom camera layer (`src/engine/`). **Not** impress.js, **not** reveal.js |
 | Content | Typed JSON in `content/`, validated by Zod. No hardcoded copy, prices, or URLs |
@@ -62,6 +62,11 @@ Full reasoning: [`docs/architecture/01-overview.md`](docs/architecture/01-overvi
   `src/config/kiosk.config.ts`, which reads `.env`.
 - Components are presentational; logic lives in `src/lib/`.
 - File names `kebab-case.ts`; React components `PascalCase.tsx`.
+- Logical CSS properties everywhere **except `src/engine/`**. The canvas is a maths
+  space, not a layout: under RTL, logical insets place its origin at the viewport's
+  right edge and silently mirror every scene coordinate. The camera and scene
+  wrappers therefore use physical `left`/`top` with an explicit `direction: ltr`,
+  and each scene restores `direction: rtl` for its content. Lint enforces this split.
 
 ## 4. Git workflow — trunk-based
 
@@ -188,3 +193,13 @@ When you add or change any of the following, update the named section here in th
 
 Keep it terse. This file is loaded into every agent's context — every sentence costs budget.
 Prefer a one-line rule plus a link to the deep doc over a paragraph here.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
