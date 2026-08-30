@@ -1,0 +1,28 @@
+# OS
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Build / cache
+dist/
+*.tsbuildinfo
+.turbo/
+coverage/
+playwright-report/
+test-results/
+
+# Environment — .env is the versioned single source of truth and IS committed.
+# Only secret overlays are ignored.
+.env.local
+.env.*.local
+.env.secrets
+
+# Logs
+*.log
+npm-debug.log*

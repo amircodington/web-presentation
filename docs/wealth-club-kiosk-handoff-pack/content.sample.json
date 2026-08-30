@@ -1,0 +1,68 @@
+{
+  "brand": {
+    "name_fa": "باشگاه ثروت",
+    "name_en": "Wealth Club",
+    "primary_color": "TBD",
+    "secondary_color": "TBD",
+    "logo": "/assets/logo.svg"
+  },
+  "festival": {
+    "name": "جشنواره باغ کتاب",
+    "offer_active": true,
+    "offer_title": "پیشنهاد ویژه جشنواره",
+    "offer_description": "TBD",
+    "valid_until": "TBD"
+  },
+  "courses": [
+    {
+      "id": "plus18",
+      "title": "دوره +18",
+      "hero_title": "۱۸ سالت شده؛ برای تصمیم‌های مالی واقعی آماده‌ای؟",
+      "hero_subtitle": "TBD",
+      "target_age": "18+",
+      "price_regular": "TBD",
+      "price_festival": "TBD",
+      "registration_url": "TBD",
+      "active": true
+    },
+    {
+      "id": "business-school",
+      "title": "Business School",
+      "hero_title": "از یک ایده تا یک کسب‌وکار واقعی",
+      "hero_subtitle": "TBD",
+      "target_age": "TBD",
+      "price_regular": "TBD",
+      "price_festival": "TBD",
+      "registration_url": "TBD",
+      "active": true
+    }
+  ],
+  "workshops": [
+    {
+      "id": "ws-001",
+      "title": "TBD",
+      "target_age": "TBD",
+      "date": "TBD",
+      "duration": "TBD",
+      "price_regular": "TBD",
+      "price_festival": "TBD",
+      "registration_url": "TBD",
+      "active": true
+    }
+  ],
+  "contact": {
+    "phone": "TBD",
+    "website": "TBD",
+    "instagram": "TBD",
+    "bale": "TBD"
+  },
+  "qr": {
+    "general": "TBD",
+    "plus18": "TBD",
+    "business_school": "TBD",
+    "workshops": "TBD",
+    "school": "TBD",
+    "organization": "TBD",
+    "test_result": "TBD"
+  }
+}
