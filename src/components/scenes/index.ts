@@ -5,6 +5,7 @@ import { CollaborationScene } from "./CollaborationScene"
 import { ConnectScene } from "./ConnectScene"
 import { CourseDetailScene } from "./CourseDetailScene"
 import { CoursesScene } from "./CoursesScene"
+import { GameScene } from "./GameScene"
 import { HomeScene } from "./HomeScene"
 import { LiveActivitiesScene } from "./LiveActivitiesScene"
 import { OfferScene } from "./OfferScene"
@@ -23,6 +24,7 @@ export const sceneRegistry: SceneRegistry = {
   CoursesScene,
   CourseDetailScene,
   LiveActivitiesScene,
+  GameScene,
   CollaborationScene,
   OfferScene,
   QuizIntroScene,

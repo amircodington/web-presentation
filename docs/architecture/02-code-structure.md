@@ -77,6 +77,7 @@ src/
 │   ├── quiz/                   # QuestionCard, OptionButton, ScoreMeter, ResultReveal
 │   ├── products/               # CourseCard, WorkshopCard, PriceTag, OfferBadge
 │   ├── lead/                   # LeadForm, QrPanel, SuccessScreen
+│   ├── games/                  # AllocationGame, MarketGame, JudgementGame
 │   ├── media/                  # BackgroundVideo, KenBurnsImage, ParticleField
 │   └── ui/                     # Button, Heading, Sheet — primitives only, no domain logic
 │
@@ -86,6 +87,7 @@ src/
 │   └── select.ts               # derived queries: activeCourses(), offerFor(courseId)
 │
 ├── lib/
+│   ├── games/                  # pure game logic: allocation feedback rules
 │   ├── scoring.ts              # quiz answers → raw score
 │   ├── recommendation.ts       # score + audience → ordered product ids
 │   ├── idle.ts                 # inactivity detection and reset orchestration

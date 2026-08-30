@@ -110,6 +110,31 @@ visitor: every `recommendedProducts` id exists in `courses.json` or `workshops.j
 result bands cover the full reachable score range with no gaps and no overlaps, and every
 question has at least two options.
 
+## Playable booth activities
+
+`activities.json` carries the live mini-workshops from the activations brief. Each
+may include a `game` object, and the kiosk plays a short version on screen while a
+visitor waits for the next live run.
+
+Three mechanics cover all four activities, discriminated on `game.kind`:
+
+| Kind | Activity | Mechanic |
+|---|---|---|
+| `allocation` | چالش ۱۰۰ میلیون · سبدت رو بچین | Split a fixed pot of tokens between options |
+| `market` | راز نوسان قیمت | Predict which way each headline moves the price |
+| `judgement` | فرصته یا کلاهبرداری؟ | Judge each offer reasonable or suspicious |
+
+The split is deliberate: **rules live in code, wording lives in content.**
+`lib/games/allocation.ts` decides which lessons an allocation demonstrates and
+returns rule ids; `activities.json` holds the Persian copy for each id. So the
+teaching text can be rewritten without touching logic, and the logic is testable
+without rendering anything. A test asserts that every rule the evaluator can emit
+has copy in every allocation game — a rule without copy would show a visitor an
+empty result panel at the exact moment they are most engaged.
+
+Options carry `risk` and `growth` rather than being hardcoded by id, so adding a
+new asset to a game is a content edit.
+
 ## QR destinations
 
 `qr.json` maps a purpose (`general`, `plus18`, `school`, `test_result`, …) to a URL. Codes are
