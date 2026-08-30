@@ -58,6 +58,24 @@ textarea {
   user-select: text;
 }
 
+/*
+ * The kiosk itself is touch-only, but the same build is driven with a mouse during
+ * content review and on-site setup — an interactive element that keeps the default
+ * arrow reads as inert.
+ */
+button,
+[role="button"],
+summary,
+label[for],
+a[href] {
+  cursor: pointer;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

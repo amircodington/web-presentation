@@ -66,6 +66,107 @@ export function clampZoom(scale: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, scale))
 }
 
+/**
+ * Uniform scale that fits the design space inside a physical screen without
+ * distortion or cropping.
+ *
+ * The kiosk is authored once at a fixed design size and scaled to whatever screen
+ * it lands on. That is what makes a 13" laptop and a 55" TV show *proportionally
+ * identical* frames — percentage-based sizing cannot promise that, because it
+ * reflows when the aspect ratio changes.
+ */
+export function fitScale(design: Size, screen: Size): number {
+  if (design.width <= 0 || design.height <= 0) return 1
+  return Math.min(screen.width / design.width, screen.height / design.height)
+}
+
+/** A rectangle in canvas space. */
+export interface Bounds {
+  minX: number
+  minY: number
+  maxX: number
+  maxY: number
+}
+
+/**
+ * The box enclosing every scene, including each scene's own extent rather than
+ * just its centre point. Used to frame the overview map.
+ */
+export function sceneExtent(
+  placements: readonly ScenePlacement[],
+  design: Size,
+): Bounds {
+  if (placements.length === 0) {
+    return { minX: 0, minY: 0, maxX: design.width, maxY: design.height }
+  }
+
+  let minX = Infinity
+  let minY = Infinity
+  let maxX = -Infinity
+  let maxY = -Infinity
+
+  for (const p of placements) {
+    // A rotated rectangle's axis-aligned extent, so rotated scenes are not clipped.
+    const theta = (p.rotate * Math.PI) / 180
+    const cos = Math.abs(Math.cos(theta))
+    const sin = Math.abs(Math.sin(theta))
+    const w = (design.width * cos + design.height * sin) * p.scale
+    const h = (design.width * sin + design.height * cos) * p.scale
+
+    minX = Math.min(minX, p.x - w / 2)
+    minY = Math.min(minY, p.y - h / 2)
+    maxX = Math.max(maxX, p.x + w / 2)
+    maxY = Math.max(maxY, p.y + h / 2)
+  }
+
+  return { minX, minY, maxX, maxY }
+}
+
+/** Viewport-pixel breathing room around a fitted region. */
+export type Padding = number | { top?: number; right?: number; bottom?: number; left?: number }
+
+function normalisePadding(padding: Padding) {
+  if (typeof padding === "number") {
+    return { top: padding, right: padding, bottom: padding, left: padding }
+  }
+  return {
+    top: padding.top ?? 0,
+    right: padding.right ?? 0,
+    bottom: padding.bottom ?? 0,
+    left: padding.left ?? 0,
+  }
+}
+
+/**
+ * Camera transform that frames a whole region of canvas space in the viewport.
+ *
+ * Padding may be asymmetric: the overview map reserves extra room at the bottom so
+ * the persistent chrome bar does not sit on top of the scenes it is meant to let
+ * you choose between.
+ */
+export function fitBounds(bounds: Bounds, viewport: Size, padding: Padding = 120): CameraTransform {
+  const pad = normalisePadding(padding)
+  const width = Math.max(1, bounds.maxX - bounds.minX)
+  const height = Math.max(1, bounds.maxY - bounds.minY)
+
+  const available = {
+    width: Math.max(1, viewport.width - pad.left - pad.right),
+    height: Math.max(1, viewport.height - pad.top - pad.bottom),
+  }
+  const scale = Math.min(available.width / width, available.height / height)
+
+  const centreX = (bounds.minX + bounds.maxX) / 2
+  const centreY = (bounds.minY + bounds.maxY) / 2
+
+  // Centre within the padded box rather than the raw viewport.
+  return {
+    x: pad.left + available.width / 2 - centreX * scale,
+    y: pad.top + available.height / 2 - centreY * scale,
+    scale,
+    rotate: 0,
+  }
+}
+
 /** Axis-aligned bounds of every scene placement, used to clamp free panning. */
 export function canvasBounds(placements: readonly ScenePlacement[]): {
   minX: number

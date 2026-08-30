@@ -160,6 +160,11 @@ These come from the physical reality of an unattended screen in a loud hall:
 - **Idle reset.** No interaction for `KIOSK_IDLE_TIMEOUT_MS` → session cleared, camera returns
   to the attract scene. Session data must never leak between two visitors.
 - **Touch targets ≥ 88px.** Fingers, on glass, at standing height. No hover-only affordances.
+- **One design size, scaled.** Scenes are authored at `ENGINE_DESIGN_WIDTH` ×
+  `ENGINE_DESIGN_HEIGHT` and the stage scales uniformly to the screen, so a laptop and
+  the TV show identical frames. Never add breakpoints or percentage layouts to a scene.
+- **Interactive elements show a pointer cursor.** The kiosk is touch-only, but the same
+  build is driven with a mouse during review and setup.
 - **60fps or it does not ship.** Animate `transform` and `opacity` only. Never animate
   `width`, `height`, `top`, or `left`.
 - **Respect `prefers-reduced-motion`**, but keep the kiosk's own default expressive.

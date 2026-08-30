@@ -1,10 +1,12 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState, type ComponentType } from "react"
+import { useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from "react"
 import { kioskConfig } from "@/config/kiosk.config"
 import { Camera } from "./Camera"
+import { CameraProvider } from "./CameraContext"
 import { Scene } from "./Scene"
 import { sceneStates } from "./lifecycle"
+import { fitScale } from "./projection"
 import { useCamera, type CameraApi } from "./use-camera"
 import { useGestures } from "./use-gestures"
 import type { SceneNode, SceneState, Size } from "./types"
@@ -23,8 +25,11 @@ interface SceneGraphProps {
   scenes: readonly SceneNode[]
   initialSceneId: string
   registry: SceneRegistry
-  /** Receives the camera API once mounted, for idle reset and chrome controls. */
-  onReady?: (camera: CameraApi) => void
+  /**
+   * Chrome rendered above the canvas and outside the scaled stage, so controls keep
+   * their real pixel size on any screen. Read the camera with `useCameraApi()`.
+   */
+  overlay?: ReactNode
 }
 
 /**
@@ -35,15 +40,22 @@ interface SceneGraphProps {
  * physical display happens here, once, so scenes are authored at a single known
  * size and never need responsive logic — a kiosk has exactly one screen.
  */
-export function SceneGraph({ scenes, initialSceneId, registry, onReady }: SceneGraphProps) {
+export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneGraphProps) {
   const viewportRef = useRef<HTMLDivElement>(null)
-  const [viewport, setViewport] = useState<Size>(() => ({
+
+  const design: Size = {
     width: kioskConfig.engine.designWidth,
     height: kioskConfig.engine.designHeight,
-  }))
+  }
 
-  const { scope, camera } = useCamera({ scenes, initialSceneId, viewport })
-  useGestures(viewportRef, camera)
+  const [screen, setScreen] = useState<Size>(design)
+
+  // The camera always works in design space. Only the stage below knows about the
+  // physical screen, so camera maths is resolution-independent and every scene is
+  // authored once against one known size.
+  const { scope, camera } = useCamera({ scenes, initialSceneId, viewport: design })
+  const scale = fitScale(design, screen)
+  useGestures(viewportRef, camera, scale)
 
   useEffect(() => {
     const element = viewportRef.current
@@ -51,36 +63,55 @@ export function SceneGraph({ scenes, initialSceneId, registry, onReady }: SceneG
     const observer = new ResizeObserver(([entry]) => {
       if (!entry) return
       const { width, height } = entry.contentRect
-      setViewport({ width, height })
+      setScreen({ width, height })
     })
     observer.observe(element)
     return () => observer.disconnect()
   }, [])
 
-  // The API object is recreated each render, so consumers and memoization key off
-  // the active scene id instead of the object identity.
+  // The API object is recreated each render, so memoization keys off the active
+  // scene id rather than the object identity.
   const activeId = camera.current.id
-
-  useEffect(() => {
-    onReady?.(camera)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeId])
 
   const states = useMemo(() => sceneStates(scenes, activeId), [scenes, activeId])
 
   return (
+    <CameraProvider value={camera}>
     <div
       ref={viewportRef}
       data-viewport
-      className="relative h-dvh w-dvw overflow-hidden bg-[var(--kiosk-bg)]"
+      className="relative grid h-dvh w-dvw place-items-center overflow-hidden bg-[var(--kiosk-bg)]"
       style={{ touchAction: "none", overscrollBehavior: "none" }}
     >
+      {/*
+        The stage is exactly one design frame, scaled uniformly to the screen. This
+        is what guarantees a 13" laptop and a 55" TV render proportionally identical
+        frames: one scale on one element, never a reflow.
+      */}
+      <div
+        data-stage
+        style={{
+          position: "relative",
+          width: design.width,
+          height: design.height,
+          transform: `scale(${scale})`,
+          transformOrigin: "center center",
+          overflow: "hidden",
+        }}
+      >
       <Camera scopeRef={scope}>
         {scenes.map((scene) => {
           const Component = registry[scene.component]
           const state = states.get(scene.id) ?? "far"
           return (
-            <Scene key={scene.id} id={scene.id} placement={scene.camera} state={state}>
+            <Scene
+              key={scene.id}
+              id={scene.id}
+              placement={scene.camera}
+              state={state}
+              overview={camera.isOverview}
+              onSelect={() => camera.goTo(scene.id, "dive")}
+            >
               {Component ? (
                 <Component state={state} camera={camera} props={scene.props ?? {}} />
               ) : (
@@ -90,7 +121,10 @@ export function SceneGraph({ scenes, initialSceneId, registry, onReady }: SceneG
           )
         })}
       </Camera>
+      </div>
+      {overlay ? <div className="pointer-events-none absolute inset-0">{overlay}</div> : null}
     </div>
+    </CameraProvider>
   )
 }
 
