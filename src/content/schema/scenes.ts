@@ -16,7 +16,14 @@ const SceneNodeSchema = z.object({
   transition: TransitionNameSchema.default("glide"),
   next: z.string().optional(),
   back: z.string().optional(),
-  meta: z.object({ idleReturn: z.boolean().optional() }).optional(),
+  meta: z
+    .object({
+      /** Where the idle timer returns to — the attract loop. */
+      idleReturn: z.boolean().optional(),
+      /** Where the "home" control goes — the hub a visitor navigates from. */
+      hub: z.boolean().optional(),
+    })
+    .optional(),
   /** Passed verbatim to the scene component, so one component can serve many scenes. */
   props: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
 })
@@ -56,12 +63,14 @@ export const ScenesSchema = z
       }
     }
 
-    const idleReturns = value.scenes.filter((scene) => scene.meta?.idleReturn)
-    if (idleReturns.length !== 1) {
-      ctx.addIssue({
-        code: "custom",
-        message: `exactly one scene must set meta.idleReturn; found ${idleReturns.length}`,
-      })
+    for (const flag of ["idleReturn", "hub"] as const) {
+      const marked = value.scenes.filter((scene) => scene.meta?.[flag])
+      if (marked.length !== 1) {
+        ctx.addIssue({
+          code: "custom",
+          message: `exactly one scene must set meta.${flag}; found ${marked.length}`,
+        })
+      }
     }
   })
 

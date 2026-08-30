@@ -29,7 +29,7 @@ export function useIdleReset(camera: CameraApi) {
       clearTimeout(timer)
       timer = setTimeout(() => {
         reset()
-        cameraRef.current?.home()
+        cameraRef.current?.attract()
       }, kioskConfig.idleTimeoutMs)
     }
 

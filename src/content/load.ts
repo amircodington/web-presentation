@@ -1,7 +1,9 @@
 import { z } from "zod"
+import activitiesJson from "@content/activities.json"
 import audiencesJson from "@content/audiences.json"
 import brandJson from "@content/brand.json"
 import contactJson from "@content/contact.json"
+import collaborationJson from "@content/collaboration.json"
 import coursesJson from "@content/courses.json"
 import festivalJson from "@content/festival.json"
 import qrJson from "@content/qr.json"
@@ -10,7 +12,9 @@ import resultsJson from "@content/results.json"
 import scenesJson from "@content/scenes.json"
 import workshopsJson from "@content/workshops.json"
 import { BrandSchema } from "./schema/brand"
+import { ActivitiesSchema } from "./schema/activities"
 import { AudiencesSchema, CoursesSchema, WorkshopsSchema } from "./schema/catalogue"
+import { CollaborationSchema } from "./schema/collaboration"
 import { ContactSchema, FestivalSchema, QrSchema } from "./schema/festival"
 import { QuizSchema, ResultsSchema } from "./schema/quiz"
 import { ScenesSchema } from "./schema/scenes"
@@ -47,6 +51,8 @@ const audiences = parse("audiences", AudiencesSchema, audiencesJson)
 const quiz = parse("quiz", QuizSchema, quizJson)
 const results = parse("results", ResultsSchema, resultsJson)
 const scenes = parse("scenes", ScenesSchema, scenesJson)
+const collaboration = parse("collaboration", CollaborationSchema, collaborationJson)
+const activities = parse("activities", ActivitiesSchema, activitiesJson)
 
 /** Invariants that span files and so cannot live in any single schema. */
 function checkCrossReferences(): void {
@@ -58,6 +64,18 @@ function checkCrossReferences(): void {
           `content/results.json: band "${band.id}" recommends unknown product "${id}"`,
         )
       }
+    }
+  }
+
+  const qrKeys = new Set(Object.keys(qr))
+  for (const course of courses) {
+    if (course.qrKey && !qrKeys.has(course.qrKey)) {
+      throw new Error(`content/courses.json: course "${course.id}" has unknown qrKey "${course.qrKey}"`)
+    }
+  }
+  for (const track of [collaboration.schools, collaboration.organizations]) {
+    if (!qrKeys.has(track.qrKey)) {
+      throw new Error(`content/collaboration.json: "${track.id}" has unknown qrKey "${track.qrKey}"`)
     }
   }
 
@@ -84,6 +102,8 @@ export const content = Object.freeze({
   quiz,
   results,
   scenes,
+  collaboration,
+  activities,
 })
 
 export type Content = typeof content

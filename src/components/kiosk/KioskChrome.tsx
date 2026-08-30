@@ -11,7 +11,8 @@ import { useCameraApi } from "@/engine"
 export function KioskChrome() {
   const camera = useCameraApi()
 
-  const atHome = camera.current.meta?.idleReturn === true
+  const atAttract = camera.current.meta?.idleReturn === true
+  const atHub = camera.current.meta?.hub === true
   const inOverview = camera.isOverview
 
   return (
@@ -40,14 +41,16 @@ export function KioskChrome() {
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             className="pointer-events-auto absolute bottom-10 flex w-full justify-center gap-5"
           >
-            {!atHome && camera.current.back ? (
+            {!atAttract && camera.current.back ? (
               <ChromeButton onClick={() => camera.back()}>→ بازگشت</ChromeButton>
             ) : null}
-            {!atHome ? <ChromeButton onClick={() => camera.home()}>خانه</ChromeButton> : null}
+            {!atAttract && !atHub ? (
+              <ChromeButton onClick={() => camera.home()}>خانه</ChromeButton>
+            ) : null}
             <ChromeButton onClick={() => camera.overview()} variant="accent">
               🗺 نقشه کامل
             </ChromeButton>
-            {!atHome && camera.current.next ? (
+            {!atAttract && camera.current.next ? (
               <ChromeButton onClick={() => camera.next()}>ادامه ←</ChromeButton>
             ) : null}
           </motion.div>

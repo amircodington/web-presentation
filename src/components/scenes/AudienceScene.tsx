@@ -14,7 +14,7 @@ export function AudienceScene({ state, camera }: SceneComponentProps) {
   const setAudience = useSession((store) => store.setAudience)
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col justify-center gap-14 rounded-[48px] px-24 py-16">
+    <div className="scene-surface flex h-full w-full flex-col justify-center gap-14 rounded-[48px] px-24 pt-16 pb-52">
       <div className="flex flex-col gap-4">
         <p className="text-[28px] font-medium text-[var(--kiosk-accent)]">شناخت مخاطب</p>
         <h2 className="text-[76px] leading-[1.15] font-bold">کدام یک به تو نزدیک‌تر است؟</h2>

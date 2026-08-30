@@ -5,7 +5,7 @@
     "maxScore": 3,
     "headline": "تازه اول راهی — و این بهترین نقطه شروع است",
     "description": "هنوز رابطه‌ات با پول شکل نگرفته. خبر خوب اینکه عادت‌های مالی در همین مرحله راحت‌ترین ساخته می‌شوند.",
-    "recommendedProducts": ["teen-money", "ws-market-game"],
+    "recommendedProducts": ["masir-servat", "business-school"],
     "audiences": ["student"]
   },
   {
@@ -14,7 +14,7 @@
     "maxScore": 7,
     "headline": "می‌دانی مهم است، ولی هنوز منظم نیستی",
     "description": "آگاهی داری اما ابزار نداری. یک چارچوب ساده، بیشترین تفاوت را برایت می‌سازد.",
-    "recommendedProducts": ["plus18", "ws-first-income"],
+    "recommendedProducts": ["plus18", "masir-servat"],
     "audiences": ["young-adult", "student"]
   },
   {
@@ -22,7 +22,7 @@
     "minScore": 8,
     "maxScore": 10,
     "headline": "پایه‌ات محکم است — وقت ساختن است",
-    "description": "اصول را رعایت می‌کنی. قدم بعدی این است که از مدیریت پول به ساختن درآمد برسی.",
+    "description": "اصول را رعایت می‌کنی. قدم بعدی این است که از مدیریت پول به ساختن درآمد و سرمایه‌گذاری برسی.",
     "recommendedProducts": ["business-school", "plus18"],
     "audiences": ["young-adult", "student"]
   },
@@ -31,8 +31,8 @@
     "minScore": 11,
     "maxScore": 12,
     "headline": "جلوتر از بیشتر مردمی",
-    "description": "برنامه داری و اجرایش می‌کنی. بیشترین ارزش برایت در برنامه‌های پیشرفته و همکاری است.",
-    "recommendedProducts": ["business-school", "org-program"],
+    "description": "برنامه داری و اجرایش می‌کنی. بیشترین ارزش برایت در مسیر تخصصی ترم‌های ۵ و ۶ و همکاری است.",
+    "recommendedProducts": ["business-school", "plus18"],
     "audiences": ["young-adult", "organization"]
   }
 ]

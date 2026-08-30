@@ -1,27 +1,50 @@
 {
-  "designSize": { "width": 1920, "height": 1080 },
+  "designSize": {
+    "width": 1920,
+    "height": 1080
+  },
   "initialScene": "attract",
   "scenes": [
     {
       "id": "attract",
       "component": "AttractScene",
-      "camera": { "x": 0, "y": 0, "scale": 1, "rotate": 0 },
+      "camera": {
+        "x": 0,
+        "y": 0,
+        "scale": 1,
+        "rotate": 0
+      },
       "transition": "drift",
       "next": "home",
-      "meta": { "idleReturn": true }
+      "meta": {
+        "idleReturn": true
+      }
     },
     {
       "id": "home",
       "component": "HomeScene",
-      "camera": { "x": -2800, "y": 0, "scale": 1, "rotate": 0 },
+      "camera": {
+        "x": -2800,
+        "y": 0,
+        "scale": 1,
+        "rotate": 0
+      },
       "transition": "dive",
       "next": "audiences",
-      "back": "attract"
+      "back": "attract",
+      "meta": {
+        "hub": true
+      }
     },
     {
       "id": "audiences",
       "component": "AudienceScene",
-      "camera": { "x": -2800, "y": 1750, "scale": 1.15, "rotate": 0 },
+      "camera": {
+        "x": -2800,
+        "y": 1750,
+        "scale": 1.15,
+        "rotate": 0
+      },
       "transition": "dive",
       "next": "courses",
       "back": "home"
@@ -29,31 +52,131 @@
     {
       "id": "courses",
       "component": "CoursesScene",
-      "camera": { "x": -5900, "y": 0, "scale": 1, "rotate": -3 },
+      "camera": {
+        "x": -5900,
+        "y": 1750,
+        "scale": 1,
+        "rotate": -3
+      },
       "transition": "glide",
-      "next": "workshops",
+      "next": "course-plus18",
       "back": "audiences"
     },
     {
-      "id": "workshops",
-      "component": "WorkshopsScene",
-      "camera": { "x": -8900, "y": -420, "scale": 1, "rotate": 3 },
+      "id": "course-plus18",
+      "component": "CourseDetailScene",
+      "camera": {
+        "x": -8900,
+        "y": 1750,
+        "scale": 1.1,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "next": "course-business-school",
+      "back": "courses",
+      "props": {
+        "courseId": "plus18"
+      }
+    },
+    {
+      "id": "course-business-school",
+      "component": "CourseDetailScene",
+      "camera": {
+        "x": -12000,
+        "y": 1750,
+        "scale": 1.1,
+        "rotate": 0
+      },
+      "transition": "glide",
+      "next": "course-masir-servat",
+      "back": "course-plus18",
+      "props": {
+        "courseId": "business-school"
+      }
+    },
+    {
+      "id": "course-masir-servat",
+      "component": "CourseDetailScene",
+      "camera": {
+        "x": -15100,
+        "y": 1750,
+        "scale": 1.1,
+        "rotate": 0
+      },
       "transition": "glide",
       "next": "offer",
-      "back": "courses"
+      "back": "course-business-school",
+      "props": {
+        "courseId": "masir-servat"
+      }
+    },
+    {
+      "id": "live",
+      "component": "LiveActivitiesScene",
+      "camera": {
+        "x": -2800,
+        "y": -1900,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "next": "collab-schools",
+      "back": "home"
+    },
+    {
+      "id": "collab-schools",
+      "component": "CollaborationScene",
+      "camera": {
+        "x": -6100,
+        "y": -1900,
+        "scale": 1,
+        "rotate": 3
+      },
+      "transition": "glide",
+      "next": "collab-organizations",
+      "back": "live",
+      "props": {
+        "track": "schools"
+      }
+    },
+    {
+      "id": "collab-organizations",
+      "component": "CollaborationScene",
+      "camera": {
+        "x": -9400,
+        "y": -1900,
+        "scale": 1,
+        "rotate": -3
+      },
+      "transition": "glide",
+      "next": "connect",
+      "back": "collab-schools",
+      "props": {
+        "track": "organizations"
+      }
     },
     {
       "id": "offer",
       "component": "OfferScene",
-      "camera": { "x": -8900, "y": 1600, "scale": 1.25, "rotate": 0 },
+      "camera": {
+        "x": -18000,
+        "y": 3900,
+        "scale": 1.25,
+        "rotate": 0
+      },
       "transition": "rise",
       "next": "quiz-intro",
-      "back": "workshops"
+      "back": "course-masir-servat"
     },
     {
       "id": "quiz-intro",
       "component": "QuizIntroScene",
-      "camera": { "x": -2800, "y": 3600, "scale": 1.1, "rotate": 0 },
+      "camera": {
+        "x": -2800,
+        "y": 3900,
+        "scale": 1.1,
+        "rotate": 0
+      },
       "transition": "dive",
       "next": "quiz-q1",
       "back": "home"
@@ -61,43 +184,76 @@
     {
       "id": "quiz-q1",
       "component": "QuizQuestionScene",
-      "camera": { "x": -5000, "y": 3600, "scale": 1, "rotate": 0 },
+      "camera": {
+        "x": -5200,
+        "y": 3900,
+        "scale": 1,
+        "rotate": 0
+      },
       "transition": "snap",
       "next": "quiz-q2",
       "back": "quiz-intro",
-      "props": { "questionIndex": 0 }
+      "props": {
+        "questionIndex": 0
+      }
     },
     {
       "id": "quiz-q2",
       "component": "QuizQuestionScene",
-      "camera": { "x": -7200, "y": 3600, "scale": 1, "rotate": 0 },
+      "camera": {
+        "x": -7400,
+        "y": 3900,
+        "scale": 1,
+        "rotate": 0
+      },
       "transition": "snap",
       "next": "quiz-q3",
       "back": "quiz-q1",
-      "props": { "questionIndex": 1 }
+      "props": {
+        "questionIndex": 1
+      }
     },
     {
       "id": "quiz-q3",
       "component": "QuizQuestionScene",
-      "camera": { "x": -9400, "y": 3600, "scale": 1, "rotate": 0 },
+      "camera": {
+        "x": -9600,
+        "y": 3900,
+        "scale": 1,
+        "rotate": 0
+      },
       "transition": "snap",
       "next": "quiz-q4",
       "back": "quiz-q2",
-      "props": { "questionIndex": 2 }
+      "props": {
+        "questionIndex": 2
+      }
     },
     {
       "id": "quiz-q4",
       "component": "QuizQuestionScene",
-      "camera": { "x": -11600, "y": 3600, "scale": 1, "rotate": 0 },
+      "camera": {
+        "x": -11800,
+        "y": 3900,
+        "scale": 1,
+        "rotate": 0
+      },
       "transition": "snap",
       "next": "quiz-result",
       "back": "quiz-q3",
-      "props": { "questionIndex": 3 }
+      "props": {
+        "questionIndex": 3
+      }
     },
     {
       "id": "quiz-result",
       "component": "QuizResultScene",
-      "camera": { "x": -11600, "y": 1500, "scale": 1.3, "rotate": 0 },
+      "camera": {
+        "x": -14000,
+        "y": 3900,
+        "scale": 1.2,
+        "rotate": 0
+      },
       "transition": "rise",
       "next": "connect",
       "back": "quiz-q4"
@@ -105,7 +261,12 @@
     {
       "id": "connect",
       "component": "ConnectScene",
-      "camera": { "x": -5900, "y": -1900, "scale": 1.1, "rotate": 0 },
+      "camera": {
+        "x": -6100,
+        "y": 0,
+        "scale": 1.1,
+        "rotate": 0
+      },
       "transition": "dive",
       "back": "home"
     }

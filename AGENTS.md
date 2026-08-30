@@ -168,7 +168,12 @@ These come from the physical reality of an unattended screen in a loud hall:
 - **60fps or it does not ship.** Animate `transform` and `opacity` only. Never animate
   `width`, `height`, `top`, or `left`.
 - **Respect `prefers-reduced-motion`**, but keep the kiosk's own default expressive.
-- **No dead ends.** Every scene has a visible way back to home and to the attract loop.
+- **No dead ends.** Every scene has a visible way back to the hub and to the attract loop.
+- **Reserve chrome clearance.** Scenes carry `pb-52` so the persistent controls never
+  cover content. Scenes must also not overlap on the canvas — both are enforced by
+  `npm run validate:content` and a browser measurement pass.
+- **B2B and B2G prices are never displayed.** Both source briefs quote per engagement;
+  a figure on a public screen undercuts the conversation the booth exists to start.
 
 ## 9. Before you say a task is done
 

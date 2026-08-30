@@ -25,7 +25,7 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
   const columns = Math.max(1, courses.length)
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col justify-center gap-12 rounded-[48px] px-24 py-16">
+    <div className="scene-surface flex h-full w-full flex-col justify-center gap-12 rounded-[48px] px-24 pt-16 pb-52">
       <div className="flex items-end justify-between gap-10">
         <div className="flex flex-col gap-4">
           <p className="text-[28px] font-medium text-[var(--kiosk-accent)]">دوره‌ها</p>
@@ -33,8 +33,8 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
             {audience ? "این‌ها برای تو انتخاب شده‌اند" : "مسیرهای یادگیری"}
           </h2>
         </div>
-        <Button variant="ghost" onClick={() => camera.goTo("workshops")}>
-          کارگاه‌ها ←
+        <Button variant="ghost" onClick={() => camera.goTo("live")}>
+          فعالیت‌های زنده ←
         </Button>
       </div>
 
@@ -48,12 +48,15 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
         {courses.map((course, index) => {
           const price = priceFor(course.id)
           return (
-            <motion.article
+            <motion.button
               key={course.id}
+              type="button"
+              onClick={() => camera.goTo(`course-${course.id}`, "dive")}
               initial={{ opacity: 0, y: 60 }}
               animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
               transition={{ duration: 0.55, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
-              className="flex min-h-[430px] flex-col justify-between rounded-3xl border-2 border-white/10 bg-white/[0.04] p-10"
+              whileTap={{ scale: 0.97 }}
+              className="flex min-h-[430px] cursor-pointer flex-col justify-between rounded-3xl border-2 border-white/10 bg-white/[0.04] p-10 text-start"
             >
               <div className="flex flex-col gap-5">
                 <h3 className="text-[42px] leading-tight font-bold">{course.title}</h3>
@@ -67,8 +70,11 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
                 ) : null}
               </div>
 
-              <PriceBlock regular={price.regular} festival={price.festival} />
-            </motion.article>
+              <div className="flex w-full items-baseline justify-between gap-4">
+                <PriceBlock regular={price.regular} festival={price.festival} />
+                <span className="text-[26px] text-[var(--kiosk-accent)]">جزئیات ←</span>
+              </div>
+            </motion.button>
           )
         })}
       </div>
@@ -83,7 +89,7 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
  */
 function PriceBlock({ regular, festival }: { regular?: number; festival?: number }) {
   if (regular === undefined && festival === undefined) {
-    return <p className="text-[30px] text-[var(--kiosk-muted)]">تماس بگیرید</p>
+    return <p className="text-[28px] text-[var(--kiosk-muted)]">قیمت را در غرفه بپرسید</p>
   }
 
   return (

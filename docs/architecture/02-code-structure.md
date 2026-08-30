@@ -42,6 +42,8 @@ content/
 ├── offers.json          # festival pricing overrides
 ├── contact.json         # phone, site, instagram, bale
 ├── qr.json              # every QR destination URL, keyed by purpose
+├── collaboration.json   # the B2B (schools) and B2G (organizations) tracks
+├── activities.json      # live mini-workshops run at the booth
 └── scenes.json          # scene graph: id, camera position, component, transition
 ```
 
