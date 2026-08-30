@@ -188,6 +188,53 @@ The engine plays it on activation and reverses it on deactivation. This split is
 the camera never needs to know what is inside a scene, and a scene never needs to know where
 it sits on the canvas.
 
+## Fitting the design space to a screen
+
+Scenes are authored once at a fixed design size (`ENGINE_DESIGN_WIDTH` ×
+`ENGINE_DESIGN_HEIGHT`). A **stage** element of exactly that size sits between the
+viewport and the camera, and carries a single uniform `scale()`:
+
+```text
+viewport   100dvw × 100dvh, grid place-items-center
+└── stage  1920×1080, transform: scale(fitScale(design, screen))
+    └── camera
+        └── scenes
+```
+
+`fitScale` is `min(screen.w / design.w, screen.h / design.h)` — the limiting axis,
+so nothing is ever cropped or distorted. This is what makes a 13" laptop and a 55"
+TV render **proportionally identical** frames; verified by measuring an element's
+centre as a fraction of the stage at 1440×900, 1920×1080 and 3840×2160, which agree
+to four decimal places.
+
+Percentage-based sizing cannot promise that: percentages reflow when the aspect
+ratio changes, so a 16:10 laptop and a 16:9 TV would produce different line breaks
+and different relative type sizes. The cost of the stage approach is letterbox bars
+when the aspect ratios differ; they are painted in the kiosk background and are
+invisible in practice.
+
+Because the camera always works in design space, its maths is resolution
+independent. Only the gesture layer needs the stage scale, so a drag moves the
+canvas by the distance the finger actually travelled.
+
+## The overview map
+
+`camera.overview()` frames the entire canvas at once, so a visitor can see the whole
+presentation and jump anywhere in one tap. It is built from `sceneExtent` (the box
+enclosing every scene, accounting for each scene's own size and rotation) and
+`fitBounds`, which accepts asymmetric padding — the map reserves extra room at the
+bottom so the chrome bar does not cover the scenes it exists to let you choose
+between.
+
+While the map is open every scene is selectable, not just the active one, and each
+gets a full-card hit target. Shrunk to thumbnail size, individual buttons inside a
+scene are far too small to aim at.
+
+Scenes therefore clip to their own bounds (`overflow: hidden`). Without that,
+decorative layers that deliberately overflow — the attract scene's ambient orbs, the
+offer scene's radial rays — would paint outside the box `sceneExtent` computes, and
+the outermost scenes would be clipped by the stage.
+
 ## The RTL trap
 
 The canvas is a coordinate space, not a layout. Positioning it with logical

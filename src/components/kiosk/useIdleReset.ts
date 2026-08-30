@@ -15,7 +15,7 @@ const ACTIVITY_EVENTS = ["pointerdown", "pointermove", "keydown", "wheel"] as co
  * their answers on screen for the next person. Pointer, keyboard and wheel all
  * count as activity, so the timer never fires while someone is still interacting.
  */
-export function useIdleReset(camera: CameraApi | undefined) {
+export function useIdleReset(camera: CameraApi) {
   const reset = useSession((store) => store.reset)
   const cameraRef = useRef(camera)
   useInsertionEffect(() => {
@@ -23,7 +23,6 @@ export function useIdleReset(camera: CameraApi | undefined) {
   }, [camera])
 
   useEffect(() => {
-    if (!camera) return
     let timer: ReturnType<typeof setTimeout>
 
     const schedule = () => {

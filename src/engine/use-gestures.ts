@@ -29,13 +29,17 @@ interface Pointer {
 export function useGestures(
   viewportRef: React.RefObject<HTMLElement | null>,
   camera: CameraApi,
+  /** Stage scale, so a drag moves the canvas by the distance the finger travelled. */
+  stageScale = 1,
 ) {
   // Held in a ref so the listeners below never re-subscribe mid-gesture: swapping
   // handlers while a finger is down loses the pointer's start position.
   const cameraRef = useRef(camera)
+  const scaleRef = useRef(stageScale)
   useInsertionEffect(() => {
     cameraRef.current = camera
-  }, [camera])
+    scaleRef.current = stageScale || 1
+  }, [camera, stageScale])
 
   useEffect(() => {
     const element = viewportRef.current
@@ -75,7 +79,8 @@ export function useGestures(
         const distance = pinchDistance(pointers)
         if (lastPinchDistance > 0) {
           const factor = distance / lastPinchDistance
-          cameraRef.current.nudge({ scale: clampFactor(factor), x: dx / 2, y: dy / 2 })
+          const s = scaleRef.current
+          cameraRef.current.nudge({ scale: clampFactor(factor), x: dx / 2 / s, y: dy / 2 / s })
         }
         lastPinchDistance = distance
       }

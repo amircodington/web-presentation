@@ -1,0 +1,222 @@
+{
+  "id": "business-school",
+  "title": "Business School",
+  "title_fa": "مدرسه کسب‌وکار باشگاه ثروت",
+  "tagline": "شاه‌راهی به سوی آینده‌ای روشن و توانگر",
+  "positioning": {
+    "short": "مسیر بلندمدت آموزش مالی، اقتصادی، سرمایه‌گذاری و کسب‌وکار با رویکرد تعاملی و تجربه‌محور",
+    "description": "Business School در باغ کتاب تهران بستری نوآورانه برای آموزش مفاهیم مالی، اقتصادی و کارآفرینی است که یادگیری را با تجربه‌های واقعی، بازی‌های آموزشی و شبیه‌سازی بازارهای مالی ترکیب می‌کند.",
+    "location": "باغ کتاب تهران",
+    "delivery_modes": [
+      "حضوری",
+      "آنلاین",
+      "ترکیبی"
+    ]
+  },
+  "audience": {
+    "source_description": [
+      "نوجوانان",
+      "دانشجویان",
+      "علاقه‌مندان"
+    ],
+    "exact_age_range": "TBD",
+    "entry_requirements": "TBD"
+  },
+  "goals": [
+    "پرورش ذهن اقتصادی",
+    "مدیریت آگاهانه پول",
+    "شناخت بازارهای مالی و سرمایه‌گذاری",
+    "تقویت تفکر تحلیلی و تصمیم‌گیری مالی",
+    "ساخت پرتفوی سرمایه‌گذاری شخصی",
+    "طراحی مسیر رشد اقتصادی و شغلی"
+  ],
+  "learning_model": [
+    "آموزش مفهومی",
+    "تجربه عملی",
+    "بازی آموزشی",
+    "شبیه‌سازی بازارهای مالی",
+    "تمرین و پروژه",
+    "ارزیابی و آزمون"
+  ],
+  "partners": [
+    "مؤسسه آموزشی علامه حلی",
+    "شتاب‌دهنده نوآوری‌های آموزشی سرآمد"
+  ],
+  "pathway": {
+    "terms_count": 6,
+    "certificate_stage": true,
+    "final_outcome": "تعیین مسیر شغلی و سرمایه‌گذاری",
+    "term_structure": {
+      "sessions_per_term": 16,
+      "weeks_per_term": 8
+    },
+    "note": "در کاتالوگ، ترم‌های 5 و 6 به عنوان مرحله مهارت‌های تخصصی معرفی شده‌اند."
+  },
+  "general_curriculum": [
+    {
+      "id": "trade-basics",
+      "title": "الفبای تجارت",
+      "topics": [
+        "انواع بازارهای مالی",
+        "معاملات فروش",
+        "انواع روش‌های معامله‌گری و سرمایه‌گذاری"
+      ]
+    },
+    {
+      "id": "economics-basics",
+      "title": "مبانی اقتصاد",
+      "topics": [
+        "شناخت پول",
+        "عرضه و تقاضا",
+        "بانک و وظایف آن",
+        "تورم و بیکاری"
+      ]
+    },
+    {
+      "id": "technical-basics",
+      "title": "مبانی تحلیل تکنیکال",
+      "topics": [
+        "کندل‌شناسی",
+        "انواع روندها",
+        "آشنایی با انواع سطوح"
+      ]
+    },
+    {
+      "id": "micro-macro-economics",
+      "title": "اقتصاد خرد و کلان",
+      "topics": [
+        "رکود",
+        "نرخ بهره و GDP",
+        "سیاست‌های پولی و ابزارها"
+      ]
+    },
+    {
+      "id": "money-investing",
+      "title": "مدیریت پول و سرمایه‌گذاری",
+      "topics": [
+        "مدیریت مالی شخصی",
+        "بررسی ریسک و بازده در بازارهای مالی",
+        "اصول سرمایه‌گذاری و انواع دارایی‌ها"
+      ]
+    },
+    {
+      "id": "technical-intermediate",
+      "title": "تحلیل تکنیکال مقدماتی",
+      "topics": [
+        "الگوهای کندلی و کلاسیک",
+        "انواع شکست",
+        "آشنایی با اندیکاتورها و اسیلاتورها"
+      ]
+    },
+    {
+      "id": "crypto-web3",
+      "title": "رمزارز، متاورس و بلاک‌چین",
+      "topics": [
+        "بلاک‌چین و کارکرد آن",
+        "رمزارزها",
+        "وب 3 و متاورس",
+        "NFT و اوراکل"
+      ]
+    },
+    {
+      "id": "market-psychology-business-analysis",
+      "title": "روان‌شناسی بازارهای مالی و تحلیل کسب‌وکار",
+      "topics": [
+        "تله‌ها و سوگیری‌های ذهن",
+        "شناخت نیازهای کسب‌وکار، فرصت‌ها و مشکلات",
+        "گیمیفیکیشن"
+      ]
+    },
+    {
+      "id": "digital-marketing",
+      "title": "دیجیتال مارکتینگ",
+      "topics": [
+        "بازاریابی محتوایی",
+        "استراتژی مارکتینگ",
+        "کمپین‌های تبلیغاتی"
+      ]
+    },
+    {
+      "id": "algo-ai",
+      "title": "الگوترید و هوش مصنوعی",
+      "topics": [
+        "الگوریتم و پایگاه داده",
+        "پرامپت‌نویسی",
+        "آشنایی با زبان برنامه‌نویسی MQL"
+      ]
+    },
+    {
+      "id": "portfolio-management",
+      "title": "Portfolio Management",
+      "topics": [
+        "Asset classes and investment portfolio",
+        "Analyzing financial reports",
+        "Financial strategies and plan"
+      ],
+      "note": "طبق کاتالوگ، این درس برای آمادگی بیشتر جهت آزمون‌های خارج از کشور به زبان انگلیسی ارائه خواهد شد."
+    },
+    {
+      "id": "technical-advanced",
+      "title": "تحلیل تکنیکال پیشرفته",
+      "topics": [
+        "آشنایی با انواع سطوح و ابزارها",
+        "سایکل‌های بازار",
+        "استراتژی"
+      ]
+    }
+  ],
+  "specializations_terms_5_6": [
+    "تکنیکالیست و چارتیست (پرایس اکشن پیشرفته)",
+    "تحلیلگر فاندامنتال و سنتیمنت",
+    "الگوریتمیک تریدینگ و ساخت اکسپرت‌های معاملاتی",
+    "مدیریت کسب‌وکار و مارکتینگ"
+  ],
+  "certificate": {
+    "available": true,
+    "description": "در بروشور به ارائه گواهی و نیز گواهی بین‌المللی تخصصی برای پذیرفته‌شدگان مرحله تخصصی اشاره شده است.",
+    "issuer_details": "TBD_CONFIRM"
+  },
+  "pricing": {
+    "regular_price": "TBD",
+    "festival_price": "TBD",
+    "online_discount_percent": "TBD",
+    "deposit_allowed": "TBD"
+  },
+  "schedule": {
+    "next_start_date": "TBD",
+    "days": "TBD",
+    "time": "TBD"
+  },
+  "registration": {
+    "mode": [
+      "ثبت‌نام حضوری در غرفه",
+      "پیام به پشتیبانی باشگاه ثروت"
+    ],
+    "support_phone": "09912987688",
+    "telegram": {
+      "username": "@SERVATCLUBIR",
+      "url": "https://t.me/SERVATCLUBIR"
+    },
+    "bale": {
+      "username": "@bashgah_servat",
+      "url": "https://ble.ir/bashgah_servat"
+    },
+    "website_from_brochure": "www.servatclub.ir",
+    "email_from_brochure": "info@servatclub.ir",
+    "brochure_social_handle": "@servatclubiran"
+  },
+  "kiosk": {
+    "hero_title": "از پول و اقتصاد تا سرمایه‌گذاری و کسب‌وکار",
+    "hero_subtitle": "یک مسیر ۶ ترمی برای ساختن ذهن اقتصادی، مهارت مالی و مسیر حرفه‌ای آینده.",
+    "primary_cta": "مسیر Business School رو ببین",
+    "secondary_cta": "این دوره برای من مناسبه؟",
+    "detail_cta": "جزئیات ترم‌ها",
+    "registration_cta": "ثبت‌نام / مشاوره",
+    "recommended_for": [
+      "student",
+      "teen",
+      "young-adult",
+      "parent"
+    ]
+  }
+}

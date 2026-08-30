@@ -1,0 +1,175 @@
+{
+  "id": "schools-b2b",
+  "title": "همکاری با مدارس",
+  "positioning": "دو مدل اصلی همکاری آموزشی با مدارس + امکان طراحی برنامه اختصاصی",
+  "audience": {
+    "primary": [
+      "مدیر مدرسه",
+      "معاون آموزشی",
+      "معاون پرورشی",
+      "مسئول فوق‌برنامه",
+      "مؤسس مدرسه"
+    ],
+    "school_levels": [
+      "متوسطه اول",
+      "متوسطه دوم"
+    ]
+  },
+  "products": [
+    {
+      "id": "school-one-day-workshop",
+      "title": "مسیر ثروت | روز تجربه سواد مالی و سرمایه‌گذاری",
+      "type": "one-day-workshop",
+      "duration": "حدود 8 ساعت",
+      "minimum_students": 25,
+      "locations": [
+        "مدرسه",
+        "باغ کتاب تهران"
+      ],
+      "delivery_mode": [
+        "حضوری"
+      ],
+      "core_content": [
+        "Cashflow و جریان نقدی",
+        "مدیریت پول و تصمیم‌گیری مالی",
+        "عرضه و تقاضا و نوسان قیمت",
+        "شناخت بازارهای مالی",
+        "سرمایه‌گذاری و تفاوت آن با ترید",
+        "ریسک و بازده",
+        "تحلیل تکنیکال مقدماتی",
+        "فاندامنتال مقدماتی",
+        "آشنایی با هوش مصنوعی و الگوتریدینگ",
+        "چالش نهایی و نقشه شخصی"
+      ],
+      "school_sales_message": "یک روز تجربه عملی سواد مالی برای دانش‌آموزان؛ از مدیریت پول و تصمیم‌گیری مالی تا شناخت سرمایه‌گذاری و بازارهای نوین.",
+      "pricing_mode": "custom_quote",
+      "price_display": "متناسب با تعداد دانش‌آموز و مدل اجرا"
+    },
+    {
+      "id": "business-school-in-school",
+      "title": "Business School در مدرسه شما",
+      "type": "long-term-program",
+      "terms": 6,
+      "sessions_per_term": 16,
+      "weeks_per_term": 8,
+      "entry_term": 1,
+      "school_sales_message": "یک Business School واقعی داخل مدرسه‌تان راه‌اندازی کنید.",
+      "core_path": [
+        "پایه مالی و اقتصادی",
+        "بازار و سرمایه‌گذاری",
+        "کسب‌وکار و مارکتینگ",
+        "تحلیل و تصمیم‌گیری",
+        "مهارت‌های تخصصی"
+      ],
+      "pricing_mode": "custom_quote",
+      "price_display": "متناسب با تعداد دانش‌آموز، تعداد گروه‌ها و مدل اجرا"
+    }
+  ],
+  "custom_program": {
+    "id": "school-custom-program",
+    "title": "برنامه اختصاصی برای مدرسه من",
+    "purpose": "انعطاف برای مدارس با نیاز، زمان‌بندی، تعداد یا بودجه متفاوت",
+    "examples": [
+      "اجرای 8 ساعت در دو روز",
+      "اجرای ویژه یک پایه تحصیلی",
+      "برنامه برای 50 تا 200 دانش‌آموز",
+      "برنامه ترکیبی دانش‌آموز و والدین",
+      "هفته مهارت‌های زندگی",
+      "رویداد مالی مناسبتی",
+      "نسخه سفارشی Business School"
+    ],
+    "pricing_mode": "custom_quote"
+  },
+  "lead_form": {
+    "title": "درخواست همکاری با مدرسه",
+    "required_fields": [
+      {
+        "key": "school_name",
+        "label": "نام مدرسه",
+        "type": "text"
+      },
+      {
+        "key": "contact_name",
+        "label": "نام مدیر / مسئول",
+        "type": "text"
+      },
+      {
+        "key": "mobile",
+        "label": "شماره تماس",
+        "type": "tel"
+      },
+      {
+        "key": "student_count",
+        "label": "تعداد تقریبی دانش‌آموز",
+        "type": "number"
+      }
+    ],
+    "optional_fields": [
+      {
+        "key": "city_region",
+        "label": "شهر / منطقه",
+        "type": "text"
+      },
+      {
+        "key": "interest",
+        "label": "علاقه‌مند به",
+        "type": "multi_select",
+        "options": [
+          "ورکشاپ یک‌روزه",
+          "Business School",
+          "هر دو",
+          "برنامه اختصاصی"
+        ]
+      },
+      {
+        "key": "notes",
+        "label": "توضیحات",
+        "type": "textarea"
+      }
+    ],
+    "lead_tag": "SCHOOL_LEAD"
+  },
+  "contact": {
+    "phone": "09912987688",
+    "telegram": "@SERVATCLUBIR",
+    "telegram_url": "https://t.me/SERVATCLUBIR",
+    "bale": "@bashgah_servat",
+    "bale_url": "https://ble.ir/bashgah_servat"
+  },
+  "kiosk": {
+    "route": "/collaboration/schools",
+    "hero_title": "برای دانش‌آموزانتان کدام مسیر مناسب‌تر است؟",
+    "hero_subtitle": "از یک روز تجربه مالی تا راه‌اندازی Business School در مدرسه شما.",
+    "cards": [
+      {
+        "title": "یک روز متفاوت",
+        "subtitle": "ورکشاپ 8 ساعته سواد مالی، سرمایه‌گذاری و بازار",
+        "cta": "مشاهده برنامه"
+      },
+      {
+        "title": "یک مسیر بلندمدت",
+        "subtitle": "Business School در مدرسه شما",
+        "cta": "مشاهده مسیر 6 ترمی"
+      },
+      {
+        "title": "برنامه اختصاصی",
+        "subtitle": "برای نیاز، بودجه و زمان‌بندی خاص مدرسه",
+        "cta": "درخواست طراحی برنامه"
+      }
+    ],
+    "primary_cta": "درخواست همکاری",
+    "secondary_cta": "QR همکاری مدارس",
+    "price_policy": "Do not show fixed per-student price on kiosk"
+  },
+  "analytics": {
+    "events": [
+      "school_page_viewed",
+      "school_workshop_viewed",
+      "school_business_school_viewed",
+      "school_custom_program_viewed",
+      "school_lead_started",
+      "school_lead_submitted",
+      "school_qr_viewed"
+    ]
+  }
+}

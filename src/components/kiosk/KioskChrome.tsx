@@ -2,36 +2,56 @@
 
 import { AnimatePresence, motion } from "motion/react"
 import { kioskConfig } from "@/config/kiosk.config"
-import type { CameraApi } from "@/engine"
+import { useCameraApi } from "@/engine"
 
 /**
  * Persistent controls that sit above the canvas rather than on it, so they do not
  * move with the camera. Every scene has a visible way home — no dead ends.
  */
-export function KioskChrome({ camera }: { camera: CameraApi | undefined }) {
-  if (!camera) return null
+export function KioskChrome() {
+  const camera = useCameraApi()
+
   const atHome = camera.current.meta?.idleReturn === true
+  const inOverview = camera.isOverview
 
   return (
     <>
-      <AnimatePresence>
-        {!atHome ? (
+      <AnimatePresence mode="popLayout">
+        {inOverview ? (
           <motion.div
+            key="overview-bar"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="pointer-events-auto absolute inset-inline-start-0 bottom-10 flex w-full justify-center gap-5"
+            className="pointer-events-auto absolute bottom-10 flex w-full flex-col items-center gap-5"
           >
-            {camera.current.back ? (
+            <p className="rounded-full bg-black/60 px-8 py-3 text-[26px] text-white/70 backdrop-blur-md">
+              روی هر بخش بزنید تا به آن بروید
+            </p>
+            <ChromeButton onClick={() => camera.exitOverview()}>بستن نقشه</ChromeButton>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="nav-bar"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 40 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="pointer-events-auto absolute bottom-10 flex w-full justify-center gap-5"
+          >
+            {!atHome && camera.current.back ? (
               <ChromeButton onClick={() => camera.back()}>→ بازگشت</ChromeButton>
             ) : null}
-            <ChromeButton onClick={() => camera.home()}>خانه</ChromeButton>
-            {camera.current.next ? (
+            {!atHome ? <ChromeButton onClick={() => camera.home()}>خانه</ChromeButton> : null}
+            <ChromeButton onClick={() => camera.overview()} variant="accent">
+              🗺 نقشه کامل
+            </ChromeButton>
+            {!atHome && camera.current.next ? (
               <ChromeButton onClick={() => camera.next()}>ادامه ←</ChromeButton>
             ) : null}
           </motion.div>
-        ) : null}
+        )}
       </AnimatePresence>
 
       <span className="pointer-events-none absolute bottom-4 left-6 text-[16px] text-white/20">
@@ -41,12 +61,25 @@ export function KioskChrome({ camera }: { camera: CameraApi | undefined }) {
   )
 }
 
-function ChromeButton({ children, onClick }: { children: string; onClick: () => void }) {
+function ChromeButton({
+  children,
+  onClick,
+  variant = "ghost",
+}: {
+  children: string
+  onClick: () => void
+  variant?: "ghost" | "accent"
+}) {
+  const skin =
+    variant === "accent"
+      ? "border-[var(--kiosk-accent)]/50 bg-[var(--kiosk-accent)]/15 text-[var(--kiosk-accent)]"
+      : "border-white/12 bg-black/50 text-[var(--kiosk-text)]"
+
   return (
     <button
       type="button"
       onClick={onClick}
-      className="min-h-[88px] rounded-full border-2 border-white/12 bg-black/50 px-10 text-[30px] font-semibold backdrop-blur-md"
+      className={`min-h-[88px] cursor-pointer rounded-full border-2 px-10 text-[30px] font-semibold backdrop-blur-md ${skin}`}
     >
       {children}
     </button>
