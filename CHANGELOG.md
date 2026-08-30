@@ -29,6 +29,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `meta.idleReturn`
 - **ops:** content validation now rejects overlapping scenes and unknown `qrKey`s
 
+- **games:** three playable booth activities on the kiosk — token allocation,
+  price prediction, and scam judgement — covering all four activities from the
+  activations brief
+- **ui:** light scheme built on one sharp red, with card/border/on-accent tokens
+
 ### Fixed
 - **engine:** canvas coordinate space no longer mirrors under `dir="rtl"`; scaled scenes were
   offset by their own scale factor
@@ -36,3 +41,5 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **kiosk:** the "home" control returned to the attract loop instead of the hub
 - **kiosk:** the chrome bar covered the bottom of scene content
 - **engine:** the overview map held a stale camera and never showed its close control
+- **engine:** the scaled stage was centred by layout, so it sat partly off the left
+  edge of the viewport under RTL

@@ -156,6 +156,70 @@
       }
     },
     {
+      "id": "game-challenge-100m",
+      "component": "GameScene",
+      "camera": {
+        "x": -2800,
+        "y": -4400,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "next": "game-price-mystery",
+      "back": "live",
+      "props": {
+        "activityId": "challenge-100m"
+      }
+    },
+    {
+      "id": "game-price-mystery",
+      "component": "GameScene",
+      "camera": {
+        "x": -6100,
+        "y": -4400,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "next": "game-scam-or-opportunity",
+      "back": "live",
+      "props": {
+        "activityId": "price-mystery"
+      }
+    },
+    {
+      "id": "game-scam-or-opportunity",
+      "component": "GameScene",
+      "camera": {
+        "x": -9400,
+        "y": -4400,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "next": "game-build-a-portfolio",
+      "back": "live",
+      "props": {
+        "activityId": "scam-or-opportunity"
+      }
+    },
+    {
+      "id": "game-build-a-portfolio",
+      "component": "GameScene",
+      "camera": {
+        "x": -12700,
+        "y": -4400,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "next": "quiz-intro",
+      "back": "live",
+      "props": {
+        "activityId": "build-a-portfolio"
+      }
+    },
+    {
       "id": "offer",
       "component": "OfferScene",
       "camera": {
