@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+/*
+ * The kiosk is designed dark on purpose: a bright screen in an exhibition hall
+ * is a mirror. Saturated accents on a dark ground hold contrast under overhead
+ * lighting and let video sit in the page instead of floating on it.
+ *
+ * Colour values mirror content/brand.json. KioskTheme rewrites them at runtime
+ * from that file, so a rebrand is a JSON edit.
+ */
+@theme {
+  --color-kiosk-bg: #070b14;
+  --color-kiosk-surface: #0f1626;
+  --color-kiosk-accent: #f2b33d;
+  --color-kiosk-accent-soft: #7a5c1e;
+  --color-kiosk-text: #f5f7fa;
+  --color-kiosk-muted: #93a1b8;
+
+  --ease-arrive: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-leave: cubic-bezier(0.4, 0, 1, 1);
+
+  --duration-instant: 120ms;
+  --duration-quick: 240ms;
+  --duration-base: 450ms;
+  --duration-slow: 900ms;
+  --duration-cinematic: 1400ms;
+}
+
+:root {
+  --kiosk-bg: var(--color-kiosk-bg);
+  --kiosk-surface: var(--color-kiosk-surface);
+  --kiosk-accent: var(--color-kiosk-accent);
+  --kiosk-accent-soft: var(--color-kiosk-accent-soft);
+  --kiosk-text: var(--color-kiosk-text);
+  --kiosk-muted: var(--color-kiosk-muted);
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--kiosk-bg);
+  color: var(--kiosk-text);
+  /* Persian ascenders and diacritics collide at Latin line heights. */
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* On a kiosk, every one of these is a visible failure rather than a feature. */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+input,
+textarea {
+  user-select: text;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@utility scene-surface {
+  background:
+    radial-gradient(120% 80% at 80% 0%, color-mix(in oklab, var(--kiosk-accent) 12%, transparent), transparent 60%),
+    linear-gradient(180deg, var(--kiosk-surface), var(--kiosk-bg));
+}
+
+@keyframes kiosk-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+@keyframes kiosk-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
+}
+
+@keyframes kiosk-sheen {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
