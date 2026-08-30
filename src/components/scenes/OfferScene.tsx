@@ -20,15 +20,15 @@ export function OfferScene({ state, camera }: SceneComponentProps) {
   }
 
   return (
-    <div className="relative flex h-full w-full flex-col items-center justify-center gap-12 overflow-hidden rounded-[48px] bg-[var(--kiosk-accent)] px-24 pb-52 text-center text-[#12160f]">
+    <div className="relative flex h-full w-full flex-col items-center justify-center gap-12 overflow-hidden rounded-[48px] bg-[var(--kiosk-accent)] px-24 pb-52 text-center text-[var(--kiosk-on-accent)]">
       <motion.div
         aria-hidden
         animate={isActive ? { rotate: 360 } : {}}
         transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-        className="pointer-events-none absolute -inset-[40%] opacity-[0.07]"
+        className="pointer-events-none absolute -inset-[40%] opacity-[0.12]"
         style={{
           background:
-            "repeating-conic-gradient(#12160f 0deg 10deg, transparent 10deg 20deg)",
+            "repeating-conic-gradient(var(--kiosk-on-accent) 0deg 10deg, transparent 10deg 20deg)",
         }}
       />
 
@@ -58,7 +58,11 @@ export function OfferScene({ state, camera }: SceneComponentProps) {
         </p>
       ) : null}
 
-      <Button variant="ghost" className="relative !border-[#12160f]/25 !text-[#12160f]" onClick={() => camera.goTo("quiz-intro")}>
+      <Button
+        variant="ghost"
+        className="relative !border-[var(--kiosk-on-accent)] !bg-[var(--kiosk-on-accent)] !text-[var(--kiosk-accent)]"
+        onClick={() => camera.goTo("quiz-intro")}
+      >
         ببین کدام دوره مناسب توست ←
       </Button>
     </div>

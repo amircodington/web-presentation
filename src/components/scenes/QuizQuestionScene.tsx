@@ -59,7 +59,7 @@ export function QuizQuestionScene({ state, camera, props }: SceneComponentProps)
               className={`min-h-[128px] rounded-3xl border-2 px-10 text-start text-[36px] font-semibold transition-colors duration-[var(--duration-instant)] ${
                 isChosen
                   ? "border-[var(--kiosk-accent)] bg-[var(--kiosk-accent)]/15 text-[var(--kiosk-accent)]"
-                  : "border-white/10 bg-white/[0.04]"
+                  : "card-surface"
               }`}
             >
               {option.label}

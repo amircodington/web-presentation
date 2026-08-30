@@ -98,8 +98,10 @@ function OverviewTarget({
       aria-label={`رفتن به ${id}`}
       className="absolute inset-0 cursor-pointer rounded-[48px] transition-colors"
       style={{
-        border: active ? "6px solid var(--kiosk-accent)" : "6px solid rgba(255,255,255,0.10)",
-        background: active ? "transparent" : "rgba(7,11,20,0.35)",
+        border: `6px solid ${active ? "var(--kiosk-accent)" : "var(--kiosk-border)"}`,
+        background: active
+          ? "transparent"
+          : "color-mix(in oklab, var(--kiosk-bg) 45%, transparent)",
       }}
     />
   )

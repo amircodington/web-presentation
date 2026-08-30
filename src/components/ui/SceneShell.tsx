@@ -25,7 +25,7 @@ export function SceneShell({ state, eyebrow, title, children, className = "" }: 
 
   return (
     <div
-      className={`scene-surface flex h-full w-full flex-col justify-center gap-10 rounded-[48px] px-24 py-20 ring-1 ring-white/5 ${className}`}
+      className={`scene-surface flex h-full w-full flex-col justify-center gap-10 rounded-[48px] px-24 py-20  ${className}`}
       style={{ opacity: state === "far" ? 0.45 : 1 }}
     >
       {eyebrow ? (

@@ -37,7 +37,7 @@ export function HomeScene({ state, camera }: SceneComponentProps) {
             animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
             transition={{ duration: 0.55, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
             whileTap={{ scale: 0.97 }}
-            className="flex min-h-[210px] cursor-pointer flex-col justify-between rounded-3xl border-2 border-white/10 bg-white/[0.04] p-9 text-start"
+            className="flex min-h-[210px] cursor-pointer flex-col justify-between rounded-3xl card-surface p-9 text-start"
           >
             <span className="text-[60px]">{path.icon}</span>
             <span className="flex flex-col gap-1">

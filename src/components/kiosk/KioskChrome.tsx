@@ -27,7 +27,7 @@ export function KioskChrome() {
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             className="pointer-events-auto absolute bottom-10 flex w-full flex-col items-center gap-5"
           >
-            <p className="rounded-full bg-black/60 px-8 py-3 text-[26px] text-white/70 backdrop-blur-md">
+            <p className="rounded-full bg-[var(--kiosk-text)] px-8 py-3 text-[26px] text-[var(--kiosk-bg)]">
               روی هر بخش بزنید تا به آن بروید
             </p>
             <ChromeButton onClick={() => camera.exitOverview()}>بستن نقشه</ChromeButton>
@@ -57,7 +57,7 @@ export function KioskChrome() {
         )}
       </AnimatePresence>
 
-      <span className="pointer-events-none absolute bottom-4 left-6 text-[16px] text-white/20">
+      <span className="pointer-events-none absolute bottom-4 left-6 text-[16px] text-[var(--kiosk-muted)] opacity-50">
         v{kioskConfig.version}
       </span>
     </>
@@ -73,16 +73,18 @@ function ChromeButton({
   onClick: () => void
   variant?: "ghost" | "accent"
 }) {
+  // The chrome never takes the solid accent. Exactly one thing on screen should
+  // read as "touch this", and that belongs to the scene, not the navigation.
   const skin =
     variant === "accent"
-      ? "border-[var(--kiosk-accent)]/50 bg-[var(--kiosk-accent)]/15 text-[var(--kiosk-accent)]"
-      : "border-white/12 bg-black/50 text-[var(--kiosk-text)]"
+      ? "border-[var(--kiosk-accent)] bg-[var(--kiosk-surface)] text-[var(--kiosk-accent)]"
+      : "border-[var(--kiosk-border)] bg-[var(--kiosk-surface)] text-[var(--kiosk-text)]"
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`min-h-[88px] cursor-pointer rounded-full border-2 px-10 text-[30px] font-semibold backdrop-blur-md ${skin}`}
+      className={`min-h-[88px] cursor-pointer rounded-full border-2 px-10 text-[30px] font-semibold shadow-[0_12px_36px_-16px_rgb(23_19_16/0.45)] ${skin}`}
     >
       {children}
     </button>

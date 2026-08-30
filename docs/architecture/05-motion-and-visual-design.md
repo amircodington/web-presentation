@@ -68,13 +68,24 @@ the script's ascenders and diacritics collide at tighter settings.
 Sourced from `brand.json` into CSS custom properties, so a rebrand is a JSON edit. Until the
 client supplies values, the placeholders live in one place and are clearly marked.
 
-The kiosk is designed **dark**. A bright screen in a hall is a mirror; a dark screen with
-saturated accents holds contrast under overhead lighting and makes video content sit in the
-page instead of floating on it. Text sits at 7:1 contrast minimum — AAA, not AA, because the
-viewing distance is three times a desktop's.
+The kiosk is designed **light**: warm paper ground, near-black ink, and one sharp red.
+Red is the strongest attention signal available at ten metres, and it is reserved for
+exactly one thing per screen — whatever the visitor should touch next.
+
+The trade-off is deliberate and worth stating: a bright screen in a hall reflects
+overhead lighting more than a dark one, and video content sits less comfortably on a
+light ground. The compensations are a warm off-white rather than pure white (less
+glare), ink at 14:1 contrast against it, and full-bleed red panels to give the deck
+tonal rhythm rather than relying on a dark surround.
+
+Components never hardcode a white or black alpha. Card fill, hairlines, and
+on-accent text are tokens (`--kiosk-card`, `--kiosk-border`, `--kiosk-on-accent`)
+sourced from `brand.json`, so the whole scheme can be inverted from content.
 
 Exactly one accent colour signals "touch this". If two things on screen use the accent, the
 visitor has to make a decision, and visitors at a booth do not make decisions — they leave.
+This is why the persistent chrome never takes the solid accent: the navigation must not
+compete with the scene's own call to action.
 
 ## The attract loop
 

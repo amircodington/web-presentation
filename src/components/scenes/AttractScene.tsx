@@ -30,10 +30,16 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
         {content.brand.nameFa}
       </motion.p>
 
-      <h1 className="relative max-w-[70%] text-[128px] leading-[1.1] font-black text-balance">
+      <h1 className="relative max-w-[74%] text-[128px] leading-[1.08] font-black text-balance">
         پول را کسی به تو یاد نداد.
         <br />
-        <span className="text-[var(--kiosk-accent)]">اینجا شروع می‌شود.</span>
+        <span className="relative inline-block px-6 text-[var(--kiosk-on-accent)]">
+          <span
+            aria-hidden
+            className="absolute inset-0 -skew-x-3 rounded-lg bg-[var(--kiosk-accent)]"
+          />
+          <span className="relative">اینجا شروع می‌شود.</span>
+        </span>
       </h1>
 
       <p className="relative max-w-[55%] text-[40px] text-[var(--kiosk-muted)]">
@@ -43,7 +49,7 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
       <motion.div
         animate={isActive ? { scale: [1, 1.12, 1], opacity: [0.85, 1, 0.85] } : {}}
         transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-        className="relative mt-6 flex items-center gap-6 rounded-full border-2 border-[var(--kiosk-accent)]/40 bg-[var(--kiosk-accent)]/10 px-14 py-7"
+        className="relative mt-6 flex items-center gap-6 rounded-full bg-[var(--kiosk-accent)] px-14 py-7 text-[var(--kiosk-on-accent)] shadow-[0_24px_70px_-24px_var(--kiosk-accent)]"
       >
         <span className="text-[56px]">👆</span>
         <span className="text-[40px] font-semibold">برای شروع لمس کنید</span>
@@ -53,22 +59,25 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
 }
 
 /**
- * Slow drifting orbs behind the type. Nothing loops in under 20 seconds and no
- * two loops share a period, so the field never resolves into a repeating pattern
- * that reads as a frozen screen from a distance.
+ * Slow drifting shapes behind the type.
+ *
+ * Heavily blurred tinted discs, so the ground reads as a soft wash rather than as
+ * hard shapes. Nothing loops in under 20 seconds and no two loops share a period,
+ * so the field never resolves into a repeating pattern that reads as a frozen
+ * screen from a distance.
  */
 function AmbientField({ animate }: { animate: boolean }) {
   const orbs = [
-    { size: 900, x: "12%", y: "8%", hue: "var(--kiosk-accent)", duration: 26 },
-    { size: 700, x: "72%", y: "62%", hue: "#3D7BF2", duration: 34 },
-    { size: 520, x: "48%", y: "18%", hue: "#F26D3D", duration: 41 },
+    { id: "a", size: 860, x: "6%", y: "4%", tint: "var(--kiosk-accent)", opacity: 0.16, duration: 26 },
+    { id: "b", size: 700, x: "68%", y: "56%", tint: "#E8A33C", opacity: 0.16, duration: 34 },
+    { id: "c", size: 520, x: "44%", y: "12%", tint: "var(--kiosk-accent)", opacity: 0.1, duration: 41 },
   ]
 
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0">
       {orbs.map((orb) => (
         <motion.div
-          key={orb.hue + orb.duration}
+          key={orb.id}
           animate={animate ? { x: [0, 120, -80, 0], y: [0, -90, 60, 0] } : {}}
           transition={{ duration: orb.duration, repeat: Infinity, ease: "easeInOut" }}
           style={{
@@ -77,8 +86,10 @@ function AmbientField({ animate }: { animate: boolean }) {
             insetBlockStart: orb.y,
             width: orb.size,
             height: orb.size,
-            background: `radial-gradient(circle, ${orb.hue}33, transparent 65%)`,
-            filter: "blur(40px)",
+            borderRadius: "9999px",
+            background: orb.tint,
+            opacity: orb.opacity,
+            filter: "blur(90px)",
           }}
         />
       ))}

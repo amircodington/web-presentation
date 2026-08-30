@@ -33,7 +33,7 @@ export function AudienceScene({ state, camera }: SceneComponentProps) {
             animate={isActive ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0.7, y: 0, scale: 1 }}
             transition={{ duration: 0.5, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
             whileTap={{ scale: 0.96 }}
-            className="flex min-h-[240px] flex-col justify-between rounded-3xl border-2 border-white/10 bg-white/[0.04] p-9 text-start"
+            className="flex min-h-[240px] flex-col justify-between rounded-3xl card-surface p-9 text-start"
           >
             <span className="text-[64px]">{audience.icon}</span>
             <span className="flex flex-col gap-2">
