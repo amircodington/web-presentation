@@ -77,7 +77,7 @@ export function CourseDetailScene({ state, props }: SceneComponentProps) {
             initial={{ opacity: 0, x: -50 }}
             animate={isActive ? { opacity: 1, x: 0 } : { opacity: 0.7, x: 0 }}
             transition={{ duration: 0.45, delay: 0.15 + index * 0.07, ease: [0.22, 1, 0.36, 1] }}
-            className="rounded-2xl border-2 border-white/10 bg-white/[0.04] px-8 py-4"
+            className="rounded-2xl card-surface px-8 py-4"
           >
             <h3 className="text-[30px] font-bold text-[var(--kiosk-accent)]">{block.title}</h3>
             <p className="text-[24px] leading-relaxed text-[var(--kiosk-muted)]">
@@ -108,7 +108,7 @@ function Logistics({
   return (
     <div className="flex flex-wrap gap-3">
       {rows.map((row) => (
-        <span key={row} className="rounded-full bg-white/8 px-5 py-2 text-[23px]">
+        <span key={row} className="chip rounded-full px-5 py-2 text-[23px]">
           {row}
         </span>
       ))}

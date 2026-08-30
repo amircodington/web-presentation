@@ -1,20 +1,23 @@
 @import "tailwindcss";
 
 /*
- * The kiosk is designed dark on purpose: a bright screen in an exhibition hall
- * is a mirror. Saturated accents on a dark ground hold contrast under overhead
- * lighting and let video sit in the page instead of floating on it.
+ * A light, high-contrast scheme built around one sharp red. Red is the strongest
+ * attention signal available at ten metres and it is used for exactly one thing:
+ * whatever the visitor should touch next. Everything else is paper and ink.
  *
  * Colour values mirror content/brand.json. KioskTheme rewrites them at runtime
  * from that file, so a rebrand is a JSON edit.
  */
 @theme {
-  --color-kiosk-bg: #070b14;
-  --color-kiosk-surface: #0f1626;
-  --color-kiosk-accent: #f2b33d;
-  --color-kiosk-accent-soft: #7a5c1e;
-  --color-kiosk-text: #f5f7fa;
-  --color-kiosk-muted: #93a1b8;
+  --color-kiosk-bg: #f6f2ec;
+  --color-kiosk-surface: #ffffff;
+  --color-kiosk-card: #ffffff;
+  --color-kiosk-border: #e2d9cd;
+  --color-kiosk-accent: #d91e2a;
+  --color-kiosk-accent-soft: #fbe4e3;
+  --color-kiosk-on-accent: #ffffff;
+  --color-kiosk-text: #171310;
+  --color-kiosk-muted: #6e6459;
 
   --ease-arrive: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-leave: cubic-bezier(0.4, 0, 1, 1);
@@ -29,8 +32,11 @@
 :root {
   --kiosk-bg: var(--color-kiosk-bg);
   --kiosk-surface: var(--color-kiosk-surface);
+  --kiosk-card: var(--color-kiosk-card);
+  --kiosk-border: var(--color-kiosk-border);
   --kiosk-accent: var(--color-kiosk-accent);
   --kiosk-accent-soft: var(--color-kiosk-accent-soft);
+  --kiosk-on-accent: var(--color-kiosk-on-accent);
   --kiosk-text: var(--color-kiosk-text);
   --kiosk-muted: var(--color-kiosk-muted);
 }
@@ -88,8 +94,20 @@ button:disabled,
 
 @utility scene-surface {
   background:
-    radial-gradient(120% 80% at 80% 0%, color-mix(in oklab, var(--kiosk-accent) 12%, transparent), transparent 60%),
+    radial-gradient(110% 70% at 88% -10%, color-mix(in oklab, var(--kiosk-accent) 10%, transparent), transparent 62%),
     linear-gradient(180deg, var(--kiosk-surface), var(--kiosk-bg));
+  box-shadow: 0 40px 120px -60px rgb(23 19 16 / 0.35);
+}
+
+/* Card fill and hairline, so components never hardcode a white or black alpha. */
+@utility card-surface {
+  background: var(--kiosk-card);
+  border: 2px solid var(--kiosk-border);
+}
+
+/* Small neutral chip: ages, durations, delivery modes. */
+@utility chip {
+  background: color-mix(in oklab, var(--kiosk-text) 6%, transparent);
 }
 
 @keyframes kiosk-pulse {

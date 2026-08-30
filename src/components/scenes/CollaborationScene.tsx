@@ -35,7 +35,7 @@ export function CollaborationScene({ state, camera, props }: SceneComponentProps
             initial={{ opacity: 0, y: 55 }}
             animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
-            className="flex min-h-[300px] flex-col gap-4 rounded-3xl border-2 border-white/10 bg-white/[0.04] p-9"
+            className="flex min-h-[300px] flex-col gap-4 rounded-3xl card-surface p-9"
           >
             <h3 className="text-[36px] leading-tight font-bold">{card.title}</h3>
             <p className="text-[26px] font-medium text-[var(--kiosk-accent)]">{card.subtitle}</p>
@@ -49,7 +49,7 @@ export function CollaborationScene({ state, camera, props }: SceneComponentProps
         <button
           type="button"
           onClick={() => camera.goTo("connect")}
-          className="min-h-[88px] cursor-pointer rounded-2xl bg-[var(--kiosk-accent)] px-10 text-[32px] font-semibold text-[#12160f]"
+          className="min-h-[88px] cursor-pointer rounded-2xl bg-[var(--kiosk-accent)] px-10 text-[32px] font-semibold text-[var(--kiosk-on-accent)]"
         >
           {track.cta}
         </button>

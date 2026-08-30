@@ -44,7 +44,7 @@ export function ConnectScene({ state, camera }: SceneComponentProps) {
               className={`flex min-h-[78px] cursor-pointer items-center gap-5 rounded-2xl border-2 px-8 text-start text-[29px] font-semibold transition-colors duration-[var(--duration-instant)] ${
                 selected === channel.key
                   ? "border-[var(--kiosk-accent)] bg-[var(--kiosk-accent)]/12 text-[var(--kiosk-accent)]"
-                  : "border-white/10 bg-white/[0.04]"
+                  : "card-surface"
               }`}
             >
               <span className="text-[40px]">{channel.icon}</span>

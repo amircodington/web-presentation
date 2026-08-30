@@ -35,7 +35,7 @@ export function LiveActivitiesScene({ state }: SceneComponentProps) {
             initial={{ opacity: 0, y: 50 }}
             animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="flex min-h-[230px] gap-7 rounded-3xl border-2 border-white/10 bg-white/[0.04] p-8"
+            className="flex min-h-[230px] gap-7 rounded-3xl card-surface p-8"
           >
             <span className="text-[56px] leading-none">{activity.icon}</span>
             <div className="flex flex-col gap-3">

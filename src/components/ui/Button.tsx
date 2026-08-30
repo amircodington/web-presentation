@@ -20,11 +20,11 @@ interface ButtonProps {
  */
 export function Button({ children, onClick, variant = "accent", className = "" }: ButtonProps) {
   const base =
-    "min-h-[88px] rounded-2xl px-10 text-[32px] font-semibold transition-colors duration-[var(--duration-instant)]"
+    "min-h-[88px] cursor-pointer rounded-2xl px-10 text-[32px] font-semibold transition-colors duration-[var(--duration-instant)]"
   const skin =
     variant === "accent"
-      ? "bg-[var(--kiosk-accent)] text-[#12160f] shadow-[0_18px_60px_-20px_var(--kiosk-accent)]"
-      : "border-2 border-white/15 bg-white/5 text-[var(--kiosk-text)]"
+      ? "bg-[var(--kiosk-accent)] text-[var(--kiosk-on-accent)] shadow-[0_18px_50px_-18px_var(--kiosk-accent)]"
+      : "card-surface text-[var(--kiosk-text)]"
 
   return (
     <motion.button

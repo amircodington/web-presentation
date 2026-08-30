@@ -82,7 +82,7 @@ function ScoreDial({ score, max, animate }: { score: number; max: number; animat
 
   return (
     <svg width={220} height={220} viewBox="0 0 220 220" aria-hidden className="shrink-0">
-      <circle cx={110} cy={110} r={radius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={16} />
+      <circle cx={110} cy={110} r={radius} fill="none" stroke="var(--kiosk-border)" strokeWidth={16} />
       <motion.circle
         cx={110}
         cy={110}

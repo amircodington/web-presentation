@@ -56,7 +56,7 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
               animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
               transition={{ duration: 0.55, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
               whileTap={{ scale: 0.97 }}
-              className="flex min-h-[430px] cursor-pointer flex-col justify-between rounded-3xl border-2 border-white/10 bg-white/[0.04] p-10 text-start"
+              className="flex min-h-[430px] cursor-pointer flex-col justify-between rounded-3xl card-surface p-10 text-start"
             >
               <div className="flex flex-col gap-5">
                 <h3 className="text-[42px] leading-tight font-bold">{course.title}</h3>
@@ -64,7 +64,7 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
                   {course.summary}
                 </p>
                 {course.targetAge ? (
-                  <span className="w-fit rounded-full bg-white/8 px-6 py-2 text-[24px]">
+                  <span className="w-fit chip rounded-full px-6 py-2 text-[24px]">
                     {course.targetAge}
                   </span>
                 ) : null}

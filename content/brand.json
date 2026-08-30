@@ -4,11 +4,14 @@
   "tagline": "سواد مالی، از نوجوانی تا تصمیم‌های بزرگ",
   "logo": "/media/logo.svg",
   "colors": {
-    "background": "#070B14",
-    "surface": "#0F1626",
-    "accent": "#F2B33D",
-    "accentSoft": "#7A5C1E",
-    "text": "#F5F7FA",
-    "textMuted": "#93A1B8"
+    "background": "#F6F2EC",
+    "surface": "#FFFFFF",
+    "card": "#FFFFFF",
+    "border": "#E2D9CD",
+    "accent": "#D91E2A",
+    "accentSoft": "#FBE4E3",
+    "onAccent": "#FFFFFF",
+    "text": "#171310",
+    "textMuted": "#6E6459"
   }
 }
