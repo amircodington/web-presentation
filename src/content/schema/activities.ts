@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { IconNameSchema } from "./common"
 
 /**
  * Divide a fixed pot between competing options — the mechanic behind both
@@ -18,7 +19,7 @@ const AllocationGameSchema = z.object({
       z.object({
         id: z.string().min(1),
         label: z.string().min(1),
-        icon: z.string().min(1),
+        icon: IconNameSchema,
         risk: z.enum(["none", "low", "medium", "high"]),
         /** Whether this option can grow in value, for the opportunity-cost rule. */
         growth: z.boolean(),
@@ -78,7 +79,7 @@ const ActivitySchema = z.object({
   id: z.string().min(1),
   title: z.string().min(1),
   durationMin: z.number().int().positive(),
-  icon: z.string().min(1),
+  icon: IconNameSchema,
   hook: z.string().min(1),
   mechanic: z.string().min(1),
   learning: z.array(z.string().min(1)).min(1),
@@ -88,16 +89,12 @@ const ActivitySchema = z.object({
 })
 
 /**
- * The live mini-workshops run at the booth. The kiosk shows what is coming next so
- * the screen advertises the stand's own programme rather than competing with it,
- * and lets a visitor play a short version while they wait.
+ * The catalogue of mini-activities the booth can run. When each one is actually on
+ * belongs to `event.json`, so taking the same activities to a different event is a
+ * schedule edit rather than a rewrite of this file.
  */
 export const ActivitiesSchema = z.object({
   title: z.string().min(1),
-  eventHours: z.string().min(1),
-  cadence: z.string().min(1),
-  nextSlotLabel: z.string().min(1),
-  slots: z.array(z.string().regex(/^\d{2}:\d{2}$/)).min(1),
   activities: z.array(ActivitySchema).min(1),
 })
 

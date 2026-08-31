@@ -1,17 +1,22 @@
 {
   "nameFa": "باشگاه ثروت",
   "nameEn": "Wealth Club",
-  "tagline": "سواد مالی، از نوجوانی تا تصمیم‌های بزرگ",
-  "logo": "/media/logo.svg",
+  "tagline": "بازی کن، خودت را محک بزن، مسیرت را ببین",
+  "logo": "/media/logo-full.png",
+  "logoMark": "/media/logo-mark.png",
   "colors": {
-    "background": "#F6F2EC",
-    "surface": "#FFFFFF",
-    "card": "#FFFFFF",
-    "border": "#E2D9CD",
-    "accent": "#D91E2A",
-    "accentSoft": "#FBE4E3",
+    "background": "#07301D",
+    "surface": "#0C462B",
+    "card": "#F7F4EC",
+    "border": "#1A5C3A",
+    "accent": "#E8404A",
+    "accentSoft": "#FADFE0",
     "onAccent": "#FFFFFF",
-    "text": "#171310",
-    "textMuted": "#6E6459"
+    "text": "#EAF4ED",
+    "textMuted": "#8FB6A0",
+    "cardText": "#0A2116",
+    "cardMuted": "#5B7566",
+    "money": "#F0B33C",
+    "positive": "#3FC47C"
   }
 }

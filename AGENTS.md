@@ -34,6 +34,8 @@ Do not relitigate these. To change one, write an ADR in `docs/architecture/adr/`
 | Motion | Motion (`motion/react`) for UI enter/exit + layout; GSAP timelines for scene choreography |
 | Zoom engine | Custom camera layer (`src/engine/`). **Not** impress.js, **not** reveal.js |
 | Content | Typed JSON in `content/`, validated by Zod. No hardcoded copy, prices, or URLs |
+| Per-event config | `content/event.json` — hours, running order, audience priority, product order |
+| Icons | Named in content, drawn in `components/ui/Icon.tsx`. **No emoji in the UI** |
 | Backend | None. QR-first. Leads buffer in IndexedDB and export as CSV |
 | Locale | `fa-IR` only, `dir="rtl"` |
 | Runtime | Docker, `node:22-bookworm-slim` base |
@@ -169,6 +171,10 @@ These come from the physical reality of an unattended screen in a loud hall:
 - **Idle reset.** No interaction for `KIOSK_IDLE_TIMEOUT_MS` → session cleared, camera returns
   to the attract scene. Session data must never leak between two visitors.
 - **Touch targets ≥ 88px.** Fingers, on glass, at standing height. No hover-only affordances.
+- **A full-bleed tap target needs `pointer-events-none` on every layer above it.** Otherwise the
+  headline swallows the tap aimed at the middle of the screen, which is where people aim.
+- **Anything read at length sits on a light mat.** The ground is the dark board; body copy is
+  never reversed out of it. See [05 — Colour](docs/architecture/05-motion-and-visual-design.md).
 - **One design size, scaled.** Scenes are authored at `ENGINE_DESIGN_WIDTH` ×
   `ENGINE_DESIGN_HEIGHT` and the stage scales uniformly to the screen, so a laptop and
   the TV show identical frames. Never add breakpoints or percentage layouts to a scene.
@@ -206,6 +212,7 @@ When you add or change any of the following, update the named section here in th
 | An environment variable | §5, and `docs/operations/02-versioning-and-releases.md` |
 | A Docker image, service, or compose file | §7, and `docs/operations/01-docker.md` |
 | A naming, comment, or style convention | §3 |
+| A content file, schema, or icon name | §2, and `docs/architecture/04-content-model.md` |
 | A branch or commit convention | §4, and `docs/operations/03-git-workflow.md` |
 | A locked technical decision | §2 + a new ADR in `docs/architecture/adr/` |
 | A kiosk hardware or UX constraint | §8 |

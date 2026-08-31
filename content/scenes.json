@@ -30,15 +30,15 @@
         "rotate": 0
       },
       "transition": "dive",
-      "next": "audiences",
+      "next": "parent-path",
       "back": "attract",
       "meta": {
         "hub": true
       }
     },
     {
-      "id": "audiences",
-      "component": "AudienceScene",
+      "id": "parent-path",
+      "component": "ParentPathScene",
       "camera": {
         "x": -2800,
         "y": 1750,
@@ -60,7 +60,7 @@
       },
       "transition": "glide",
       "next": "course-plus18",
-      "back": "audiences"
+      "back": "parent-path"
     },
     {
       "id": "course-plus18",

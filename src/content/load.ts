@@ -5,6 +5,7 @@ import brandJson from "@content/brand.json"
 import contactJson from "@content/contact.json"
 import collaborationJson from "@content/collaboration.json"
 import coursesJson from "@content/courses.json"
+import eventJson from "@content/event.json"
 import festivalJson from "@content/festival.json"
 import qrJson from "@content/qr.json"
 import quizJson from "@content/quiz.json"
@@ -15,6 +16,7 @@ import { BrandSchema } from "./schema/brand"
 import { ActivitiesSchema } from "./schema/activities"
 import { AudiencesSchema, CoursesSchema, WorkshopsSchema } from "./schema/catalogue"
 import { CollaborationSchema } from "./schema/collaboration"
+import { EventSchema } from "./schema/event"
 import { ContactSchema, FestivalSchema, QrSchema } from "./schema/festival"
 import { QuizSchema, ResultsSchema } from "./schema/quiz"
 import { ScenesSchema } from "./schema/scenes"
@@ -43,6 +45,7 @@ function parse<T>(name: string, schema: z.ZodType<T>, raw: unknown): T {
 
 const brand = parse("brand", BrandSchema, brandJson)
 const festival = parse("festival", FestivalSchema, festivalJson)
+const event = parse("event", EventSchema, eventJson)
 const contact = parse("contact", ContactSchema, contactJson)
 const qr = parse("qr", QrSchema, qrJson)
 const courses = parse("courses", CoursesSchema, coursesJson)
@@ -79,7 +82,32 @@ function checkCrossReferences(): void {
     }
   }
 
+  const activityIds = new Set(activities.activities.map((activity) => activity.id))
+  for (const slot of event.schedule) {
+    if (!activityIds.has(slot.activityId)) {
+      throw new Error(
+        `content/event.json: slot ${slot.time} runs unknown activity "${slot.activityId}"`,
+      )
+    }
+  }
+
+  const orderedIds = [
+    ...event.defaultProductOrder,
+    ...Object.values(event.audienceProductOrder).flat().filter((id) => id !== undefined),
+  ]
+  for (const id of orderedIds) {
+    if (!productIds.has(id)) {
+      throw new Error(`content/event.json: product order names unknown product "${id}"`)
+    }
+  }
+
   const audienceIds = new Set(audiences.map((audience) => audience.id))
+  for (const id of [...event.audiencePriority, ...event.secondaryAudiences]) {
+    if (!audienceIds.has(id)) {
+      throw new Error(`content/event.json: unknown audience "${id}"`)
+    }
+  }
+
   for (const course of courses) {
     for (const id of course.audiences) {
       if (!audienceIds.has(id)) {
@@ -94,6 +122,7 @@ checkCrossReferences()
 export const content = Object.freeze({
   brand,
   festival,
+  event,
   contact,
   qr,
   courses,

@@ -1,23 +1,31 @@
 @import "tailwindcss";
 
 /*
- * A light, high-contrast scheme built around one sharp red. Red is the strongest
- * attention signal available at ten metres and it is used for exactly one thing:
- * whatever the visitor should touch next. Everything else is paper and ink.
+ * The booth's own table, rendered.
+ *
+ * At the stand, visitors sit around a green board covered in plastic counters,
+ * play banknotes and light card mats. The screen uses the same three materials:
+ * a dark green ground, red as the single "touch this" signal, and light paper
+ * mats carrying anything a visitor has to read. A dark ground also means the TV
+ * glows in a bright, loud hall instead of competing with it.
  *
  * Colour values mirror content/brand.json. KioskTheme rewrites them at runtime
  * from that file, so a rebrand is a JSON edit.
  */
 @theme {
-  --color-kiosk-bg: #f6f2ec;
-  --color-kiosk-surface: #ffffff;
-  --color-kiosk-card: #ffffff;
-  --color-kiosk-border: #e2d9cd;
-  --color-kiosk-accent: #d91e2a;
-  --color-kiosk-accent-soft: #fbe4e3;
+  --color-kiosk-bg: #07301d;
+  --color-kiosk-surface: #0c462b;
+  --color-kiosk-card: #f7f4ec;
+  --color-kiosk-border: #1a5c3a;
+  --color-kiosk-accent: #e8404a;
+  --color-kiosk-accent-soft: #fadfe0;
   --color-kiosk-on-accent: #ffffff;
-  --color-kiosk-text: #171310;
-  --color-kiosk-muted: #6e6459;
+  --color-kiosk-text: #eaf4ed;
+  --color-kiosk-muted: #8fb6a0;
+  --color-kiosk-card-text: #0a2116;
+  --color-kiosk-card-muted: #5b7566;
+  --color-kiosk-money: #f0b33c;
+  --color-kiosk-positive: #3fc47c;
 
   --ease-arrive: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-leave: cubic-bezier(0.4, 0, 1, 1);
@@ -39,6 +47,10 @@
   --kiosk-on-accent: var(--color-kiosk-on-accent);
   --kiosk-text: var(--color-kiosk-text);
   --kiosk-muted: var(--color-kiosk-muted);
+  --kiosk-card-text: var(--color-kiosk-card-text);
+  --kiosk-card-muted: var(--color-kiosk-card-muted);
+  --kiosk-money: var(--color-kiosk-money);
+  --kiosk-positive: var(--color-kiosk-positive);
 }
 
 html,
@@ -92,22 +104,54 @@ button:disabled,
   }
 }
 
+/*
+ * The table. Two soft pools of light rather than a flat fill, so a 1920×1080 field
+ * of one green does not read as a dead panel from across the hall.
+ */
 @utility scene-surface {
   background:
-    radial-gradient(110% 70% at 88% -10%, color-mix(in oklab, var(--kiosk-accent) 10%, transparent), transparent 62%),
-    linear-gradient(180deg, var(--kiosk-surface), var(--kiosk-bg));
-  box-shadow: 0 40px 120px -60px rgb(23 19 16 / 0.35);
+    radial-gradient(80% 55% at 78% -8%, color-mix(in oklab, var(--kiosk-positive) 14%, transparent), transparent 65%),
+    radial-gradient(70% 60% at 8% 106%, color-mix(in oklab, var(--kiosk-accent) 12%, transparent), transparent 62%),
+    linear-gradient(168deg, var(--kiosk-surface), var(--kiosk-bg) 62%);
+  box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--kiosk-border) 70%, transparent);
 }
 
-/* Card fill and hairline, so components never hardcode a white or black alpha. */
-@utility card-surface {
+/*
+ * A paper mat laid on the table. Everything a visitor reads at length sits on one,
+ * which is why it carries its own text colours rather than inheriting the board's.
+ */
+@utility mat {
   background: var(--kiosk-card);
+  color: var(--kiosk-card-text);
+  box-shadow:
+    0 2px 0 0 color-mix(in oklab, var(--kiosk-card-text) 12%, transparent),
+    0 18px 40px -20px rgb(0 0 0 / 0.65);
+}
+
+/* Raised panel that stays on the board rather than becoming paper. */
+@utility felt {
+  background: color-mix(in oklab, var(--kiosk-surface) 82%, black);
   border: 2px solid var(--kiosk-border);
 }
 
-/* Small neutral chip: ages, durations, delivery modes. */
-@utility chip {
-  background: color-mix(in oklab, var(--kiosk-text) 6%, transparent);
+/* Small neutral label: ages, durations, delivery modes. */
+@utility pill {
+  background: color-mix(in oklab, var(--kiosk-text) 10%, transparent);
+  color: var(--kiosk-text);
+}
+
+/* The same label once it sits on a paper mat. */
+@utility pill-on-mat {
+  background: color-mix(in oklab, var(--kiosk-card-text) 8%, transparent);
+  color: var(--kiosk-card-muted);
+}
+
+/* Display face. Lalezar has one weight and a lot of personality — hero lines only. */
+@utility display {
+  font-family: var(--font-kiosk-display), var(--font-kiosk), sans-serif;
+  font-weight: 400;
+  line-height: 1.22;
+  letter-spacing: 0;
 }
 
 @keyframes kiosk-pulse {

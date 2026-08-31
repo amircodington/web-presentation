@@ -1,6 +1,5 @@
 import type { SceneRegistry } from "@/engine"
 import { AttractScene } from "./AttractScene"
-import { AudienceScene } from "./AudienceScene"
 import { CollaborationScene } from "./CollaborationScene"
 import { ConnectScene } from "./ConnectScene"
 import { CourseDetailScene } from "./CourseDetailScene"
@@ -9,6 +8,7 @@ import { GameScene } from "./GameScene"
 import { HomeScene } from "./HomeScene"
 import { LiveActivitiesScene } from "./LiveActivitiesScene"
 import { OfferScene } from "./OfferScene"
+import { ParentPathScene } from "./ParentPathScene"
 import { QuizIntroScene } from "./QuizIntroScene"
 import { QuizQuestionScene } from "./QuizQuestionScene"
 import { QuizResultScene } from "./QuizResultScene"
@@ -20,7 +20,7 @@ import { QuizResultScene } from "./QuizResultScene"
 export const sceneRegistry: SceneRegistry = {
   AttractScene,
   HomeScene,
-  AudienceScene,
+  ParentPathScene,
   CoursesScene,
   CourseDetailScene,
   LiveActivitiesScene,

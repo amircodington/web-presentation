@@ -4,6 +4,7 @@ import { motion } from "motion/react"
 import { content } from "@/content/load"
 import { formatJalali } from "@/lib/format"
 import { Button } from "@/components/ui/Button"
+import { Chip } from "@/components/ui/Chip"
 import type { SceneComponentProps } from "@/engine"
 
 /** The festival offer. Renders nothing when the offer is switched off. */
@@ -20,7 +21,7 @@ export function OfferScene({ state, camera }: SceneComponentProps) {
   }
 
   return (
-    <div className="relative flex h-full w-full flex-col items-center justify-center gap-12 overflow-hidden rounded-[48px] bg-[var(--kiosk-accent)] px-24 pb-52 text-center text-[var(--kiosk-on-accent)]">
+    <div className="relative flex h-full w-full flex-col items-center justify-center gap-10 overflow-hidden rounded-[48px] bg-[var(--kiosk-accent)] px-24 pb-52 text-center text-[var(--kiosk-on-accent)]">
       <motion.div
         aria-hidden
         animate={isActive ? { rotate: 360 } : {}}
@@ -32,28 +33,21 @@ export function OfferScene({ state, camera }: SceneComponentProps) {
         }}
       />
 
-      <motion.p
-        initial={{ opacity: 0, y: 30 }}
-        animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.8, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="relative text-[32px] font-bold tracking-[0.2em]"
-      >
-        {festival.name}
-      </motion.p>
+      <Chip icon="gift" tone="paper" size={132} className="relative" />
 
       <motion.h2
         initial={{ opacity: 0, scale: 0.9 }}
         animate={isActive ? { opacity: 1, scale: 1 } : { opacity: 0.9, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-        className="relative text-[110px] leading-[1.1] font-black"
+        className="display relative text-[100px]"
       >
         {festival.offerTitle}
       </motion.h2>
 
-      <p className="relative max-w-[70%] text-[42px] font-semibold">{festival.offerDescription}</p>
+      <p className="relative max-w-[70%] text-[38px] font-semibold">{festival.offerDescription}</p>
 
       {festival.validUntil ? (
-        <p className="relative text-[30px] font-medium opacity-70">
+        <p className="relative text-[28px] font-medium opacity-75">
           تا {formatJalali(festival.validUntil)}
         </p>
       ) : null}
@@ -63,7 +57,7 @@ export function OfferScene({ state, camera }: SceneComponentProps) {
         className="relative !border-[var(--kiosk-on-accent)] !bg-[var(--kiosk-on-accent)] !text-[var(--kiosk-accent)]"
         onClick={() => camera.goTo("quiz-intro")}
       >
-        ببین کدام دوره مناسب توست ←
+        ببین کدام مسیر مناسب توست ←
       </Button>
     </div>
   )

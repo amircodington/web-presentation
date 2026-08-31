@@ -3,6 +3,8 @@
 import { motion } from "motion/react"
 import { productById, priceFor } from "@/content/select"
 import { formatPrice } from "@/lib/format"
+import { Icon } from "@/components/ui/Icon"
+import { Photo } from "@/components/ui/Photo"
 import type { SceneComponentProps } from "@/engine"
 
 /**
@@ -19,31 +21,37 @@ export function CourseDetailScene({ state, props }: SceneComponentProps) {
   const logistics = course.logistics
 
   return (
-    <div className="scene-surface flex h-full w-full gap-14 rounded-[48px] px-20 pt-14 pb-52">
-      <div className="flex w-[42%] shrink-0 flex-col justify-center gap-7">
+    <div className="scene-surface flex h-full w-full gap-12 rounded-[48px] px-16 pt-14 pb-52">
+      {course.media ? (
+        <Photo media={course.media} className="w-[23%] shrink-0 rounded-[32px]" />
+      ) : null}
+
+      <div className="flex w-[34%] shrink-0 flex-col justify-center gap-6">
         {course.campaignTitle ? (
-          <p className="text-[30px] font-bold text-[var(--kiosk-accent)]">{course.campaignTitle}</p>
+          <p className="text-[28px] font-bold text-[var(--kiosk-money)]">{course.campaignTitle}</p>
         ) : null}
 
         <motion.h2
           initial={{ opacity: 0, y: 40 }}
           animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.75, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[56px] leading-[1.2] font-bold text-balance"
+          className="display text-[50px] text-balance"
         >
           {course.heroTitle}
         </motion.h2>
 
         {course.heroSubtitle ? (
-          <p className="text-[30px] leading-relaxed text-[var(--kiosk-muted)]">
+          <p className="text-[27px] leading-relaxed text-[var(--kiosk-muted)]">
             {course.heroSubtitle}
           </p>
         ) : null}
 
         <ul className="flex flex-col gap-3">
           {course.highlights.map((item) => (
-            <li key={item} className="flex items-center gap-4 text-[27px]">
-              <span className="text-[var(--kiosk-accent)]">◆</span>
+            <li key={item} className="flex items-center gap-4 text-[26px]">
+              <span className="text-[var(--kiosk-positive)]">
+                <Icon name="check" size={26} />
+              </span>
               {item}
             </li>
           ))}
@@ -51,12 +59,12 @@ export function CourseDetailScene({ state, props }: SceneComponentProps) {
 
         {logistics ? <Logistics logistics={logistics} /> : null}
 
-        <p className="text-[32px] font-bold">
+        <p className="text-[30px] font-bold">
           {price.festival !== undefined
             ? formatPrice(price.festival)
             : price.regular !== undefined
               ? formatPrice(price.regular)
-              : "قیمت و شرایط ثبت‌نام را در غرفه بپرسید"}
+              : "شرایط ثبت‌نام را در غرفه بپرسید"}
         </p>
       </div>
 
@@ -77,10 +85,10 @@ export function CourseDetailScene({ state, props }: SceneComponentProps) {
             initial={{ opacity: 0, x: -50 }}
             animate={isActive ? { opacity: 1, x: 0 } : { opacity: 0.7, x: 0 }}
             transition={{ duration: 0.45, delay: 0.15 + index * 0.07, ease: [0.22, 1, 0.36, 1] }}
-            className="rounded-2xl card-surface px-8 py-4"
+            className="mat rounded-2xl px-7 py-4"
           >
-            <h3 className="text-[30px] font-bold text-[var(--kiosk-accent)]">{block.title}</h3>
-            <p className="text-[24px] leading-relaxed text-[var(--kiosk-muted)]">
+            <h3 className="text-[28px] font-bold text-[var(--kiosk-accent)]">{block.title}</h3>
+            <p className="text-[23px] leading-relaxed text-[var(--kiosk-card-muted)]">
               {block.items.join(" · ")}
             </p>
           </motion.div>
@@ -108,7 +116,7 @@ function Logistics({
   return (
     <div className="flex flex-wrap gap-3">
       {rows.map((row) => (
-        <span key={row} className="chip rounded-full px-5 py-2 text-[23px]">
+        <span key={row} className="pill rounded-full px-5 py-2 text-[22px]">
           {row}
         </span>
       ))}
