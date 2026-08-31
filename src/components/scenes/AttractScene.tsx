@@ -33,18 +33,19 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
   const isActive = state === "active"
   const { attract, contextTag } = content.event
   const line = useRotatingLine(attract.rotating, isActive)
+  const startQuiz = () => camera.goTo("quiz-intro", "dive")
 
   return (
     <div className="scene-surface relative flex h-full w-full flex-col items-center overflow-hidden rounded-[48px] px-20 pt-14 pb-52 text-center">
       <AmbientPhoto animate={state !== "far"} />
       <DriftingChips animate={isActive} />
 
-      <button
-        type="button"
-        onClick={() => camera.goTo("quiz-intro", "dive")}
-        aria-label={attract.cta}
-        className="absolute inset-0 z-0"
-      />
+      {/*
+        The whole surface starts the quiz, not just the pill. Plenty of visitors
+        tap the headline or the photo rather than the button, and a screen that
+        ignores that reads as broken rather than as decorative.
+      */}
+      <button type="button" onClick={startQuiz} aria-label={attract.cta} className="absolute inset-0 z-0" />
 
       <header className="pointer-events-none relative z-10 flex w-full items-center justify-between">
         <div className="flex items-center gap-6">
@@ -88,15 +89,18 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
       </div>
 
       <div className="pointer-events-none relative z-10 flex flex-col items-center gap-7">
-        <motion.span
+        <motion.button
+          type="button"
+          onClick={startQuiz}
           animate={isActive ? { scale: [1, 1.05, 1] } : {}}
           transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-          className="pointer-events-auto inline-flex min-h-[112px] items-center gap-6 rounded-full bg-[var(--kiosk-accent)] px-16 text-[var(--kiosk-on-accent)] shadow-[0_12px_0_-2px_color-mix(in_oklab,var(--kiosk-accent)_55%,black),0_36px_80px_-28px_var(--kiosk-accent)]"
+          whileTap={{ scale: 0.96 }}
+          className="pointer-events-auto inline-flex min-h-[112px] cursor-pointer items-center gap-6 rounded-full bg-[var(--kiosk-accent)] px-16 text-[var(--kiosk-on-accent)] shadow-[0_12px_0_-2px_color-mix(in_oklab,var(--kiosk-accent)_55%,black),0_36px_80px_-28px_var(--kiosk-accent)]"
         >
           <Icon name="play" size={40} />
           <b className="text-[46px] font-black">{attract.cta}</b>
           <span className="text-[26px] font-medium opacity-80">۶۰ ثانیه</span>
-        </motion.span>
+        </motion.button>
 
         <button
           type="button"
