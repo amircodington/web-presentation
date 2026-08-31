@@ -26,10 +26,14 @@ RUN npm run build
 FROM node:${NODE_VERSION} AS runner
 WORKDIR /app
 ARG APP_VERSION=0.0.0
+ARG APP_INTERNAL_PORT=3000
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_PUBLIC_APP_VERSION=${APP_VERSION}
-ENV PORT=3000
+ENV PORT=${APP_INTERNAL_PORT}
+# Binding to 0.0.0.0 rather than localhost is what makes the server reachable
+# from another container on the compose network. With the default the nginx
+# service gets connection refused and nothing else looks wrong.
 ENV HOSTNAME=0.0.0.0
 
 COPY --from=builder --chown=node:node /app/.next/standalone ./
@@ -37,9 +41,10 @@ COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 COPY --from=builder --chown=node:node /app/public ./public
 
 USER node
-EXPOSE 3000
+EXPOSE ${APP_INTERNAL_PORT}
 
+# Reads $PORT rather than a literal so the probe follows APP_INTERNAL_PORT.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD node -e "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+  CMD node -e "fetch('http://127.0.0.1:'+process.env.PORT+'/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
 CMD ["node", "server.js"]

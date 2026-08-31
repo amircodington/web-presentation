@@ -27,7 +27,7 @@ APP_BUILD_DATE=
 DOCKER_IMAGE=wealth-club/kiosk
 DOCKER_REGISTRY=
 DEV_PORT=3000
-PROD_PORT=8080
+PROD_PORT=3002
 NODE_VERSION=22-bookworm-slim
 
 # ─── Kiosk behaviour ─────────────────────────────────────

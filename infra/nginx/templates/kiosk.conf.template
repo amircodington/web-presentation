@@ -1,0 +1,61 @@
+# Server block for the kiosk. Rendered to /etc/nginx/conf.d/kiosk.conf at
+# container start by the nginx image entrypoint, which substitutes every
+# ${NGINX_*} placeholder from the environment. NGINX_ENVSUBST_FILTER in the
+# compose file restricts substitution to that prefix, so nginx's own runtime
+# variables ($host, $uri, …) survive untouched.
+
+upstream kiosk_app {
+    server ${NGINX_UPSTREAM};
+    keepalive 32;
+}
+
+server {
+    # `default_server` is what makes this block answer requests whose Host does
+    # not match server_name — the container healthcheck and the deploy script
+    # both call in on 127.0.0.1, and without it they would land on whatever
+    # nginx considers default and get a 404.
+    listen      ${NGINX_LISTEN_PORT} default_server;
+    listen      [::]:${NGINX_LISTEN_PORT} default_server;
+    server_name ${NGINX_SERVER_NAME};
+
+    # The kiosk is one screen, and the whole point is that the visitor never
+    # sees a browser chrome error. A default nginx error page would be the most
+    # visible possible failure, so upstream errors fall through to the app.
+    proxy_intercept_errors off;
+
+    # Content-hashed build output. Next already marks these immutable; saying so
+    # again here means a reload of the attract loop costs no revalidation.
+    location /_next/static/ {
+        include /etc/nginx/snippets/proxy.conf;
+        proxy_pass http://kiosk_app;
+        proxy_hide_header Cache-Control;
+        add_header Cache-Control "public, max-age=31536000, immutable" always;
+        access_log off;
+    }
+
+    # Video and imagery served from public/. Large, static, and never renamed
+    # between releases — so revalidate daily rather than never.
+    location /media/ {
+        include /etc/nginx/snippets/proxy.conf;
+        proxy_pass http://kiosk_app;
+        proxy_hide_header Cache-Control;
+        add_header Cache-Control "public, max-age=86400" always;
+        access_log off;
+    }
+
+    # Liveness probe for the container healthcheck and the deploy script. Kept
+    # uncached and out of the access log so a 30s poll does not fill the disk
+    # over an eight-hour festival day.
+    location = /api/health {
+        include /etc/nginx/snippets/proxy.conf;
+        proxy_pass http://kiosk_app;
+        proxy_hide_header Cache-Control;
+        add_header Cache-Control "no-store" always;
+        access_log off;
+    }
+
+    location / {
+        include /etc/nginx/snippets/proxy.conf;
+        proxy_pass http://kiosk_app;
+    }
+}
