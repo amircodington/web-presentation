@@ -1,4 +1,8 @@
-# syntax=docker/dockerfile:1
+# Deliberately no `# syntax=docker/dockerfile:1` directive. That pins the build
+# frontend to an image BuildKit downloads from Docker Hub before it can read
+# this file at all — a network round-trip on every build, on a network that
+# resets Docker Hub connections at random. Nothing here needs a frontend newer
+# than the one built into BuildKit: no heredocs, no RUN --mount.
 
 ARG NODE_VERSION=22-bookworm-slim
 
