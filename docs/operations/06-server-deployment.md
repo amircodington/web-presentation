@@ -78,6 +78,58 @@ docker compose -f docker-compose.prod.yml up -d --build
 curl -f http://127.0.0.1:3002/api/health
 ```
 
+## Docker Hub connections get reset
+
+The server's transit provider resets TLS connections to Docker Hub at random:
+
+```text
+read tcp 89.45.89.150:33182->172.64.144.78:443: read: connection reset by peer
+Head "https://registry-1.docker.io/v2/...": net/http: TLS handshake timeout
+```
+
+It is **transient, not a block**. The identical pull succeeds on the next attempt — measured
+here, the first attempt failed and the second worked, twice in a row. Docker Hub is reachable
+from this host; individual connections just die mid-handshake.
+
+Three things in the repo account for it, so a normal deploy rides through it:
+
+- `deploy.sh` pulls base images through a `retry` helper — six attempts, five seconds apart.
+- `deploy.sh` deliberately does **not** pass `build --pull`. That re-checks the registry on
+  every deploy even when the base image is already local, which turns a flaky network into a
+  flaky deploy for no benefit.
+- The `Dockerfile` carries no `# syntax=docker/dockerfile:1` directive. That one makes BuildKit
+  download a frontend image *before it can parse the Dockerfile*, so it fails ahead of any
+  retry logic and nothing in the script can help.
+
+If a deploy still gives up after six attempts, run it again rather than reaching for a mirror —
+it is usually gone within minutes. Failing that, `docker save` the images on a machine with
+clean access and `docker load` them here; the images needed are `node:${NODE_VERSION}`,
+`nginx:${NGINX_VERSION}` and nothing else.
+
+Note that `ghcr.io` is **not** reachable from this host at all, so pushing built images to
+GitHub's registry is not an available shortcut.
+
+## This host runs other things
+
+`89.45.89.150` is not dedicated to the kiosk. At the time of writing it also runs `finworld`
+(ports 3000 and 4000) and `ocr-pdf` (port 3001).
+
+Two consequences:
+
+- **`PROD_PORT=3002` is not arbitrary.** 3000 is taken by `finworld-web`. Publishing the app
+  directly on 3000, which is what the pre-nginx setup did, would collide.
+- **ufw is inactive, and `server-bootstrap.sh` will not enable it.** Enabling the firewall with
+  only the kiosk's rules would drop the other stacks' ports instantly. The script adds the
+  `allow` rules and then tells you what else is published so the decision stays with whoever
+  owns the host.
+
+Check before changing any port:
+
+```bash
+ss -tulpn | grep LISTEN
+docker ps --format '{{.Names}}\t{{.Ports}}'
+```
+
 ## Checking it
 
 ```bash
@@ -101,6 +153,8 @@ the repo is not literally what nginx read.
 | nginx exits with `host not found in upstream` | The `kiosk` service never started; read its logs |
 | 502 from nginx | App is up but not listening on `0.0.0.0` — check `HOSTNAME` in the container |
 | `docker-compose: command not found` | v1 binary. Use `docker compose` (space), installed by the bootstrap script |
+| `COPY /app/public: not found` during build | `public/` lost its tracked `.gitkeep`; git does not store empty directories |
+| `connection reset by peer` pulling an image | Transient. See "Docker Hub connections get reset" above — re-run |
 
 ## TLS
 
