@@ -19,6 +19,23 @@ COMPOSE="docker compose -f docker-compose.prod.yml"
 
 log() { printf '\n\033[1;36m▸ %s\033[0m\n' "$*"; }
 
+# Connections to Docker Hub from this network are reset at random by the
+# transit provider — `read: connection reset by peer` partway through a pull.
+# It is transient: the identical command succeeds on the next attempt. Retrying
+# is the fix, not a workaround for a real failure.
+retry() {
+  local attempt=1 max=6
+  until "$@"; do
+    if (( attempt >= max )); then
+      printf '\033[1;31m  giving up after %d attempts\033[0m\n' "$max"
+      return 1
+    fi
+    printf '\033[0;33m  attempt %d failed, retrying in 5s…\033[0m\n' "$attempt"
+    attempt=$((attempt + 1))
+    sleep 5
+  done
+}
+
 log "Fetching from origin"
 git fetch --tags --prune origin
 
@@ -36,8 +53,16 @@ set -a; source ./.env; set +a
 
 log "Deploying ${APP_NAME} ${APP_VERSION} ($(git rev-parse --short HEAD))"
 
+# Base images are fetched separately from the build so a reset costs one retry
+# of the pull rather than a retry of the whole build. Deliberately not `build
+# --pull`: that re-checks the registry on every deploy even when the base image
+# is already local, turning a flaky network into a flaky deploy.
+log "Fetching base images"
+retry docker pull "node:${NODE_VERSION}"
+retry docker pull "nginx:${NGINX_VERSION}"
+
 log "Building images"
-$COMPOSE build --pull
+retry $COMPOSE build
 
 log "Starting services"
 $COMPOSE up -d --remove-orphans

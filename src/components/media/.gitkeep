@@ -1,0 +1,4 @@
+Media components live here. Tracked so the directory survives a clean clone —
+git does not store empty directories.
+
+Delete this file once real components live here.
