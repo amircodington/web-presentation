@@ -1,0 +1,46 @@
+{
+  "name": "باغ مدرسه",
+  "venue": "باغ کتاب تهران",
+  "contextTag": "باشگاه ثروت در باغ مدرسه",
+  "startTime": "15:00",
+  "endTime": "22:00",
+  "audiencePriority": [
+    "student",
+    "parent",
+    "recent-konkur",
+    "school",
+    "organization"
+  ],
+  "secondaryAudiences": ["school", "organization"],
+  "attract": {
+    "hook": "هوش مالی‌ات چند از ۱۰۰ است؟",
+    "rotating": [
+      "اگر ۱۰۰ میلیون داشتی، باهاش چی کار می‌کردی؟",
+      "فکر می‌کنی راحت گول سود تضمینی رو می‌خوری؟",
+      "تو بازار، خریدار بهتری هستی یا فروشنده؟",
+      "۶۰ ثانیه وقت داری خودتو محک بزنی."
+    ],
+    "cta": "شروع تست"
+  },
+  "defaultProductOrder": ["masir-servat", "business-school", "plus18"],
+  "audienceProductOrder": {
+    "recent-konkur": ["plus18", "masir-servat", "business-school"]
+  },
+  "cadence": "هر ۳۰ دقیقه یک اجرای ۸ تا ۱۲ دقیقه‌ای",
+  "nextSlotLabel": "مینی‌چالش بعدی",
+  "schedule": [
+    { "time": "15:30", "activityId": "challenge-100m" },
+    { "time": "16:00", "activityId": "price-mystery" },
+    { "time": "16:30", "activityId": "scam-or-opportunity" },
+    { "time": "17:00", "activityId": "challenge-100m" },
+    { "time": "17:30", "activityId": "price-mystery" },
+    { "time": "18:00", "activityId": "scam-or-opportunity" },
+    { "time": "18:30", "activityId": "challenge-100m" },
+    { "time": "19:00", "activityId": "price-mystery" },
+    { "time": "19:30", "activityId": "scam-or-opportunity" },
+    { "time": "20:00", "activityId": "challenge-100m" },
+    { "time": "20:30", "activityId": "price-mystery" },
+    { "time": "21:00", "activityId": "scam-or-opportunity" },
+    { "time": "21:30", "activityId": "challenge-100m" }
+  ]
+}

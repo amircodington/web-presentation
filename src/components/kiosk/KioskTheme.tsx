@@ -18,6 +18,10 @@ export function KioskTheme() {
     --kiosk-on-accent:${colors.onAccent};
     --kiosk-text:${colors.text};
     --kiosk-muted:${colors.textMuted};
+    --kiosk-card-text:${colors.cardText};
+    --kiosk-card-muted:${colors.cardMuted};
+    --kiosk-money:${colors.money};
+    --kiosk-positive:${colors.positive};
   }`
   return <style dangerouslySetInnerHTML={{ __html: css }} />
 }

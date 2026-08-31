@@ -1,5 +1,11 @@
 import { z } from "zod"
-import { AudienceIdSchema, IsoDateSchema, MediaRefSchema, PriceSchema } from "./common"
+import {
+  AudienceIdSchema,
+  IconNameSchema,
+  IsoDateSchema,
+  MediaRefSchema,
+  PriceSchema,
+} from "./common"
 
 /** One themed block of a course syllabus. */
 export const CurriculumBlockSchema = z.object({
@@ -62,9 +68,36 @@ export const WorkshopSchema = z.object({
 export const AudienceSchema = z.object({
   id: AudienceIdSchema,
   label: z.string().min(1),
+  /**
+   * How the visitor names themselves — "I'm a student", not "Student".
+   * The home screen asks the visitor to point at themselves, and a first-person
+   * card is answered faster than a category label.
+   */
+  selfLabel: z.string().min(1),
   headline: z.string().min(1),
   question: z.string().min(1),
-  icon: z.string().min(1),
+  icon: IconNameSchema,
+  /** Photograph from a real Wealth Club session, shown on the home card. */
+  media: MediaRefSchema.optional(),
+  /**
+   * A second question this audience has to answer before a recommendation means
+   * anything. A parent picking "my child" has told us nothing until they say
+   * which year the child is in — the answer routes them to a different product.
+   */
+  followUp: z
+    .object({
+      options: z
+        .array(
+          z.object({
+            label: z.string().min(1),
+            detail: z.string().min(1),
+            /** Re-files the visitor as this audience, changing what leads. */
+            audience: AudienceIdSchema.optional(),
+          }),
+        )
+        .min(2),
+    })
+    .optional(),
   needs: z.array(z.string().min(1)).min(1),
 })
 

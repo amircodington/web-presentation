@@ -135,6 +135,33 @@ empty result panel at the exact moment they are most engaged.
 Options carry `risk` and `growth` rather than being hardcoded by id, so adding a
 new asset to a game is a content edit.
 
+## Event configuration
+
+`content/event.json` holds everything that changes when the booth moves to a different event:
+opening hours, the mini-activity running order, which audience the home screen greets first,
+and which product each audience is led with.
+
+Nothing in that file may be reached by editing a component. The two rules it drives:
+
+| Field | Effect |
+|---|---|
+| `audiencePriority` / `secondaryAudiences` | Order and visual weight of the home screen cards |
+| `defaultProductOrder` / `audienceProductOrder` | Which product leads any listing, per audience |
+| `schedule` | `[{ time, activityId }]` — validated against `activities.json` at build time |
+| `attract` | The hook, its rotating lines, and the CTA on the attract loop |
+
+`activities.json` stays the reusable catalogue of what the booth *can* run; `event.json` decides
+when each one is actually on. Taking the same activities to a different event is a schedule edit.
+
+## Icons
+
+Content names an icon; `components/ui/Icon.tsx` owns the geometry. The names are a Zod enum in
+`schema/common.ts`, so naming an icon that does not exist fails `npm run validate:content`
+rather than rendering an empty square at the booth.
+
+Emoji are not used anywhere in the UI. The host font decides their colour and weight, so they
+cannot be tinted to match a state, and at kiosk sizes they read as clip art pasted onto the design.
+
 ## QR destinations
 
 `qr.json` maps a purpose (`general`, `plus18`, `school`, `test_result`, …) to a URL. Codes are

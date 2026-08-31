@@ -1,29 +1,11 @@
 {
   "title": "فعالیت‌های زنده غرفه",
-  "eventHours": "۱۴:۰۰ تا ۲۱:۰۰",
-  "cadence": "هر ۳۰ دقیقه یک اجرای ۸ تا ۱۲ دقیقه‌ای",
-  "nextSlotLabel": "مینی‌ورکشاپ بعدی",
-  "slots": [
-    "14:30",
-    "15:00",
-    "15:30",
-    "16:00",
-    "16:30",
-    "17:00",
-    "17:30",
-    "18:00",
-    "18:30",
-    "19:00",
-    "19:30",
-    "20:00",
-    "20:30"
-  ],
   "activities": [
     {
       "id": "challenge-100m",
       "title": "چالش ۱۰۰ میلیون",
       "durationMin": 8,
-      "icon": "💰",
+      "icon": "coins",
       "hook": "اگر همین الان ۱۰۰ میلیون تومان داشتی، باهاش چه کار می‌کردی؟",
       "mechanic": "مبلغ را بین خرج، پس‌انداز، طلا، بورس، کسب‌وکار و آموزش تقسیم کن.",
       "learning": [
@@ -43,42 +25,42 @@
           {
             "id": "spend",
             "label": "خرید و خرج",
-            "icon": "🛍",
+            "icon": "spend",
             "risk": "none",
             "growth": false
           },
           {
             "id": "save",
             "label": "پس‌انداز نقدی",
-            "icon": "🏦",
+            "icon": "save",
             "risk": "none",
             "growth": false
           },
           {
             "id": "gold",
             "label": "طلا",
-            "icon": "🪙",
+            "icon": "gold",
             "risk": "low",
             "growth": true
           },
           {
             "id": "market",
             "label": "بورس / صندوق",
-            "icon": "📈",
+            "icon": "market",
             "risk": "high",
             "growth": true
           },
           {
             "id": "business",
             "label": "کسب‌وکار",
-            "icon": "🚀",
+            "icon": "business",
             "risk": "high",
             "growth": true
           },
           {
             "id": "education",
             "label": "آموزش و مهارت",
-            "icon": "🎓",
+            "icon": "education",
             "risk": "low",
             "growth": true
           }
@@ -115,7 +97,7 @@
       "id": "price-mystery",
       "title": "راز نوسان قیمت",
       "durationMin": 10,
-      "icon": "📈",
+      "icon": "chart",
       "hook": "چرا قیمت یک چیز در ۵ دقیقه می‌تونه تغییر کنه؟",
       "mechanic": "چند نفر خریدار و چند نفر فروشنده می‌شوند و با هر خبر، قیمت جدید شکل می‌گیرد.",
       "learning": [
@@ -167,7 +149,7 @@
       "id": "scam-or-opportunity",
       "title": "فرصته یا کلاهبرداری؟",
       "durationMin": 8,
-      "icon": "🚩",
+      "icon": "flag",
       "hook": "پنج پیشنهاد مالی می‌گم؛ تو بگو کدومش مشکوکه.",
       "mechanic": "با کارت سبز و قرمز، پیشنهادهای مالی کوتاه را ارزیابی کن.",
       "learning": [
@@ -215,7 +197,7 @@
       "id": "build-a-portfolio",
       "title": "سبدت رو بچین",
       "durationMin": 10,
-      "icon": "🧺",
+      "icon": "basket",
       "hook": "برای یک هدف مشخص، بین چند دارایی یک سبد بساز.",
       "mechanic": "با ۱۰ توکن بین نقد، طلا، صندوق، کسب‌وکار و آموزش تقسیم کن.",
       "learning": [
@@ -235,35 +217,35 @@
           {
             "id": "cash",
             "label": "نقد",
-            "icon": "💵",
+            "icon": "cash",
             "risk": "none",
             "growth": false
           },
           {
             "id": "gold",
             "label": "طلا",
-            "icon": "🪙",
+            "icon": "gold",
             "risk": "low",
             "growth": true
           },
           {
             "id": "fund",
             "label": "صندوق / بورس",
-            "icon": "📈",
+            "icon": "market",
             "risk": "high",
             "growth": true
           },
           {
             "id": "business",
             "label": "کسب‌وکار کوچک",
-            "icon": "🚀",
+            "icon": "business",
             "risk": "high",
             "growth": true
           },
           {
             "id": "education",
             "label": "آموزش",
-            "icon": "🎓",
+            "icon": "education",
             "risk": "low",
             "growth": true
           }

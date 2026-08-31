@@ -2,6 +2,9 @@
 
 import { motion } from "motion/react"
 import { content } from "@/content/load"
+import { toPersianDigits } from "@/lib/format"
+import { Button } from "@/components/ui/Button"
+import { Chip } from "@/components/ui/Chip"
 import type { SceneComponentProps } from "@/engine"
 
 /**
@@ -19,13 +22,11 @@ export function CollaborationScene({ state, camera, props }: SceneComponentProps
   if (!track) return null
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col justify-center gap-10 rounded-[48px] px-24 pt-14 pb-52">
+    <div className="scene-surface flex h-full w-full flex-col justify-center gap-9 rounded-[48px] px-20 pt-14 pb-52">
       <div className="flex flex-col gap-4">
-        <p className="text-[28px] font-medium text-[var(--kiosk-accent)]">{track.title}</p>
-        <h2 className="max-w-[85%] text-[62px] leading-[1.18] font-bold text-balance">
-          {track.heroTitle}
-        </h2>
-        <p className="text-[30px] text-[var(--kiosk-muted)]">{track.heroSubtitle}</p>
+        <p className="text-[26px] font-medium text-[var(--kiosk-money)]">{track.title}</p>
+        <h2 className="display max-w-[85%] text-[58px] text-balance">{track.heroTitle}</h2>
+        <p className="text-[28px] text-[var(--kiosk-muted)]">{track.heroSubtitle}</p>
       </div>
 
       <div className="grid grid-cols-3 gap-6">
@@ -35,24 +36,21 @@ export function CollaborationScene({ state, camera, props }: SceneComponentProps
             initial={{ opacity: 0, y: 55 }}
             animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
-            className="flex min-h-[300px] flex-col gap-4 rounded-3xl card-surface p-9"
+            className="mat flex min-h-[290px] flex-col gap-4 rounded-[32px] p-8"
           >
-            <h3 className="text-[36px] leading-tight font-bold">{card.title}</h3>
-            <p className="text-[26px] font-medium text-[var(--kiosk-accent)]">{card.subtitle}</p>
-            <p className="text-[24px] leading-relaxed text-[var(--kiosk-muted)]">{card.detail}</p>
+            <Chip label={toPersianDigits(index + 1)} tone="board" size={64} />
+            <h3 className="text-[33px] leading-tight font-bold">{card.title}</h3>
+            <p className="text-[24px] font-medium text-[var(--kiosk-accent)]">{card.subtitle}</p>
+            <p className="text-[23px] leading-relaxed text-[var(--kiosk-card-muted)]">
+              {card.detail}
+            </p>
           </motion.article>
         ))}
       </div>
 
       <div className="flex items-center justify-between gap-8">
-        <p className="text-[26px] text-[var(--kiosk-muted)]">{track.pricePolicy}</p>
-        <button
-          type="button"
-          onClick={() => camera.goTo("connect")}
-          className="min-h-[88px] cursor-pointer rounded-2xl bg-[var(--kiosk-accent)] px-10 text-[32px] font-semibold text-[var(--kiosk-on-accent)]"
-        >
-          {track.cta}
-        </button>
+        <p className="text-[25px] text-[var(--kiosk-muted)]">{track.pricePolicy}</p>
+        <Button onClick={() => camera.goTo("connect")}>{track.cta}</Button>
       </div>
     </div>
   )

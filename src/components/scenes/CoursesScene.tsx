@@ -1,14 +1,17 @@
 "use client"
 
 import { motion } from "motion/react"
-import { activeCourses, coursesFor, priceFor } from "@/content/select"
+import { activeCourses, coursesFor, orderProducts, priceFor } from "@/content/select"
 import { formatPrice } from "@/lib/format"
 import { useSession } from "@/store/session"
 import { Button } from "@/components/ui/Button"
+import { Photo } from "@/components/ui/Photo"
 import type { SceneComponentProps } from "@/engine"
 
 /**
- * The catalogue, filtered to the visitor's declared audience when there is one.
+ * The catalogue, filtered to the visitor's declared audience when there is one and
+ * ordered the way `event.json` wants products led with.
+ *
  * Falls back to everything active rather than to an empty screen, because an
  * audience with no matching course must still see something to consider.
  */
@@ -17,7 +20,7 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
   const audience = useSession((store) => store.audience)
 
   const matching = audience ? coursesFor(audience) : []
-  const courses = (matching.length > 0 ? matching : activeCourses()).slice(0, 3)
+  const courses = (matching.length > 0 ? matching : orderProducts(activeCourses())).slice(0, 3)
 
   // Filtering by audience often leaves one or two cards. A fixed three-column grid
   // would strand them against a wall of empty space, so the track count follows
@@ -25,24 +28,24 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
   const columns = Math.max(1, courses.length)
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col justify-center gap-12 rounded-[48px] px-24 pt-16 pb-52">
+    <div className="scene-surface flex h-full w-full flex-col gap-9 rounded-[48px] px-20 pt-14 pb-52">
       <div className="flex items-end justify-between gap-10">
-        <div className="flex flex-col gap-4">
-          <p className="text-[28px] font-medium text-[var(--kiosk-accent)]">دوره‌ها</p>
-          <h2 className="text-[72px] leading-[1.15] font-bold">
-            {audience ? "این‌ها برای تو انتخاب شده‌اند" : "مسیرهای یادگیری"}
+        <div className="flex flex-col gap-3">
+          <p className="text-[26px] font-medium text-[var(--kiosk-money)]">مسیرها</p>
+          <h2 className="display text-[64px]">
+            {audience ? "این‌ها برای تو انتخاب شده" : "از کجا می‌خواهی شروع کنی؟"}
           </h2>
         </div>
         <Button variant="ghost" onClick={() => camera.goTo("live")}>
-          فعالیت‌های زنده ←
+          چالش‌های زنده ←
         </Button>
       </div>
 
       <div
-        className="mx-auto grid w-full gap-7"
+        className="mx-auto grid w-full flex-1 gap-7"
         style={{
           gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-          maxWidth: columns === 1 ? "720px" : columns === 2 ? "1180px" : "100%",
+          maxWidth: columns === 1 ? "760px" : columns === 2 ? "1200px" : "100%",
         }}
       >
         {courses.map((course, index) => {
@@ -56,23 +59,31 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
               animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
               transition={{ duration: 0.55, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
               whileTap={{ scale: 0.97 }}
-              className="flex min-h-[430px] cursor-pointer flex-col justify-between rounded-3xl card-surface p-10 text-start"
+              className="mat relative flex cursor-pointer flex-col overflow-hidden rounded-[32px] text-start"
             >
-              <div className="flex flex-col gap-5">
-                <h3 className="text-[42px] leading-tight font-bold">{course.title}</h3>
-                <p className="text-[27px] leading-relaxed text-[var(--kiosk-muted)]">
+              {index === 0 ? (
+                <span className="absolute end-6 top-6 z-10 rounded-full bg-[var(--kiosk-accent)] px-6 py-2 text-[21px] font-bold text-[var(--kiosk-on-accent)]">
+                  پیشنهاد اول
+                </span>
+              ) : null}
+
+              {course.media ? <Photo media={course.media} className="h-[210px] w-full" /> : null}
+
+              <div className="flex flex-1 flex-col gap-4 p-9">
+                <h3 className="text-[40px] leading-tight font-bold">{course.title}</h3>
+                <p className="text-[25px] leading-relaxed text-[var(--kiosk-card-muted)]">
                   {course.summary}
                 </p>
                 {course.targetAge ? (
-                  <span className="w-fit chip rounded-full px-6 py-2 text-[24px]">
+                  <span className="pill-on-mat w-fit rounded-full px-5 py-1.5 text-[22px]">
                     {course.targetAge}
                   </span>
                 ) : null}
-              </div>
 
-              <div className="flex w-full items-baseline justify-between gap-4">
-                <PriceBlock regular={price.regular} festival={price.festival} />
-                <span className="text-[26px] text-[var(--kiosk-accent)]">جزئیات ←</span>
+                <div className="mt-auto flex w-full items-baseline justify-between gap-4 pt-3">
+                  <PriceBlock regular={price.regular} festival={price.festival} />
+                  <span className="text-[25px] font-bold text-[var(--kiosk-accent)]">جزئیات ←</span>
+                </div>
               </div>
             </motion.button>
           )
@@ -89,24 +100,24 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
  */
 function PriceBlock({ regular, festival }: { regular?: number; festival?: number }) {
   if (regular === undefined && festival === undefined) {
-    return <p className="text-[28px] text-[var(--kiosk-muted)]">قیمت را در غرفه بپرسید</p>
+    return <p className="text-[25px] text-[var(--kiosk-card-muted)]">قیمت را در غرفه بپرسید</p>
   }
 
   return (
-    <div className="flex items-baseline gap-5">
+    <div className="flex items-baseline gap-4">
       {festival !== undefined ? (
         <>
-          <span className="text-[40px] font-bold text-[var(--kiosk-accent)]">
+          <span className="text-[36px] font-bold text-[var(--kiosk-accent)]">
             {formatPrice(festival)}
           </span>
           {regular !== undefined ? (
-            <span className="text-[26px] text-[var(--kiosk-muted)] line-through">
+            <span className="text-[24px] text-[var(--kiosk-card-muted)] line-through">
               {formatPrice(regular)}
             </span>
           ) : null}
         </>
       ) : (
-        <span className="text-[40px] font-bold">{formatPrice(regular!)}</span>
+        <span className="text-[36px] font-bold">{formatPrice(regular!)}</span>
       )}
     </div>
   )

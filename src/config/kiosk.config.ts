@@ -37,6 +37,10 @@ export const kioskConfig = Object.freeze({
   successResetMs: readNumber("KIOSK_SUCCESS_RESET_MS", env.KIOSK_SUCCESS_RESET_MS, 9_000),
   qrResetMs: readNumber("KIOSK_QR_RESET_MS", env.KIOSK_QR_RESET_MS, 25_000),
   gestureRecenterMs: readNumber("KIOSK_GESTURE_RECENTER_MS", env.KIOSK_GESTURE_RECENTER_MS, 6_000),
+  /** How often the schedule countdown re-reads the clock. */
+  scheduleTickMs: readNumber("KIOSK_SCHEDULE_TICK_MS", env.KIOSK_SCHEDULE_TICK_MS, 20_000),
+  /** Dwell time per rotating line on the attract loop. */
+  attractRotateMs: readNumber("KIOSK_ATTRACT_ROTATE_MS", env.KIOSK_ATTRACT_ROTATE_MS, 6_500),
   festivalOfferEnabled: readBoolean(
     "KIOSK_FESTIVAL_OFFER_ENABLED",
     env.KIOSK_FESTIVAL_OFFER_ENABLED,

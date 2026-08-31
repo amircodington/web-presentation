@@ -4,6 +4,7 @@ import { content } from "@/content/load"
 import { AllocationGame } from "@/components/games/AllocationGame"
 import { JudgementGame } from "@/components/games/JudgementGame"
 import { MarketGame } from "@/components/games/MarketGame"
+import { Chip } from "@/components/ui/Chip"
 import { toPersianDigits } from "@/lib/format"
 import type { SceneComponentProps } from "@/engine"
 
@@ -25,16 +26,16 @@ export function GameScene({ state, camera, props }: SceneComponentProps) {
   const finish = () => camera.goTo("quiz-intro", "dive")
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col gap-6 rounded-[48px] px-20 pt-12 pb-52">
+    <div className="scene-surface flex h-full w-full flex-col gap-6 rounded-[48px] px-16 pt-12 pb-52">
       <header className="flex items-start justify-between gap-8">
-        <div className="flex items-center gap-5">
-          <span className="text-[54px]">{activity.icon}</span>
+        <div className="flex items-center gap-6">
+          <Chip icon={activity.icon} tone="accent" size={80} />
           <div className="flex flex-col">
-            <h2 className="text-[46px] leading-tight font-bold">{activity.title}</h2>
-            <p className="text-[26px] text-[var(--kiosk-muted)]">{activity.hook}</p>
+            <h2 className="display text-[44px]">{activity.title}</h2>
+            <p className="text-[25px] text-[var(--kiosk-muted)]">{activity.hook}</p>
           </div>
         </div>
-        <span className="chip shrink-0 rounded-full px-6 py-2 text-[24px]">
+        <span className="pill shrink-0 rounded-full px-6 py-2 text-[23px]">
           {toPersianDigits(activity.durationMin)} دقیقه
         </span>
       </header>
@@ -59,7 +60,7 @@ function GamePreview({ learning }: { learning: readonly string[] }) {
   return (
     <div className="flex h-full flex-wrap content-center gap-4">
       {learning.map((item) => (
-        <span key={item} className="chip rounded-full px-7 py-4 text-[28px]">
+        <span key={item} className="pill rounded-full px-7 py-4 text-[27px]">
           {item}
         </span>
       ))}

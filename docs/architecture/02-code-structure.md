@@ -78,8 +78,9 @@ src/
 │   ├── products/               # CourseCard, WorkshopCard, PriceTag, OfferBadge
 │   ├── lead/                   # LeadForm, QrPanel, SuccessScreen
 │   ├── games/                  # AllocationGame, MarketGame, JudgementGame
+│   ├── charts/                 # PriceChart, ChipStackChart, ScoreGauge, ScheduleRail
 │   ├── media/                  # BackgroundVideo, KenBurnsImage, ParticleField
-│   └── ui/                     # Button, Heading, Sheet — primitives only, no domain logic
+│   └── ui/                     # Button, Chip, Icon, Logo, Photo — primitives only, no domain logic
 │
 ├── content/
 │   ├── schema/                 # one Zod schema per content file
@@ -87,7 +88,8 @@ src/
 │   └── select.ts               # derived queries: activeCourses(), offerFor(courseId)
 │
 ├── lib/
-│   ├── games/                  # pure game logic: allocation feedback rules
+│   ├── games/                  # pure game logic: allocation rules, market price series
+│   ├── schedule.ts             # pure: running order → next slot, countdown, day phase
 │   ├── scoring.ts              # quiz answers → raw score
 │   ├── recommendation.ts       # score + audience → ordered product ids
 │   ├── idle.ts                 # inactivity detection and reset orchestration

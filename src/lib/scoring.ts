@@ -1,4 +1,6 @@
 import { content } from "@/content/load"
+import { orderProducts } from "@/content/select"
+import type { AudienceId } from "@/content/schema/common"
 import type { ResultBand } from "@/content/schema/quiz"
 
 export type Answers = Readonly<Record<string, string>>
@@ -20,6 +22,19 @@ export function scoreAnswers(answers: Answers): number {
     if (option) total += option.score
   }
   return total
+}
+
+/**
+ * The score rebased onto 0–100.
+ *
+ * The attract loop asks "how much out of 100 is your financial intelligence?", so
+ * the result has to answer that question in the units it was asked in. The raw
+ * score stays the unit the bands are defined in — rebasing there would force the
+ * content team to re-derive every boundary whenever a question is added.
+ */
+export function scoreOutOfHundred(score: number): number {
+  const max = maxScore()
+  return max > 0 ? Math.round((score / max) * 100) : 0
 }
 
 /** The highest score the quiz can produce. Used to draw the progress meter. */
@@ -46,19 +61,24 @@ export function bandFor(score: number): ResultBand {
 /**
  * Ordered product ids to recommend.
  *
- * The band's own recommendations lead. When the visitor has declared an audience,
- * products matching it are promoted ahead of the rest — a parent and a student can
- * reach the same score and should not be sold the same thing.
+ * The band decides which products are relevant; `event.json` decides which of them
+ * leads. When the visitor has declared an audience, products matching it are
+ * promoted ahead of the rest — a parent and a student can reach the same score and
+ * should not be sold the same thing.
  */
-export function recommendFor(score: number, audience?: string): readonly string[] {
+export function recommendFor(score: number, audience?: AudienceId): readonly string[] {
   const band = bandFor(score)
-  if (!audience) return band.recommendedProducts
+  const ranked = orderProducts(
+    band.recommendedProducts.map((id) => ({ id })),
+    audience,
+  ).map((entry) => entry.id)
+  if (!audience) return ranked
 
   const matching: string[] = []
   const rest: string[] = []
-  for (const id of band.recommendedProducts) {
+  for (const id of ranked) {
     const course = content.courses.find((candidate) => candidate.id === id)
-    if (course?.audiences.includes(audience as never)) matching.push(id)
+    if (course?.audiences.includes(audience)) matching.push(id)
     else rest.push(id)
   }
   return [...matching, ...rest]

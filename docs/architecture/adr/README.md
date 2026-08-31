@@ -14,3 +14,4 @@ ADR that supersedes the old one, so the reasoning trail survives.
 | [0003](0003-no-backend-qr-first.md) | No backend; QR-first lead capture | Accepted |
 | [0004](0004-env-as-single-source-of-truth.md) | Committed root `.env` as the version SSOT | Accepted |
 | [0005](0005-nginx-as-the-production-edge.md) | nginx as the production edge | Accepted |
+| [0006](0006-board-palette-over-paper-palette.md) | The board palette, replacing the paper palette | Accepted |

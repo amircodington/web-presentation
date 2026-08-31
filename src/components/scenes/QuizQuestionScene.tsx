@@ -25,19 +25,17 @@ export function QuizQuestionScene({ state, camera, props }: SceneComponentProps)
   return (
     <div className="scene-surface flex h-full w-full flex-col justify-center gap-12 rounded-[48px] px-24 pt-16 pb-52">
       <div className="flex flex-col gap-6">
-        <div className="flex items-center gap-5">
-          <span className="text-[26px] font-semibold text-[var(--kiosk-accent)]">
+        <div className="flex items-center gap-6">
+          <span className="text-[25px] font-semibold text-[var(--kiosk-money)]">
             سؤال {toPersianDigits(index + 1)} از {toPersianDigits(total)}
           </span>
           <ProgressRail current={index} total={total} />
         </div>
 
-        <h2 className="max-w-[90%] text-[68px] leading-[1.18] font-bold text-balance">
-          {question.prompt}
-        </h2>
+        <h2 className="display max-w-[90%] text-[70px] text-balance">{question.prompt}</h2>
 
         {question.hint ? (
-          <p className="text-[28px] text-[var(--kiosk-muted)]">{question.hint}</p>
+          <p className="text-[27px] text-[var(--kiosk-muted)]">{question.hint}</p>
         ) : null}
       </div>
 
@@ -56,12 +54,22 @@ export function QuizQuestionScene({ state, camera, props }: SceneComponentProps)
               animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
               transition={{ duration: 0.35, delay: optionIndex * 0.05, ease: [0.16, 1, 0.3, 1] }}
               whileTap={{ scale: 0.97 }}
-              className={`min-h-[128px] rounded-3xl border-2 px-10 text-start text-[36px] font-semibold transition-colors duration-[var(--duration-instant)] ${
+              className={`flex min-h-[130px] items-center gap-6 rounded-[28px] px-9 text-start text-[35px] font-semibold transition-colors duration-[var(--duration-instant)] ${
                 isChosen
-                  ? "border-[var(--kiosk-accent)] bg-[var(--kiosk-accent)]/15 text-[var(--kiosk-accent)]"
-                  : "card-surface"
+                  ? "bg-[var(--kiosk-accent)] text-[var(--kiosk-on-accent)]"
+                  : "mat"
               }`}
             >
+              <span
+                className="grid h-14 w-14 shrink-0 place-items-center rounded-full text-[26px] font-black"
+                style={{
+                  background: isChosen
+                    ? "color-mix(in oklab, var(--kiosk-on-accent) 25%, transparent)"
+                    : "color-mix(in oklab, var(--kiosk-card-text) 9%, transparent)",
+                }}
+              >
+                {toPersianDigits(optionIndex + 1)}
+              </span>
               {option.label}
             </motion.button>
           )
@@ -77,10 +85,9 @@ function ProgressRail({ current, total }: { current: number; total: number }) {
       {Array.from({ length: total }, (_, index) => (
         <span
           key={index}
-          className="h-2 flex-1 rounded-full transition-colors duration-[var(--duration-base)]"
+          className="h-2.5 flex-1 rounded-full transition-colors duration-[var(--duration-base)]"
           style={{
-            background:
-              index <= current ? "var(--kiosk-accent)" : "color-mix(in oklab, white 12%, transparent)",
+            background: index <= current ? "var(--kiosk-money)" : "var(--kiosk-border)",
           }}
         />
       ))}

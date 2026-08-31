@@ -55,37 +55,67 @@ Persian display type at kiosk scale is the whole visual identity, so it is worth
 | Caption | 24px | Regular | Prices, ages, durations |
 | Never below | 22px | — | Anything smaller is decoration, not information |
 
-Fonts are **self-hosted** in `public/fonts` and subset — a Google Fonts request is a blank
-screen when the venue wifi drops. Vazirmatn or Estedad are the sensible choices; both have
-proper Persian numerals and a real weight range. Persian digits (`۱۲۳`) are rendered via a
-formatter, never by swapping fonts.
+Two faces, self-hosted by Next at build time — a Google Fonts request at runtime is a blank
+screen when the venue wifi drops.
+
+| Face | Role |
+|---|---|
+| **Vazirmatn** | Everything readable. Full weight range, proper Persian numerals |
+| **Lalezar** | Hero lines and big numbers only, via the `display` utility |
+
+Lalezar is a poster face: one weight, heavy, and unmistakably Persian rather than a Latin
+family with Persian glyphs bolted on. That is right for the three or four lines a passer-by
+reads at ten metres and wrong for everything else, which is why it is reached through a utility
+class rather than set on the body.
+
+Persian digits (`۱۲۳`) are rendered via a formatter, never by swapping fonts.
 
 Line height for Persian runs higher than Latin — `1.7` for body, `1.15` for display — because
 the script's ascenders and diacritics collide at tighter settings.
 
 ## Colour
 
-Sourced from `brand.json` into CSS custom properties, so a rebrand is a JSON edit. Until the
-client supplies values, the placeholders live in one place and are clearly marked.
+Sourced from `brand.json` into CSS custom properties, so a rebrand is a JSON edit.
 
-The kiosk is designed **light**: warm paper ground, near-black ink, and one sharp red.
-Red is the strongest attention signal available at ten metres, and it is reserved for
-exactly one thing per screen — whatever the visitor should touch next.
+The palette is the booth's own table. At the stand, visitors sit around a green board covered
+in plastic counters, play banknotes and light card mats, and the screen uses the same three
+materials:
 
-The trade-off is deliberate and worth stating: a bright screen in a hall reflects
-overhead lighting more than a dark one, and video content sits less comfortably on a
-light ground. The compensations are a warm off-white rather than pure white (less
-glare), ink at 14:1 contrast against it, and full-bleed red panels to give the deck
-tonal rhythm rather than relying on a dark surround.
+| Material | Token | Role |
+|---|---|---|
+| The table | `--kiosk-bg`, `--kiosk-surface` | Deep board green. The ground everything sits on |
+| Paper mats | `--kiosk-card`, `--kiosk-card-text` | Anything a visitor has to *read* sits on one |
+| The counter | `--kiosk-accent` | The logo's red. Exactly one "touch this" per screen |
 
-Components never hardcode a white or black alpha. Card fill, hairlines, and
-on-accent text are tokens (`--kiosk-card`, `--kiosk-border`, `--kiosk-on-accent`)
-sourced from `brand.json`, so the whole scheme can be inverted from content.
+Two supporting tokens carry meaning and never an action: `--kiosk-money` (gold — scores,
+prices, token values) and `--kiosk-positive` (green — growth, correct answers).
+
+**This inverts the original light scheme, deliberately.** Three reasons: the emblem above the
+stand is green and red, and a red-on-cream screen shared nothing with it; a dark screen *glows*
+in a bright hall instead of reflecting it back; and the photographs of real sessions, which are
+the strongest thing on the screen, sit far better on a dark ground than a cream one. The cost —
+long Persian text is harder to read reversed out — is paid off by the mats: every line longer
+than a label is set as ink on paper, so no body copy is ever light-on-dark.
+
+Components never hardcode a white or black alpha. Card fill, hairlines, and on-mat text are
+tokens sourced from `brand.json`, so the whole scheme can be inverted again from content.
 
 Exactly one accent colour signals "touch this". If two things on screen use the accent, the
 visitor has to make a decision, and visitors at a booth do not make decisions — they leave.
 This is why the persistent chrome never takes the solid accent: the navigation must not
 compete with the scene's own call to action.
+
+## The chip
+
+The kiosk's one repeated object, and the link between the screen and the table two metres away.
+
+A notched plastic counter, drawn in `components/ui/Chip.tsx` as two background layers: a radial
+gradient paints the face and one pressed groove, and a repeating conic gradient shows through in
+the band the face leaves uncovered to form the rim notches. It carries every icon, every token
+in the allocation game, and every step marker.
+
+A visitor who has just pushed these counters around the board recognises them here. That is the
+whole point — it is not decoration, it is continuity with the physical activity being advertised.
 
 ## The attract loop
 

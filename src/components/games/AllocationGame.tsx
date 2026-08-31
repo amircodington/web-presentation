@@ -3,9 +3,12 @@
 import { AnimatePresence, motion } from "motion/react"
 import { useState } from "react"
 import type { AllocationGame as AllocationGameContent } from "@/content/schema/activities"
-import { allocationShares, evaluateAllocation, tokensLeft } from "@/lib/games/allocation"
+import { evaluateAllocation, tokensLeft } from "@/lib/games/allocation"
 import { toPersianDigits } from "@/lib/format"
+import { ChipStackChart } from "@/components/charts/ChipStackChart"
 import { Button } from "@/components/ui/Button"
+import { Chip } from "@/components/ui/Chip"
+import { Icon } from "@/components/ui/Icon"
 
 interface Props {
   game: AllocationGameContent
@@ -26,7 +29,6 @@ export function AllocationGame({ game, onFinish }: Props) {
 
   const left = tokensLeft(game, allocation)
   const rules = submitted ? evaluateAllocation(game, allocation) : []
-  const shares = allocationShares(game, allocation)
 
   const place = (id: string) => {
     if (left === 0) return
@@ -46,40 +48,33 @@ export function AllocationGame({ game, onFinish }: Props) {
   if (submitted) {
     return (
       <div className="flex h-full flex-col justify-center gap-7">
-        <div className="flex flex-wrap gap-3">
-          {shares.map((share) => (
-            <span
-              key={share.id}
-              className="chip flex items-center gap-3 rounded-full px-6 py-3 text-[26px]"
-            >
-              <span className="text-[30px]">{share.icon}</span>
-              {share.label}
-              <b className="text-[var(--kiosk-accent)]">٪{toPersianDigits(share.percent)}</b>
-            </span>
-          ))}
+        <div className="flex items-center justify-center">
+          <ChipStackChart game={game} allocation={allocation} />
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           {rules.map((rule, index) => {
             const copy = game.feedback[rule]
             if (!copy) return null
             return (
               <motion.div
                 key={rule}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                className="card-surface rounded-3xl p-8"
+                transition={{ duration: 0.45, delay: 0.4 + index * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                className="mat rounded-[28px] px-8 py-5"
               >
-                <h4 className="text-[34px] font-bold text-[var(--kiosk-accent)]">{copy.title}</h4>
-                <p className="text-[26px] leading-relaxed text-[var(--kiosk-muted)]">{copy.body}</p>
+                <h4 className="text-[30px] font-bold text-[var(--kiosk-accent)]">{copy.title}</h4>
+                <p className="text-[24px] leading-relaxed text-[var(--kiosk-card-muted)]">
+                  {copy.body}
+                </p>
               </motion.div>
             )
           })}
         </div>
 
         <div className="flex gap-5">
-          <Button onClick={onFinish}>{"تست کامل مالی من ←"}</Button>
+          <Button onClick={onFinish}>{"هوش مالی‌ام رو محک بزن ←"}</Button>
           <Button
             variant="ghost"
             onClick={() => {
@@ -95,9 +90,9 @@ export function AllocationGame({ game, onFinish }: Props) {
   }
 
   return (
-    <div className="flex h-full flex-col justify-center gap-7">
+    <div className="flex h-full flex-col justify-center gap-6">
       <div className="flex items-center justify-between gap-8">
-        <p className="text-[32px] font-semibold">{game.prompt}</p>
+        <p className="text-[31px] font-semibold">{game.prompt}</p>
         <TokenCounter left={left} total={game.tokens} label={game.tokenLabel} />
       </div>
 
@@ -107,10 +102,8 @@ export function AllocationGame({ game, onFinish }: Props) {
           return (
             <div
               key={option.id}
-              className={`relative rounded-3xl border-2 transition-colors duration-[var(--duration-instant)] ${
-                count > 0
-                  ? "border-[var(--kiosk-accent)] bg-[var(--kiosk-accent-soft)]"
-                  : "card-surface"
+              className={`relative rounded-[28px] transition-colors duration-[var(--duration-instant)] ${
+                count > 0 ? "bg-[var(--kiosk-accent)] text-[var(--kiosk-on-accent)]" : "mat"
               }`}
             >
               <button
@@ -118,10 +111,10 @@ export function AllocationGame({ game, onFinish }: Props) {
                 onClick={() => place(option.id)}
                 disabled={left === 0}
                 aria-label={`افزودن توکن به ${option.label}`}
-                className="flex min-h-[168px] w-full cursor-pointer flex-col items-center justify-center gap-2 p-5 disabled:cursor-not-allowed"
+                className="flex min-h-[170px] w-full cursor-pointer flex-col items-center justify-center gap-2 p-5 disabled:cursor-not-allowed"
               >
-                <span className="text-[46px]">{option.icon}</span>
-                <span className="text-[27px] font-semibold">{option.label}</span>
+                <Icon name={option.icon} size={46} />
+                <span className="text-[26px] font-semibold">{option.label}</span>
                 <AnimatePresence mode="popLayout">
                   {count > 0 ? (
                     <motion.span
@@ -130,12 +123,12 @@ export function AllocationGame({ game, onFinish }: Props) {
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0.6, opacity: 0 }}
                       transition={{ type: "spring", stiffness: 600, damping: 28 }}
-                      className="text-[30px] font-black text-[var(--kiosk-accent)]"
+                      className="text-[30px] font-black"
                     >
                       {toPersianDigits(count)}×
                     </motion.span>
                   ) : (
-                    <span className="text-[24px] text-[var(--kiosk-muted)]">بزن</span>
+                    <span className="text-[23px] text-[var(--kiosk-card-muted)]">بزن</span>
                   )}
                 </AnimatePresence>
               </button>
@@ -145,7 +138,7 @@ export function AllocationGame({ game, onFinish }: Props) {
                   type="button"
                   onClick={() => take(option.id)}
                   aria-label={`برداشتن یک توکن از ${option.label}`}
-                  className="absolute top-3 left-3 h-14 w-14 cursor-pointer rounded-full bg-[var(--kiosk-surface)] text-[34px] leading-none font-bold text-[var(--kiosk-accent)] shadow-[0_6px_18px_-8px_rgb(23_19_16/0.5)]"
+                  className="absolute top-3 left-3 grid h-14 w-14 cursor-pointer place-items-center rounded-full bg-[var(--kiosk-card)] text-[34px] leading-none font-bold text-[var(--kiosk-accent)]"
                 >
                   −
                 </button>
@@ -169,20 +162,14 @@ export function AllocationGame({ game, onFinish }: Props) {
   )
 }
 
+/** The pot still to be placed, drawn as the chips it is made of. */
 function TokenCounter({ left, total, label }: { left: number; total: number; label: string }) {
   return (
     <div className="flex shrink-0 items-center gap-4">
-      <span className="text-[24px] text-[var(--kiosk-muted)]">هر توکن {label} تومان</span>
+      <span className="text-[23px] text-[var(--kiosk-muted)]">هر توکن {label} تومان</span>
       <div className="flex gap-1.5" aria-label={`${left} توکن مانده`}>
         {Array.from({ length: total }, (_, index) => (
-          <span
-            key={index}
-            className="h-8 w-8 rounded-full transition-colors duration-[var(--duration-quick)]"
-            style={{
-              background:
-                index < left ? "var(--kiosk-accent)" : "var(--kiosk-border)",
-            }}
-          />
+          <Chip key={index} tone={index < left ? "money" : "board"} size={34} />
         ))}
       </div>
     </div>

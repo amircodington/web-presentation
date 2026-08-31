@@ -5,6 +5,7 @@ import { useState } from "react"
 import type { JudgementGame as JudgementGameContent } from "@/content/schema/activities"
 import { toPersianDigits } from "@/lib/format"
 import { Button } from "@/components/ui/Button"
+import { Icon } from "@/components/ui/Icon"
 
 interface Props {
   game: JudgementGameContent
@@ -30,7 +31,7 @@ export function JudgementGame({ game, onFinish }: Props) {
     return (
       <div className="flex h-full flex-col justify-center gap-8 text-center">
         <p className="text-[34px] text-[var(--kiosk-muted)]">درست تشخیص دادی</p>
-        <p className="text-[120px] leading-none font-black text-[var(--kiosk-accent)]">
+        <p className="display text-[112px] text-[var(--kiosk-money)]">
           {toPersianDigits(correct)} از {toPersianDigits(game.scenarios.length)}
         </p>
         <p className="mx-auto max-w-[70%] text-[30px] leading-relaxed text-[var(--kiosk-muted)]">
@@ -38,7 +39,7 @@ export function JudgementGame({ game, onFinish }: Props) {
           یک قدم عقب بگذار و منبع را بررسی کن.
         </p>
         <div className="flex justify-center gap-5">
-          <Button onClick={onFinish}>{"تست کامل مالی من ←"}</Button>
+          <Button onClick={onFinish}>{"هوش مالی‌ام رو محک بزن ←"}</Button>
           <Button
             variant="ghost"
             onClick={() => {
@@ -71,15 +72,15 @@ export function JudgementGame({ game, onFinish }: Props) {
               key={i}
               className="h-3 w-12 rounded-full"
               style={{
-                background: i <= index ? "var(--kiosk-accent)" : "var(--kiosk-border)",
+                background: i <= index ? "var(--kiosk-money)" : "var(--kiosk-border)",
               }}
             />
           ))}
         </div>
       </div>
 
-      <div className="card-surface rounded-3xl px-12 py-10">
-        <p className="text-[44px] leading-snug font-bold">«{scenario.text}»</p>
+      <div className="mat rounded-[32px] px-12 py-10">
+        <p className="text-[42px] leading-snug font-bold">«{scenario.text}»</p>
       </div>
 
       <AnimatePresence mode="wait">
@@ -92,9 +93,15 @@ export function JudgementGame({ game, onFinish }: Props) {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col gap-5"
           >
-            <p className="text-[38px] font-bold">
-              {wasRight ? "✅ درست تشخیص دادی" : "❌ این یکی را از دست دادی"} — این پیشنهاد{" "}
-              {scenario.verdict === "risky" ? game.riskyLabel : game.safeLabel}
+            <p className="flex items-center gap-4 text-[36px] font-bold">
+              <span
+                style={{
+                  color: wasRight ? "var(--kiosk-positive)" : "var(--kiosk-accent)",
+                }}
+              >
+                <Icon name={wasRight ? "check" : "cross"} size={36} />
+              </span>
+              این پیشنهاد {scenario.verdict === "risky" ? game.riskyLabel : game.safeLabel}
             </p>
             <p className="text-[28px] leading-relaxed text-[var(--kiosk-muted)]">
               {scenario.explain}
@@ -155,12 +162,12 @@ function VerdictButton({
       onClick={onClick}
       className="flex min-h-[140px] cursor-pointer items-center justify-center gap-5 rounded-3xl border-4 text-[40px] font-bold"
       style={{
-        borderColor: risky ? "var(--kiosk-accent)" : "#1F8A4C",
-        background: risky ? "var(--kiosk-accent-soft)" : "#E6F4EA",
-        color: risky ? "var(--kiosk-accent)" : "#146B39",
+        borderColor: risky ? "var(--kiosk-accent)" : "var(--kiosk-positive)",
+        background: risky ? "var(--kiosk-accent-soft)" : "#E4F6EC",
+        color: risky ? "var(--kiosk-accent)" : "#0F6B3C",
       }}
     >
-      <span className="text-[54px]">{risky ? "🚩" : "✅"}</span>
+      <Icon name={risky ? "flag" : "check"} size={48} />
       {label}
     </button>
   )
