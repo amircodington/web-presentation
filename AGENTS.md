@@ -145,11 +145,20 @@ an existing one did not fit.
 
 - `docker-compose.yml` — development: bind mounts, hot reload, port 3000.
 - `docker-compose.prod.yml` — production: multi-stage build, Next.js standalone output,
-  no source mounted, image tagged from `APP_VERSION`.
+  no source mounted, image tagged from `APP_VERSION`, behind nginx.
 
 Both read from `.env`. Neither hardcodes a version, a port, or a tag.
 
-Full rules: [`docs/operations/01-docker.md`](docs/operations/01-docker.md).
+In production **nginx is the only published container**. The app uses `expose`, not `ports`,
+so it has no host-facing socket — adding one back defeats the proxy. All proxy configuration
+lives in `infra/nginx/`; the server block is a template rendered at container start so that
+the listen address, public host and upstream port stay in `.env`. See
+[ADR 0005](docs/architecture/adr/0005-nginx-as-the-production-edge.md).
+
+Deploying to a server is `./infra/scripts/deploy.sh`, not compose by hand.
+
+Full rules: [`docs/operations/01-docker.md`](docs/operations/01-docker.md) and
+[`docs/operations/06-server-deployment.md`](docs/operations/06-server-deployment.md).
 
 ## 8. Non-negotiables for the kiosk itself
 

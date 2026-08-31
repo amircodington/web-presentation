@@ -1,4 +1,11 @@
-# Production. Runs on the mini-PC driving the TV at the booth.
+# Production. nginx is the only thing published; the Next.js container is
+# reachable only from inside the compose network.
+#
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# Every port, tag, address and version below comes from the root `.env`
+# (AGENTS.md §5). Nothing here is a literal.
+
 services:
   kiosk:
     build:
@@ -8,11 +15,20 @@ services:
       args:
         APP_VERSION: ${APP_VERSION}
         NODE_VERSION: ${NODE_VERSION}
+        APP_INTERNAL_PORT: ${APP_INTERNAL_PORT}
     image: ${DOCKER_IMAGE}:${APP_VERSION}
-    ports:
-      - "${PROD_PORT}:3000"
+    # `expose`, not `ports`. Publishing the app directly would leave a second
+    # unproxied way in on every interface, which is exactly what putting nginx
+    # in front is meant to prevent.
+    expose:
+      - "${APP_INTERNAL_PORT}"
+    environment:
+      PORT: ${APP_INTERNAL_PORT}
+      HOSTNAME: 0.0.0.0
     env_file:
       - .env
+    networks:
+      - kiosk
     # The booth machine will be power-cycled and nobody will be there to bring
     # it back up.
     restart: unless-stopped
@@ -21,8 +37,48 @@ services:
         - CMD
         - node
         - -e
-        - "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+        - "fetch('http://127.0.0.1:'+process.env.PORT+'/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
       interval: 30s
       timeout: 5s
       start_period: 20s
       retries: 3
+
+  nginx:
+    image: nginx:${NGINX_VERSION}
+    # BIND_IP is 0.0.0.0 by default, which binds every interface the machine
+    # has — the same value works on the server, the booth mini-PC and a laptop.
+    ports:
+      - "${BIND_IP}:${PROD_PORT}:80"
+    environment:
+      NGINX_LISTEN_PORT: "80"
+      NGINX_SERVER_NAME: ${SERVER_HOST}
+      NGINX_UPSTREAM: kiosk:${APP_INTERNAL_PORT}
+      # Without this the entrypoint substitutes every environment variable it
+      # can see, and a stray one named like an nginx runtime variable would
+      # blank it out mid-config.
+      NGINX_ENVSUBST_FILTER: "^NGINX_"
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infra/nginx/snippets:/etc/nginx/snippets:ro
+      - ./infra/nginx/templates:/etc/nginx/templates:ro
+    # conf.d is where the entrypoint renders the template, and it must start
+    # empty: the stock image ships a default.conf that also claims port 80, and
+    # being alphabetically first it would answer before kiosk.conf does.
+    tmpfs:
+      - /etc/nginx/conf.d
+    depends_on:
+      kiosk:
+        condition: service_healthy
+    networks:
+      - kiosk
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1/api/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+networks:
+  kiosk:
+    driver: bridge

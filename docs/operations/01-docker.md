@@ -15,8 +15,12 @@ axllent/mailpit:v1.25               29.4MB
 ```
 
 The kiosk needs none of the data services (see [ADR 0003](../architecture/adr/0003-no-backend-qr-first.md)),
-so `node:22-bookworm-slim` is the only image pulled — and it is already local, meaning a first
-build needs no network.
+so `node:22-bookworm-slim` is the only image the build needs — and it is already local, meaning
+a first build needs no network.
+
+Production adds one image that was not on the list: `nginx:1.27-alpine` (~50MB), the edge proxy,
+justified in [ADR 0005](../architecture/adr/0005-nginx-as-the-production-edge.md). It is pulled
+on the first production `up`.
 
 **Adding a new base image requires an ADR.** Not because new images are forbidden, but because
 "we already have one that works" is the cheapest answer and it is easy to forget to check.
@@ -27,8 +31,10 @@ build needs no network.
 |---|---|
 | `Dockerfile` | Multi-stage: `deps` → `builder` → `runner` |
 | `docker-compose.yml` | Development. Bind-mounted source, hot reload |
-| `docker-compose.prod.yml` | Production. Baked image, no source mount |
-| `.dockerignore` | Excludes `node_modules`, `.next`, `.git`, `docs`, `tasks` |
+| `docker-compose.prod.yml` | Production. Baked image behind nginx, no source mount |
+| `.dockerignore` | Excludes `node_modules`, `.next`, `.git`, `docs`, `tasks`, `infra`, `docker-tar` |
+| `infra/nginx/` | Proxy config, bind-mounted into the nginx container at runtime |
+| `infra/scripts/` | `server-bootstrap.sh` (Ubuntu prep) and `deploy.sh` |
 
 Neither compose file contains a version, a port, or an image tag as a literal. Every one of
 those comes from `.env`.
@@ -51,16 +57,27 @@ docker compose up          # http://localhost:${DEV_PORT}
 ## Production
 
 ```bash
-docker compose -f docker-compose.prod.yml up -d --build
+docker compose -f docker-compose.prod.yml up -d --build   # http://localhost:${PROD_PORT}
 ```
+
+Two containers. `nginx` is the only one published, on `${BIND_IP}:${PROD_PORT}`; `kiosk` uses
+`expose` and is reachable only from inside the compose network — see
+[ADR 0005](../architecture/adr/0005-nginx-as-the-production-edge.md). On a server, use
+`infra/scripts/deploy.sh` rather than running compose by hand:
+[06 — Server Deployment](06-server-deployment.md).
 
 - `next build` with `output: "standalone"` — the runner stage copies only the standalone server,
   the static assets, and `public/`. No `node_modules`, no source, no dev dependencies.
+- The app binds `0.0.0.0` inside the container. With the default it would be reachable on
+  `localhost` only, and nginx would get connection refused with nothing else looking wrong.
+- `nginx` waits on `condition: service_healthy`, so a proxy is never fronting an app that has
+  not finished starting.
 - Runs as non-root `node`.
 - `restart: unless-stopped`, because the booth machine will be power-cycled and nobody will be
   there to bring it back up.
 - A healthcheck hits `/api/health`; an unhealthy container restarts itself.
-- Image tagged `${DOCKER_IMAGE}:${APP_VERSION}` and `:latest`, both from `.env`.
+- Image tagged `${DOCKER_IMAGE}:${APP_VERSION}`, and the proxy `nginx:${NGINX_VERSION}` —
+  both from `.env`.
 
 ## The Dockerfile stages
 

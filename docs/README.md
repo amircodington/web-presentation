@@ -17,6 +17,8 @@ Everything about *how this is built* lives here. Product truth lives in the hand
 | 8 | [`operations/03-git-workflow.md`](operations/03-git-workflow.md) | Trunk-based branching |
 | 9 | [`operations/04-changelogs.md`](operations/04-changelogs.md) | The two changelogs |
 | 10 | [`operations/05-kiosk-deployment.md`](operations/05-kiosk-deployment.md) | Running it on the TV |
+| 11 | [`operations/06-server-deployment.md`](operations/06-server-deployment.md) | Running it on a server behind nginx |
+| 12 | [`../infra/README.md`](../infra/README.md) | Proxy config and deploy scripts |
 
 ## Product source of truth
 

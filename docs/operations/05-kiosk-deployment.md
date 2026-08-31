@@ -9,7 +9,7 @@
                    │
 ┌──────────────────┴───────────────────────┐
 │  Mini-PC at the booth                    │
-│    Docker → Next.js standalone :8080     │
+│    Docker → nginx :3002 → Next.js :3000  │
 │    Chromium in kiosk mode → localhost    │
 │    Autostart on boot, no login prompt    │
 └──────────────────────────────────────────┘
@@ -20,18 +20,22 @@ tested before the machine leaves the office — not discovered at the venue.
 
 ## Bringing it up
 
+The port is `PROD_PORT` from `.env` — `3002`. It is written out below rather than interpolated
+because these commands get typed at a booth, but `.env` is still the only place it is defined:
+change it there and every line here follows.
+
 ```bash
 git clone <repo> && cd web-presentation
 git checkout v1.0.0                       # always a tag, never a branch
 docker compose -f docker-compose.prod.yml up -d --build
-curl -f http://localhost:8080/api/health
+curl -f http://localhost:3002/api/health
 ```
 
 ## Chromium in kiosk mode
 
 ```bash
 chromium \
-  --kiosk http://localhost:8080 \
+  --kiosk http://localhost:3002 \
   --incognito \
   --noerrdialogs \
   --disable-infobars \

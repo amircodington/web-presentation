@@ -10,3 +10,10 @@ playwright-report
 test-results
 *.log
 .DS_Store
+
+# Bind-mounted into the nginx container at runtime; never part of an image.
+infra
+
+# Exported image archives. Hundreds of megabytes that would otherwise be
+# uploaded to the daemon on every single build.
+docker-tar

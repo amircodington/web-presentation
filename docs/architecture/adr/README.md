@@ -13,3 +13,4 @@ ADR that supersedes the old one, so the reasoning trail survives.
 | [0002](0002-json-content-with-zod.md) | JSON content validated by Zod, no CMS | Accepted |
 | [0003](0003-no-backend-qr-first.md) | No backend; QR-first lead capture | Accepted |
 | [0004](0004-env-as-single-source-of-truth.md) | Committed root `.env` as the version SSOT | Accepted |
+| [0005](0005-nginx-as-the-production-edge.md) | nginx as the production edge | Accepted |
