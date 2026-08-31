@@ -19,12 +19,12 @@ export function CourseDetailScene({ state, props }: SceneComponentProps) {
 
   const price = priceFor(course.id)
   const logistics = course.logistics
+  // The poster is the better artwork where there is a full-height column to give it.
+  const artwork = course.campaignPoster ?? course.media
 
   return (
     <div className="scene-surface flex h-full w-full gap-12 rounded-[48px] px-16 pt-14 pb-52">
-      {course.media ? (
-        <Photo media={course.media} className="w-[23%] shrink-0 rounded-[32px]" />
-      ) : null}
+      {artwork ? <Photo media={artwork} className="w-[23%] shrink-0 rounded-[32px]" /> : null}
 
       <div className="flex w-[34%] shrink-0 flex-col justify-center gap-6">
         {course.campaignTitle ? (

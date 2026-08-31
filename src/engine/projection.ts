@@ -74,10 +74,19 @@ export function clampZoom(scale: number, min: number, max: number): number {
  * it lands on. That is what makes a 13" laptop and a 55" TV show *proportionally
  * identical* frames — percentage-based sizing cannot promise that, because it
  * reflows when the aspect ratio changes.
+ *
+ * `inset` reserves screen pixels on every edge before fitting, so the stage lands
+ * as a card on a surround. The margin is at least `inset` all round and larger on
+ * whichever axis is not the constraint — the frame's aspect ratio is never traded
+ * away to even the two up.
  */
-export function fitScale(design: Size, screen: Size): number {
+export function fitScale(design: Size, screen: Size, inset = 0): number {
   if (design.width <= 0 || design.height <= 0) return 1
-  return Math.min(screen.width / design.width, screen.height / design.height)
+  const available = {
+    width: Math.max(1, screen.width - inset * 2),
+    height: Math.max(1, screen.height - inset * 2),
+  }
+  return Math.min(available.width / design.width, available.height / design.height)
 }
 
 /** A rectangle in canvas space. */

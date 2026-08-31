@@ -54,7 +54,7 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
   // physical screen, so camera maths is resolution-independent and every scene is
   // authored once against one known size.
   const { scope, camera } = useCamera({ scenes, initialSceneId, viewport: design })
-  const scale = fitScale(design, screen)
+  const scale = fitScale(design, screen, kioskConfig.engine.stageInsetPx)
   useGestures(viewportRef, camera, scale)
 
   useEffect(() => {
@@ -80,8 +80,13 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
     <div
       ref={viewportRef}
       data-viewport
-      className="absolute inset-0 overflow-hidden bg-[var(--kiosk-bg)]"
-      style={{ touchAction: "none", overscrollBehavior: "none" }}
+      className="absolute inset-0 overflow-hidden"
+      /* Darker than the board, so the stage reads as a card lying on a surround. */
+      style={{
+        touchAction: "none",
+        overscrollBehavior: "none",
+        background: "color-mix(in oklab, var(--kiosk-bg) 52%, black)",
+      }}
     >
       {/*
         The stage is exactly one design frame, scaled uniformly to the screen. This
@@ -106,6 +111,10 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
           transform: `translate(-50%, -50%) scale(${scale})`,
           transformOrigin: "center center",
           overflow: "hidden",
+          // Matches the radius every scene carries, so the stage clips to the same
+          // card silhouette the scenes are drawn as.
+          borderRadius: 48,
+          boxShadow: "0 40px 90px -40px rgb(0 0 0 / 0.85)",
         }}
       >
       <Camera scopeRef={scope}>
