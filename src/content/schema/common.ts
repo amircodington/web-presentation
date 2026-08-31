@@ -53,6 +53,9 @@ export const IconNameSchema = z.enum([
   "down",
   "spark",
   "map",
+  "home",
+  "back",
+  "next",
 ])
 
 export const AudienceIdSchema = z.enum([

@@ -1,6 +1,14 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from "react"
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentType,
+  type CSSProperties,
+  type ReactNode,
+} from "react"
 import { kioskConfig } from "@/config/kiosk.config"
 import { Camera } from "./Camera"
 import { CameraProvider } from "./CameraContext"
@@ -55,6 +63,9 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
   // authored once against one known size.
   const { scope, camera } = useCamera({ scenes, initialSceneId, viewport: design })
   const scale = fitScale(design, screen, kioskConfig.engine.stageInsetPx)
+  // Published so the chrome, which lives outside the scaled stage, can sit a fixed
+  // distance from the stage's edge rather than from the screen's.
+  const stageMargin = Math.max(0, (screen.height - design.height * scale) / 2)
   useGestures(viewportRef, camera, scale)
 
   useEffect(() => {
@@ -111,6 +122,10 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
           transform: `translate(-50%, -50%) scale(${scale})`,
           transformOrigin: "center center",
           overflow: "hidden",
+          // The board itself. Without it the overview map, where the camera pulls
+          // back past the scenes, shows the surround through the stage and the card
+          // frame disappears at exactly the moment the map needs a table to sit on.
+          background: "var(--kiosk-bg)",
           // Matches the radius every scene carries, so the stage clips to the same
           // card silhouette the scenes are drawn as.
           borderRadius: 48,
@@ -140,7 +155,14 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
         })}
       </Camera>
       </div>
-      {overlay ? <div className="pointer-events-none absolute inset-0">{overlay}</div> : null}
+      {overlay ? (
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ "--kiosk-stage-margin": `${stageMargin}px` } as CSSProperties}
+        >
+          {overlay}
+        </div>
+      ) : null}
     </div>
     </CameraProvider>
   )
