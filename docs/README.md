@@ -29,6 +29,7 @@ Everything about *how this is built* lives here. Product truth lives in the hand
 | [`wealth-club-kiosk-handoff-pack/03-CONTENT-DATA-INPUTS.md`](wealth-club-kiosk-handoff-pack/03-CONTENT-DATA-INPUTS.md) | What the client must supply |
 | [`wealth-club-kiosk-handoff-pack/04-QUIZ-LOGIC.md`](wealth-club-kiosk-handoff-pack/04-QUIZ-LOGIC.md) | Scoring and recommendation rules |
 | [`wealth-club-kiosk-handoff-pack/05-DEVELOPER-HANDOFF.md`](wealth-club-kiosk-handoff-pack/05-DEVELOPER-HANDOFF.md) | Original implementation checklist |
+| [`my/`](my/) | Per-event change requests, and the brand and photography masters `public/media/` is derived from |
 
 ## Decision records
 

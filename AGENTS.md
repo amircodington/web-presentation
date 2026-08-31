@@ -23,6 +23,9 @@ conversion — stop a passer-by, identify who they are, recommend the right cour
 Authoritative product source: [`docs/wealth-club-kiosk-handoff-pack/`](docs/wealth-club-kiosk-handoff-pack/).
 If code and that pack disagree, the pack wins — or you raise it with the user, never silently diverge.
 
+Per-event amendments on top of that pack, plus the original brand and photography masters
+`public/media/` is derived from, live in [`docs/my/`](docs/my/).
+
 ## 2. Locked technical decisions
 
 Do not relitigate these. To change one, write an ADR in `docs/architecture/adr/` and get user sign-off.
