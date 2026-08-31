@@ -117,6 +117,19 @@ in the allocation game, and every step marker.
 A visitor who has just pushed these counters around the board recognises them here. That is the
 whole point — it is not decoration, it is continuity with the physical activity being advertised.
 
+## The persistent chrome
+
+Back, home, the map and next live in one tray rather than as four loose pills. Four buttons
+floating over a scene read as four separate decisions; one tray reads as "the navigation",
+which is what it is, and it stops the controls competing with the scene's own call to action.
+
+The tray keys its offset off `--kiosk-stage-margin`, a custom property the engine publishes
+from the stage's rendered geometry, so it clears the card's edge by the same distance on any
+screen rather than only on a 1920×1080 one.
+
+The map is tinted, never solid. Exactly one thing on screen may read as "touch this", and on
+every screen that is the scene's, not the navigation's.
+
 ## The attract loop
 
 The most important scene in the product and the only one most passers-by will ever see.

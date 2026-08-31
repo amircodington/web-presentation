@@ -204,6 +204,26 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <path d="M8.5 4v13M15.5 6.5v13" />
     </>
   ),
+  home: (
+    <>
+      <path d="m3.5 10.5 8.5-6.5 8.5 6.5" />
+      <path d="M5.5 9.5V20h13V9.5" />
+      <path d="M9.75 20v-5.5h4.5V20" />
+    </>
+  ),
+  /* Journeys read right-to-left, so "back" points right and "next" points left. */
+  back: (
+    <>
+      <path d="M4 12h16" />
+      <path d="m14 6 6 6-6 6" />
+    </>
+  ),
+  next: (
+    <>
+      <path d="M20 12H4" />
+      <path d="m10 6-6 6 6 6" />
+    </>
+  ),
 }
 
 /** Icons that read as a solid shape rather than an outline. */
