@@ -181,6 +181,11 @@ These come from the physical reality of an unattended screen in a loud hall:
 - **One design size, scaled.** Scenes are authored at `ENGINE_DESIGN_WIDTH` ×
   `ENGINE_DESIGN_HEIGHT` and the stage scales uniformly to the screen, so a laptop and
   the TV show identical frames. Never add breakpoints or percentage layouts to a scene.
+  `ENGINE_STAGE_INSET_PX` reserves a margin on every edge so the frame reads as a card
+  on a surround; set it to `0` for true edge-to-edge.
+- **Landscape art and portrait art are separate content fields.** A poster squeezed into
+  a card's wide strip shows background and no artwork — see `campaignPoster` in
+  `docs/architecture/04-content-model.md`.
 - **Interactive elements show a pointer cursor.** The kiosk is touch-only, but the same
   build is driven with a mouse during review and setup.
 - **60fps or it does not ship.** Animate `transform` and `opacity` only. Never animate

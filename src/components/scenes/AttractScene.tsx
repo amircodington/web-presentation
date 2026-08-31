@@ -105,9 +105,10 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
         <button
           type="button"
           onClick={() => camera.goTo("home", "glide")}
-          className="pointer-events-auto text-[27px] font-semibold text-[var(--kiosk-muted)] underline-offset-8 hover:underline"
+          className="pointer-events-auto inline-flex min-h-[88px] cursor-pointer items-center gap-4 rounded-full border-2 border-[var(--kiosk-card)]/70 bg-[color-mix(in_oklab,var(--kiosk-bg)_70%,black)] px-11 text-[30px] font-bold text-[var(--kiosk-card)]"
         >
-          یا همه مسیرها را ببین ←
+          یا همه مسیرها را ببین
+          <span aria-hidden className="text-[26px] opacity-70">←</span>
         </button>
       </div>
     </div>

@@ -39,7 +39,17 @@ export const CourseSchema = z.object({
   priceRegular: PriceSchema.optional(),
   priceFestival: PriceSchema.optional(),
   registrationUrl: z.url().optional(),
+  /** Landscape image for cards. Anything that crops to a wide strip belongs here. */
   media: MediaRefSchema.optional(),
+  /**
+   * The printed campaign poster, which is portrait.
+   *
+   * Kept apart from `media` because the two crop in opposite directions: a poster
+   * squeezed into a card's wide strip shows a band of background and none of its
+   * artwork. Only the detail scene, which has a full-height column to give it, ever
+   * shows this.
+   */
+  campaignPoster: MediaRefSchema.optional(),
   curriculum: z.array(CurriculumBlockSchema).default([]),
   logistics: LogisticsSchema.optional(),
   /** Key into qr.json. Validated against that file by the loader. */

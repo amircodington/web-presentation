@@ -42,7 +42,7 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
       </div>
 
       <div
-        className="mx-auto grid w-full flex-1 gap-7"
+        className="mx-auto grid w-full flex-1 content-center gap-7"
         style={{
           gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
           maxWidth: columns === 1 ? "760px" : columns === 2 ? "1200px" : "100%",
@@ -59,7 +59,7 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
               animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
               transition={{ duration: 0.55, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
               whileTap={{ scale: 0.97 }}
-              className="mat relative flex cursor-pointer flex-col overflow-hidden rounded-[32px] text-start"
+              className="mat relative flex h-[470px] cursor-pointer flex-col overflow-hidden rounded-[32px] text-start"
             >
               {index === 0 ? (
                 <span className="absolute end-6 top-6 z-10 rounded-full bg-[var(--kiosk-accent)] px-6 py-2 text-[21px] font-bold text-[var(--kiosk-on-accent)]">

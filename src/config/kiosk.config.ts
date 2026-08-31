@@ -52,6 +52,12 @@ export const kioskConfig = Object.freeze({
     designHeight: readNumber("ENGINE_DESIGN_HEIGHT", env.ENGINE_DESIGN_HEIGHT, 1080),
     minZoom: readNumber("ENGINE_MIN_ZOOM", env.ENGINE_MIN_ZOOM, 0.4),
     maxZoom: readNumber("ENGINE_MAX_ZOOM", env.ENGINE_MAX_ZOOM, 2.5),
+    /**
+     * Screen pixels left bare around the stage, so the frame reads as a card on a
+     * surround rather than as a full-bleed panel with nowhere to end. Set to 0 for
+     * true edge-to-edge.
+     */
+    stageInsetPx: readNumber("ENGINE_STAGE_INSET_PX", env.ENGINE_STAGE_INSET_PX, 26),
   }),
 
   features: Object.freeze({

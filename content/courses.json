@@ -90,11 +90,20 @@
     "active": true,
     "media": {
       "kind": "image",
+      "src": "/media/workshop-hands.jpg",
+      "alt": "دست‌های یک نوجوان روی تخته بازی و اسکناس‌های بازی",
+      "focalPoint": [
+        0.55,
+        0.5
+      ]
+    },
+    "campaignPoster": {
+      "kind": "image",
       "src": "/media/poster-plus18.jpg",
       "alt": "پوستر دوره ۱۸+ باشگاه ثروت",
       "focalPoint": [
         0.5,
-        0.35
+        0.3
       ]
     }
   },
@@ -150,6 +159,7 @@
     "qrKey": "business-school",
     "audiences": [
       "student",
+      "recent-konkur",
       "young-adult",
       "parent",
       "school"

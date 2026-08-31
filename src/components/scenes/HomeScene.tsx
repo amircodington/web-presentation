@@ -73,13 +73,13 @@ export function HomeScene({ state, camera }: SceneComponentProps) {
             key={audience.id}
             type="button"
             onClick={() => choose(audience)}
-            className="felt flex min-h-[96px] cursor-pointer items-center gap-5 rounded-2xl px-7 text-start"
+            className="mat flex min-h-[96px] cursor-pointer items-center gap-5 rounded-2xl px-7 text-start"
           >
-            <span className="text-[var(--kiosk-muted)]">
+            <span className="text-[var(--kiosk-accent)]">
               <Icon name={audience.icon} size={38} />
             </span>
             <span className="text-[29px] font-semibold">{audience.selfLabel}</span>
-            <span className="ms-auto text-[26px] text-[var(--kiosk-muted)]">←</span>
+            <span className="ms-auto text-[26px] text-[var(--kiosk-accent)]">←</span>
           </button>
         ))}
 
@@ -87,7 +87,7 @@ export function HomeScene({ state, camera }: SceneComponentProps) {
           <button
             type="button"
             onClick={() => camera.goTo("offer", "rise")}
-            className="flex min-h-[96px] cursor-pointer items-center gap-5 rounded-2xl border-2 border-[var(--kiosk-accent)] px-7 text-start text-[var(--kiosk-accent)]"
+            className="mat flex min-h-[96px] cursor-pointer items-center gap-5 rounded-2xl px-7 text-start text-[var(--kiosk-accent)] ring-3 ring-[var(--kiosk-accent)] ring-inset"
           >
             <Icon name="gift" size={38} />
             <span className="text-[29px] font-semibold">{content.festival.offerTitle}</span>

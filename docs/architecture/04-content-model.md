@@ -153,6 +153,15 @@ Nothing in that file may be reached by editing a component. The two rules it dri
 `activities.json` stays the reusable catalogue of what the booth *can* run; `event.json` decides
 when each one is actually on. Taking the same activities to a different event is a schedule edit.
 
+## Imagery: landscape and portrait are different fields
+
+`media` is the landscape image a card crops to a wide strip. `campaignPoster` is the printed
+poster, which is portrait, and only the course detail scene — the one layout with a full-height
+column to give it — ever renders it.
+
+They are separate fields rather than one because the two crop in opposite directions. The +18
+poster placed in a card's 210px strip showed a band of red background and none of its artwork.
+
 ## Icons
 
 Content names an icon; `components/ui/Icon.tsx` owns the geometry. The names are a Zod enum in

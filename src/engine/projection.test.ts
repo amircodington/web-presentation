@@ -108,6 +108,26 @@ describe("fitScale", () => {
     expect(fitScale(design, { width: 3840, height: 2160 })).toBeCloseTo(2)
   })
 
+  it("reserves the inset on every edge before fitting", () => {
+    // 1920 - 52 = 1868 wide, 1080 - 52 = 1028 tall. Height is the tighter axis.
+    expect(fitScale(design, design, 26)).toBeCloseTo(1028 / 1080)
+  })
+
+  it("leaves at least the inset of margin on the limiting axis", () => {
+    const inset = 26
+    const scale = fitScale(design, design, inset)
+    const margin = (design.height - design.height * scale) / 2
+    expect(margin).toBeGreaterThanOrEqual(inset - 0.001)
+  })
+
+  it("is unchanged when no inset is asked for", () => {
+    expect(fitScale(design, design, 0)).toBe(fitScale(design, design))
+  })
+
+  it("never inverts the frame on a screen smaller than the inset", () => {
+    expect(fitScale(design, { width: 20, height: 20 }, 26)).toBeGreaterThan(0)
+  })
+
   it("takes the limiting axis so nothing is cropped", () => {
     // A 16:10 laptop is height-limited against a 16:9 design.
     expect(fitScale(design, { width: 1440, height: 900 })).toBeCloseTo(1440 / 1920)
