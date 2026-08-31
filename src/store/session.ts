@@ -2,6 +2,7 @@
 
 import { create } from "zustand"
 import type { AudienceId } from "@/content/schema/common"
+import { createSessionId } from "@/lib/id"
 
 /** One visitor's interaction with the kiosk. Wiped whole on idle reset. */
 export interface KioskSession {
@@ -28,7 +29,7 @@ interface SessionStore extends KioskSession {
 
 function freshSession(): KioskSession {
   return {
-    id: crypto.randomUUID(),
+    id: createSessionId(),
     startedAt: Date.now(),
     audience: undefined,
     answers: {},
