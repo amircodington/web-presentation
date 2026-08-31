@@ -1,0 +1,8 @@
+Video and imagery are served from this directory at /media/.
+
+It is tracked deliberately: git does not store empty directories, and without a
+file here a clean clone has no public/ at all — which fails the Dockerfile's
+`COPY /app/public ./public` and breaks the build on every machine except one
+that happens to have created the directory by hand.
+
+Delete this file once real assets live here.
