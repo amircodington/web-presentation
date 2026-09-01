@@ -5,18 +5,19 @@
   "logo": "/media/logo-full.png",
   "logoMark": "/media/logo-mark.png",
   "colors": {
-    "background": "#07301D",
-    "surface": "#0C462B",
-    "card": "#F7F4EC",
-    "border": "#1A5C3A",
-    "accent": "#E8404A",
-    "accentSoft": "#FADFE0",
+    "background": "#FFF1D0",
+    "surface": "#FFFFFF",
+    "card": "#FFFFFF",
+    "border": "#1B2A4A",
+    "accent": "#FF3B30",
+    "accentSoft": "#FFD9D6",
     "onAccent": "#FFFFFF",
-    "text": "#EAF4ED",
-    "textMuted": "#8FB6A0",
-    "cardText": "#0A2116",
-    "cardMuted": "#5B7566",
-    "money": "#F0B33C",
-    "positive": "#3FC47C"
+    "text": "#1B2A4A",
+    "textMuted": "#5C6B8A",
+    "cardText": "#1B2A4A",
+    "cardMuted": "#5C6B8A",
+    "money": "#FFB020",
+    "positive": "#00BFA6",
+    "joy": "#7C4DFF"
   }
 }

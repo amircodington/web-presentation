@@ -164,7 +164,7 @@ function VerdictButton({
       style={{
         borderColor: risky ? "var(--kiosk-accent)" : "var(--kiosk-positive)",
         background: risky ? "var(--kiosk-accent-soft)" : "#E4F6EC",
-        color: risky ? "var(--kiosk-accent)" : "#0F6B3C",
+        color: risky ? "var(--kiosk-accent)" : "var(--kiosk-positive)",
       }}
     >
       <Icon name={risky ? "flag" : "check"} size={48} />

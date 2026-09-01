@@ -4,10 +4,11 @@ import type { IconName } from "@/content/schema/common"
 /** Face, notch and glyph colours for each chip denomination. */
 const TONES = {
   accent: { face: "var(--kiosk-accent)", notch: "var(--kiosk-on-accent)", glyph: "var(--kiosk-on-accent)" },
-  money: { face: "var(--kiosk-money)", notch: "var(--kiosk-card-text)", glyph: "var(--kiosk-card-text)" },
-  positive: { face: "var(--kiosk-positive)", notch: "var(--kiosk-card-text)", glyph: "var(--kiosk-card-text)" },
+  money: { face: "var(--kiosk-money)", notch: "var(--kiosk-card)", glyph: "var(--kiosk-card-text)" },
+  positive: { face: "var(--kiosk-positive)", notch: "var(--kiosk-card)", glyph: "var(--kiosk-card-text)" },
+  joy: { face: "var(--kiosk-joy)", notch: "var(--kiosk-card)", glyph: "var(--kiosk-on-accent)" },
   paper: { face: "var(--kiosk-card)", notch: "var(--kiosk-accent)", glyph: "var(--kiosk-card-text)" },
-  board: { face: "var(--kiosk-surface)", notch: "var(--kiosk-positive)", glyph: "var(--kiosk-text)" },
+  board: { face: "var(--kiosk-bg)", notch: "var(--kiosk-money)", glyph: "var(--kiosk-card-text)" },
 } as const
 
 export type ChipTone = keyof typeof TONES
@@ -48,7 +49,8 @@ export function Chip({ icon, label, tone = "paper", size = 96, className = "" }:
           // The notched rim, showing only in the band the face leaves uncovered.
           `repeating-conic-gradient(from 9deg, ${rim} 0deg 9deg, ${face} 9deg 30deg)`,
         ].join(","),
-        boxShadow: `0 ${Math.round(size * 0.05)}px ${Math.round(size * 0.16)}px -${Math.round(size * 0.05)}px rgb(0 0 0 / 0.55)`,
+        // Drawn in ink and sitting on its own hard shadow, like every other piece.
+        boxShadow: `0 0 0 ${Math.max(2, Math.round(size * 0.045))}px var(--kiosk-border), ${Math.round(size * 0.07)}px ${Math.round(size * 0.07)}px 0 0 var(--kiosk-border)`,
       }}
     >
       {icon ? <Icon name={icon} size={Math.round(size * 0.46)} /> : null}

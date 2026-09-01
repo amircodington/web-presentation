@@ -9,16 +9,17 @@ export const BrandSchema = z.object({
   logo: z.string().startsWith("/"),
   logoMark: z.string().startsWith("/"),
   colors: z.object({
-    /** The table the game is played on. Everything else sits on top of it. */
+    /** The printed board everything is played on. */
     background: HexColor,
-    /** Raised panel green — the board, one step above the table. */
+    /** Raised panel, one step above the board. */
     surface: HexColor,
-    /**
-     * Card fill. Light on purpose: every line a visitor has to *read* sits on a
-     * paper mat, the way the player cards sit on the table at the stand.
-     */
+    /** Card fill. Every line a visitor has to *read* sits on one. */
     card: HexColor,
-    /** Hairline between cards and their ground. */
+    /**
+     * The ink every card is outlined and drawn in. Not a hairline: cards carry a
+     * drawn outline and a hard shadow in this colour, which is what makes them
+     * read as pieces you could pick up rather than as flat rectangles.
+     */
     border: HexColor,
     /** Exactly one accent signals "touch this". Two accents force a decision. */
     accent: HexColor,
@@ -35,6 +36,8 @@ export const BrandSchema = z.object({
     money: HexColor,
     /** Growth and correct answers. Never an action either. */
     positive: HexColor,
+    /** The fourth colour, carried by the characters. Play, never information. */
+    joy: HexColor,
   }),
 })
 

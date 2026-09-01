@@ -36,7 +36,7 @@ export function KioskChrome() {
             className="pointer-events-auto absolute flex w-full flex-col items-center gap-5"
             style={{ bottom: "calc(var(--kiosk-stage-margin, 0px) + 52px)" }}
           >
-            <p className="rounded-full bg-[var(--kiosk-card)] px-8 py-3 text-[26px] text-[var(--kiosk-card-text)]">
+            <p className="rounded-full border-[3px] border-[var(--kiosk-border)] bg-[var(--kiosk-card)] px-8 py-3 text-[26px] font-semibold text-[var(--kiosk-card-text)]">
               روی هر بخش بزنید تا به آن بروید
             </p>
             <Tray>
@@ -79,7 +79,11 @@ export function KioskChrome() {
         )}
       </AnimatePresence>
 
-      <span className="pointer-events-none absolute bottom-3 left-5 text-[15px] text-[var(--kiosk-muted)] opacity-40">
+      {/* Latin in an RTL document wraps per character without an explicit direction. */}
+      <span
+        dir="ltr"
+        className="pointer-events-none absolute bottom-3 left-5 text-[15px] whitespace-nowrap text-[var(--kiosk-muted)] opacity-50"
+      >
         v{kioskConfig.version}
       </span>
     </div>
@@ -90,13 +94,8 @@ export function KioskChrome() {
 function Tray({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="flex items-center gap-1.5 rounded-full border-2 p-2"
-      style={{
-        borderColor: "color-mix(in oklab, var(--kiosk-card) 22%, transparent)",
-        background: "color-mix(in oklab, var(--kiosk-bg) 82%, black)",
-        boxShadow: "0 24px 60px -24px rgb(0 0 0 / 0.9)",
-        backdropFilter: "blur(6px)",
-      }}
+      className="flex items-center gap-1.5 rounded-full border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-card)] p-2"
+      style={{ boxShadow: "6px 6px 0 0 var(--kiosk-border)" }}
     >
       {children}
     </div>
@@ -127,10 +126,8 @@ function ChromeButton({
       transition={{ type: "spring", stiffness: 700, damping: 30 }}
       className="inline-flex min-h-[84px] cursor-pointer items-center gap-3.5 rounded-full px-8 text-[28px] font-semibold"
       style={{
-        color: marked ? "var(--kiosk-accent)" : "var(--kiosk-card)",
-        background: marked
-          ? "color-mix(in oklab, var(--kiosk-accent) 12%, transparent)"
-          : "color-mix(in oklab, var(--kiosk-card) 9%, transparent)",
+        color: marked ? "var(--kiosk-accent)" : "var(--kiosk-text)",
+        background: marked ? "var(--kiosk-accent-soft)" : "transparent",
       }}
     >
       <Icon name={icon} size={28} />

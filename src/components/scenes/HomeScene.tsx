@@ -165,7 +165,7 @@ function SelfTestCard({
       animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
       transition={{ duration: 0.55, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
       whileTap={{ scale: 0.97 }}
-      className="relative flex cursor-pointer flex-col items-center justify-center gap-6 overflow-hidden rounded-[32px] bg-[var(--kiosk-accent)] px-8 text-center text-[var(--kiosk-on-accent)] shadow-[0_14px_0_-3px_color-mix(in_oklab,var(--kiosk-accent)_52%,black)]"
+      className="relative flex cursor-pointer flex-col items-center justify-center gap-6 overflow-hidden rounded-[32px] border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-accent)] px-8 text-center text-[var(--kiosk-on-accent)] shadow-[8px_8px_0_0_var(--kiosk-border)]"
     >
       <Chip icon="gauge" tone="paper" size={100} />
       <b className="display text-[44px] leading-tight">هوش مالی‌ام رو محک می‌زنم</b>

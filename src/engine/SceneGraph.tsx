@@ -92,11 +92,11 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
       ref={viewportRef}
       data-viewport
       className="absolute inset-0 overflow-hidden"
-      /* Darker than the board, so the stage reads as a card lying on a surround. */
+      /* Deeper than the board, so the stage reads as a card lying on a surround. */
       style={{
         touchAction: "none",
         overscrollBehavior: "none",
-        background: "color-mix(in oklab, var(--kiosk-bg) 52%, black)",
+        background: "color-mix(in oklab, var(--kiosk-bg) 72%, var(--kiosk-border))",
       }}
     >
       {/*
@@ -129,7 +129,7 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
           // Matches the radius every scene carries, so the stage clips to the same
           // card silhouette the scenes are drawn as.
           borderRadius: 48,
-          boxShadow: "0 40px 90px -40px rgb(0 0 0 / 0.85)",
+          boxShadow: "0 0 0 5px var(--kiosk-border)",
         }}
       >
       <Camera scopeRef={scope}>
