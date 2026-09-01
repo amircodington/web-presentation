@@ -8,6 +8,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-09-01
+
+### Added
+- **leads:** capture collaboration requests to a volume-backed archive (ac0345b)
+
 ## [0.1.0] — 2026-08-31
 
 ### Added
