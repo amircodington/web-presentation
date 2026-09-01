@@ -8,6 +8,8 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.0] — 2026-08-31
+
 ### Added
 - **engine:** Prezi-style camera over a single transforming canvas — pure `projection.ts`,
   `Camera`, `Scene`, `SceneGraph`, six named transition presets, pointer gestures, and
