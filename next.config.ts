@@ -1,4 +1,33 @@
+import { readFileSync } from "node:fs"
 import type { NextConfig } from "next"
+
+/**
+ * Loads the git-ignored `.env.secrets` over the committed `.env`.
+ *
+ * Next reads `.env` and `.env.local` on its own but knows nothing about this
+ * file, and the compose files pass it through `env_file` — so without this the
+ * archive token would be present in a container and absent under `npm run dev`.
+ * Existing values win: a variable already exported in the shell is deliberate.
+ */
+function loadSecrets(): void {
+  let raw: string
+  try {
+    raw = readFileSync(".env.secrets", "utf8")
+  } catch {
+    return
+  }
+
+  for (const line of raw.split("\n")) {
+    const match = /^\s*([A-Z0-9_]+)\s*=\s*(.*)$/.exec(line)
+    if (!match) continue
+    const [, key, value] = match
+    if (process.env[key!] === undefined) {
+      process.env[key!] = value!.trim().replace(/^["'](.*)["']$/, "$1")
+    }
+  }
+}
+
+loadSecrets()
 
 /**
  * Keys from the root `.env` that must be readable in the client bundle.

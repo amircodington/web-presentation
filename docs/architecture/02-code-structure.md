@@ -59,7 +59,13 @@ src/
 │   ├── layout.tsx              # <html lang="fa" dir="rtl">, fonts, global providers
 │   ├── page.tsx                # mounts <KioskCanvas />. The only route
 │   ├── globals.css             # Tailwind layers, CSS custom properties from brand.json
-│   └── admin/page.tsx          # hidden overlay: version, CSV export, content reload
+│   ├── admin/page.tsx          # hidden overlay: version, CSV export, content reload
+│   ├── leads/page.tsx          # the lead archive, gated on ?token=. Linked from nowhere
+│   └── api/
+│       ├── health/route.ts     # liveness probe
+│       └── leads/
+│           ├── route.ts        # POST one collaboration request. Public, write-only
+│           └── archive/        # GET list/PDF/CSV, DELETE. Token-guarded
 │
 ├── engine/                     # the Prezi camera. Product-agnostic, zero content imports
 │   ├── Camera.tsx              # the transforming node; consumes camera state
@@ -72,7 +78,8 @@ src/
 │   └── types.ts                # CameraState, SceneNode, TransitionSpec
 │
 ├── components/
-│   ├── kiosk/                  # AttractLoop, IdleReset, TouchHint, ProgressRail, ResetButton
+│   ├── kiosk/                  # AttractLoop, IdleReset, TouchHint, ProgressRail, LeadForm
+│   ├── leads/                  # LeadArchive — the operator's view, not part of the kiosk UI
 │   ├── scenes/                 # one component per scene type, named in scenes.json
 │   ├── quiz/                   # QuestionCard, OptionButton, ScoreMeter, ResultReveal
 │   ├── products/               # CourseCard, WorkshopCard, PriceTag, OfferBadge
@@ -95,14 +102,15 @@ src/
 │   ├── idle.ts                 # inactivity detection and reset orchestration
 │   ├── qr.ts                   # local QR rendering
 │   ├── analytics.ts            # KPI counters into IndexedDB, no network
-│   ├── leads.ts                # lead buffer + CSV export
+│   ├── leads/                  # server-only: schema, file store, access token, PDF, CSV
 │   └── storage.ts              # IndexedDB wrapper
 │
 ├── store/
 │   └── session.ts              # Zustand KioskSession. One reset() clears everything
 │
 └── config/
-    └── kiosk.config.ts         # reads .env into a typed, frozen config object
+    ├── kiosk.config.ts         # .env → typed frozen config. Safe on the client
+    └── server.config.ts        # server-only keys and secrets. `server-only` bars client use
 ```
 
 ## The boundaries that matter
@@ -120,6 +128,12 @@ is the only place validation happens. A direct import bypasses Zod and is how an
 
 **Components never read `process.env`.** They read `kioskConfig`. One typed, frozen object,
 one place to look when a timeout is wrong.
+
+**Secrets never reach `kiosk.config.ts`.** Every key it reads is inlined into the browser
+bundle at build time, so a token placed there is published. Server-only values live in
+`server.config.ts`, whose `server-only` import turns a client import into a build error rather
+than a leak. `src/lib/leads/` follows the same rule: everything that touches the disk or the
+token imports `server-only`.
 
 ## Naming
 

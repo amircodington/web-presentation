@@ -78,6 +78,14 @@ Two containers. `nginx` is the only one published, on `${BIND_IP}:${PROD_PORT}`;
 - A healthcheck hits `/api/health`; an unhealthy container restarts itself.
 - Image tagged `${DOCKER_IMAGE}:${APP_VERSION}`, and the proxy `nginx:${NGINX_VERSION}` —
   both from `.env`.
+- One named volume, `kiosk_leads`, mounted at `${LEADS_VOLUME_PATH}`. It holds the lead archive
+  and is **the only copy** — `down -v` destroys it. Named rather than a bind mount so it
+  survives `up --build`, a rollback to an older image tag, and `docker compose down`. The
+  Dockerfile creates and `chown`s the directory before dropping to `node`, which is what seeds
+  the empty volume with an ownership the app can write to. See
+  [07 — The Lead Archive](07-lead-archive.md).
+- Both compose files load `.env.secrets` as an optional second `env_file`. It is git-ignored and
+  holds `LEADS_ACCESS_TOKEN`; a deployment without it still starts, with the archive closed.
 
 ## The Dockerfile stages
 

@@ -12,7 +12,13 @@ names, and behavioural tunables — all of which must be identical for everyone 
 reviewable in a diff. A version that lives in an uncommitted file is a version nobody can
 verify.
 
-Secrets, if any ever appear, go in `.env.secrets`, which is git-ignored and loaded on top.
+Secrets go in `.env.secrets`, which is git-ignored and loaded on top — by both compose files as
+an optional `env_file`, and by `next.config.ts` so that `npm run dev` sees them too. The
+committed `.env.secrets.example` mirrors every key. Today the only one is `LEADS_ACCESS_TOKEN`
+([07 — The Lead Archive](07-lead-archive.md)).
+
+Secrets are read through `src/config/server.config.ts`, never `kiosk.config.ts`: every key the
+latter reads is inlined into the browser bundle at build time.
 
 ## `.env` layout
 
@@ -44,6 +50,12 @@ ENGINE_DESIGN_HEIGHT=1080
 ENGINE_MIN_ZOOM=0.4
 ENGINE_MAX_ZOOM=2.5
 ENGINE_DEFAULT_TRANSITION=glide
+
+# ─── Lead archive ────────────────────────────────────────
+LEADS_DATA_DIR=.data/leads      # local path; containers use LEADS_VOLUME_PATH
+LEADS_VOLUME_PATH=/data/leads   # volume mount point, used twice by compose
+LEADS_MAX_BODY_BYTES=8192
+# LEADS_ACCESS_TOKEN lives in .env.secrets — see .env.secrets.example
 
 # ─── Feature flags ───────────────────────────────────────
 FEATURE_QUIZ_ENABLED=true
@@ -83,9 +95,11 @@ Conventional Commits are not cosmetic — `npm run release` parses them.
 ## The release command
 
 ```bash
-npm run release            # bump derived from commits
-npm run release -- --minor # force a level
-npm run release -- --dry-run
+npm run release                        # bump derived from commits
+npm run release -- --minor             # force a level
+npm run release -- --dry-run           # print the plan, touch nothing
+npm run release -- --user-notes <file> # Persian notes from a file, for non-interactive runs
+npm run release -- --no-docker         # skip the image build
 ```
 
 `scripts/release.ts` does, in this order:
@@ -105,7 +119,12 @@ Steps 3, 7, 8 and 9 all read the same value, which is the entire point: the git 
 tag, the `package.json`, and the version on screen cannot drift apart.
 
 Step 6 pausing for human input is deliberate friction. An auto-generated user changelog is
-just the technical one with the prefixes stripped, which is worse than none.
+just the technical one with the prefixes stripped, which is worse than none. Without a TTY the
+script refuses rather than inventing an entry; pass `--user-notes <file>` instead.
+
+If step 9 fails because Docker is not running, the commit and tag still stand and the script
+prints the single `docker build` command that produces the missing image. Do not re-run the
+release to "fix" it — that would burn a second version number on the same code.
 
 ## Rollback
 

@@ -7,7 +7,7 @@ Read this file **before** touching anything. It overrides personal habits and ge
 > Whenever you introduce something an agent must know to work here correctly — a new
 > directory, a new script, a new environment variable, a new convention, a new
 > architectural boundary — you update `AGENTS.md` **in the same commit** that introduced it.
-> A change that makes this file stale is an incomplete change. See §10.
+> A change that makes this file stale is an incomplete change. See §11.
 
 ---
 
@@ -39,7 +39,7 @@ Do not relitigate these. To change one, write an ADR in `docs/architecture/adr/`
 | Content | Typed JSON in `content/`, validated by Zod. No hardcoded copy, prices, or URLs |
 | Per-event config | `content/event.json` — hours, running order, audience priority, product order |
 | Icons | Named in content, drawn in `components/ui/Icon.tsx`. **No emoji in the UI** |
-| Backend | None. QR-first. Leads buffer in IndexedDB and export as CSV |
+| Backend | One write-only route (`POST /api/leads`) plus token-guarded archive routes. No database: leads are JSON files on a Docker volume. QR stays the default path — [ADR 0007](docs/architecture/adr/0007-lead-archive-on-a-volume.md) |
 | Locale | `fa-IR` only, `dir="rtl"` |
 | Runtime | Docker, `node:22-bookworm-slim` base |
 | Deployment | Local mini-PC at the booth. Must work with the network unplugged |
@@ -61,6 +61,9 @@ Full reasoning: [`docs/architecture/01-overview.md`](docs/architecture/01-overvi
 **Everything else.**
 
 - TypeScript `strict`. No `any`, no `@ts-ignore`. If you need an escape hatch, ask.
+- Never wrap a `<button>` in a `<label>`. A button is a labelable control, so it takes the
+  label's entire text as its accessible name and every chip in a group announces the same
+  thing. Caption a group with a plain `<span>` and give each control its own `aria-label`.
 - Never hardcode content, prices, phone numbers, URLs, or Persian copy in components —
   it comes from `content/` through the typed loader.
 - Never hardcode tunables (timeouts, durations, easings) in components — they come from
@@ -121,7 +124,20 @@ may define its own copy of a value that belongs in `.env`.
 - the version badge rendered in the kiosk's hidden admin overlay
 
 Never hand-edit `APP_VERSION`. Run `npm run release` (see §6).
-Secrets never go in `.env`; they go in the git-ignored `.env.secrets`.
+
+Secrets never go in `.env`; they go in the git-ignored `.env.secrets`, mirrored key-for-key by
+the committed `.env.secrets.example`. Both compose files load it as an optional `env_file`, and
+`next.config.ts` loads it for `npm run dev`.
+
+Two config modules read the environment and nothing else may:
+
+| Module | Reads | Imported by |
+|---|---|---|
+| `src/config/kiosk.config.ts` | `.env` keys listed in `next.config.ts` | anything, including client components — **every key it reads is inlined into the browser bundle** |
+| `src/config/server.config.ts` | server-only keys, including secrets | server components and route handlers only; the `server-only` import makes a client import a build error |
+
+A secret added to `kiosk.config.ts` ships to every visitor's browser. Put it in
+`server.config.ts`.
 
 Full rules: [`docs/operations/02-versioning-and-releases.md`](docs/operations/02-versioning-and-releases.md).
 
@@ -160,6 +176,11 @@ lives in `infra/nginx/`; the server block is a template rendered at container st
 the listen address, public host and upstream port stay in `.env`. See
 [ADR 0005](docs/architecture/adr/0005-nginx-as-the-production-edge.md).
 
+The named volume `kiosk_leads` holds the lead archive and is mounted at `LEADS_VOLUME_PATH`.
+It is the only copy of that data: `docker compose down -v` destroys it. The Dockerfile creates
+and `chown`s that directory before dropping to the `node` user, which is what makes the empty
+volume writable on first mount.
+
 Deploying to a server is `./infra/scripts/deploy.sh`, not compose by hand.
 
 Full rules: [`docs/operations/01-docker.md`](docs/operations/01-docker.md) and
@@ -188,6 +209,9 @@ These come from the physical reality of an unattended screen in a loud hall:
   `docs/architecture/04-content-model.md`.
 - **Interactive elements show a pointer cursor.** The kiosk is touch-only, but the same
   build is driven with a mouse during review and setup.
+- **An overlay is part of its scene, not a page.** A modal opened from a scene carries the same
+  chrome clearance and must fit without scrolling — the persistent tray floats above everything,
+  and a submit button underneath it is a form nobody can finish. Measure it, do not eyeball it.
 - **60fps or it does not ship.** Animate `transform` and `opacity` only. Never animate
   `width`, `height`, `top`, or `left`.
 - **Respect `prefers-reduced-motion`**, but keep the kiosk's own default expressive.
@@ -206,17 +230,56 @@ These come from the physical reality of an unattended screen in a loud hall:
 - [ ] No hardcoded content, copy, or tunables introduced
 - [ ] No narration or bug-fix comments introduced
 - [ ] Content changes still validate against the Zod schemas
-- [ ] `AGENTS.md` and the relevant `docs/` page updated if a convention changed (§10)
+- [ ] `AGENTS.md` and the relevant `docs/` page updated if a convention changed (§11)
 - [ ] Work is on a branch, commits are Conventional, branch is merged with `--no-ff`
+- [ ] The merge was followed by `npm run release`, so the version, the tag, the image tag and
+      both changelogs moved together (§10)
 
-## 10. Keeping this file current
+## 10. Every task ends in a release
+
+A task is not "the code works". It is **branch → merge → release**, every time, without being
+asked. Anything short of that leaves `main` at a version that no longer describes what is in it,
+and leaves the production image tag pointing at code that is not this code.
+
+```bash
+git switch -c feat/<slug> main     # 1. branch — never commit to main (§4)
+#    …work, Conventional Commits…
+npm run lint && npm run typecheck && npm run test && npm run build
+git switch main && git merge --no-ff feat/<slug>
+git branch -d feat/<slug>
+npm run release                    # 2. bump, changelogs, tag, image
+```
+
+`npm run release` is the whole of step 2 and is the **only** thing permitted to change a
+version. It refuses to run on a dirty tree or off `main`, derives the bump from the commits
+(§4), then writes in one pass: `APP_VERSION` in `.env`, the `package.json` version, the
+generated `CHANGELOG.md` section, the hand-written Persian `CHANGELOG-USER.md` entry, the
+`chore(release): v<x>` commit, the `v<x>` git tag, and the `${DOCKER_IMAGE}:<x>` image that
+production deploys.
+
+Two things it will not do for you:
+
+- **Write `CHANGELOG-USER.md`.** It prompts, and refuses an empty entry. In a non-interactive
+  session write the Persian notes to a file and pass `--user-notes <file>`. Never paste the
+  technical changelog in with the prefixes stripped — see
+  [04-changelogs.md](docs/operations/04-changelogs.md).
+- **Guess the level.** `docs`/`chore`/`refactor`-only work releases nothing, and that is
+  correct: nothing an operator would notice changed. Force one with `--major`/`--minor`/
+  `--patch` only when you know why.
+
+If Docker is unavailable the tag still stands and the script prints the one command that builds
+the missing image. Do not "fix" that by re-running the release.
+
+Full rules: [`docs/operations/02-versioning-and-releases.md`](docs/operations/02-versioning-and-releases.md).
+
+## 11. Keeping this file current
 
 When you add or change any of the following, update the named section here in the same commit:
 
 | You changed… | Update |
 |---|---|
 | A top-level directory or module boundary | §2, and `docs/architecture/02-code-structure.md` |
-| An npm script or tool | §6, §9 |
+| An npm script or tool | §6, §9, §10 |
 | An environment variable | §5, and `docs/operations/02-versioning-and-releases.md` |
 | A Docker image, service, or compose file | §7, and `docs/operations/01-docker.md` |
 | A naming, comment, or style convention | §3 |

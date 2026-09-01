@@ -1,10 +1,13 @@
 "use client"
 
-import { motion } from "motion/react"
+import { AnimatePresence, motion } from "motion/react"
+import { useState } from "react"
+import { kioskConfig } from "@/config/kiosk.config"
 import { content } from "@/content/load"
 import { toPersianDigits } from "@/lib/format"
 import { Button } from "@/components/ui/Button"
 import { Chip } from "@/components/ui/Chip"
+import { LeadForm } from "@/components/kiosk/LeadForm"
 import type { SceneComponentProps } from "@/engine"
 
 /**
@@ -13,16 +16,22 @@ import type { SceneComponentProps } from "@/engine"
  * No price is shown. Both source briefs are explicit that figures are quoted per
  * engagement — putting a per-student number on a public screen would undercut the
  * conversation the booth exists to start.
+ *
+ * Two ways out, in order of value to the booth: leave a number for a callback,
+ * or take a QR away. The form is the accent button because a head teacher who
+ * scans a code at a stand rarely follows it up, and one who has typed a mobile
+ * number gets a call.
  */
 export function CollaborationScene({ state, camera, props }: SceneComponentProps) {
   const isActive = state === "active"
   const key = String(props.track ?? "schools") as "schools" | "organizations"
   const track = content.collaboration[key]
+  const [formOpen, setFormOpen] = useState(false)
 
   if (!track) return null
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col justify-center gap-9 rounded-[48px] px-20 pt-14 pb-52">
+    <div className="scene-surface relative flex h-full w-full flex-col justify-center gap-9 rounded-[48px] px-20 pt-14 pb-52">
       <div className="flex flex-col gap-4">
         <p className="text-[26px] font-medium text-[var(--kiosk-money)]">{track.title}</p>
         <h2 className="display max-w-[85%] text-[58px] text-balance">{track.heroTitle}</h2>
@@ -50,8 +59,21 @@ export function CollaborationScene({ state, camera, props }: SceneComponentProps
 
       <div className="flex items-center justify-between gap-8">
         <p className="text-[25px] text-[var(--kiosk-muted)]">{track.pricePolicy}</p>
-        <Button onClick={() => camera.goTo("connect")}>{track.cta}</Button>
+        <div className="flex shrink-0 items-center gap-4">
+          <Button variant="ghost" onClick={() => camera.goTo("connect")}>
+            {track.cta}
+          </Button>
+          {kioskConfig.features.leadForm ? (
+            <Button onClick={() => setFormOpen(true)}>{track.formCta}</Button>
+          ) : null}
+        </div>
       </div>
+
+      <AnimatePresence>
+        {formOpen ? (
+          <LeadForm track={track} trackKey={key} onClose={() => setFormOpen(false)} />
+        ) : null}
+      </AnimatePresence>
     </div>
   )
 }

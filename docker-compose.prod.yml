@@ -16,6 +16,7 @@ services:
         APP_VERSION: ${APP_VERSION}
         NODE_VERSION: ${NODE_VERSION}
         APP_INTERNAL_PORT: ${APP_INTERNAL_PORT}
+        LEADS_VOLUME_PATH: ${LEADS_VOLUME_PATH}
     image: ${DOCKER_IMAGE}:${APP_VERSION}
     # `expose`, not `ports`. Publishing the app directly would leave a second
     # unproxied way in on every interface, which is exactly what putting nginx
@@ -25,8 +26,21 @@ services:
     environment:
       PORT: ${APP_INTERNAL_PORT}
       HOSTNAME: 0.0.0.0
+      # The committed default is a relative path, which would put the archive
+      # inside the container's read-only-by-convention app directory. Inside a
+      # container it belongs on the volume, and both sides read one variable.
+      LEADS_DATA_DIR: ${LEADS_VOLUME_PATH}
     env_file:
       - .env
+      # Holds LEADS_ACCESS_TOKEN. Marked optional so a deployment that does not
+      # collect leads still starts; the archive routes then answer 404.
+      - path: .env.secrets
+        required: false
+    volumes:
+      # Named, not a bind mount: the archive has to survive `up --build`, an
+      # image rollback, and a `docker compose down`, which is exactly the set of
+      # things a bind mount into the source tree does not survive on a server.
+      - kiosk_leads:${LEADS_VOLUME_PATH}
     networks:
       - kiosk
     # The booth machine will be power-cycled and nobody will be there to bring
@@ -78,6 +92,11 @@ services:
       timeout: 5s
       start_period: 10s
       retries: 3
+
+volumes:
+  # Every collaboration request left at the booth. Back it up before deleting it:
+  #   docker compose -f docker-compose.prod.yml run --rm kiosk tar -C ${LEADS_VOLUME_PATH} -cf - . > leads.tar
+  kiosk_leads:
 
 networks:
   kiosk:

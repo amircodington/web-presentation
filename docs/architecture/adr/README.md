@@ -11,7 +11,8 @@ ADR that supersedes the old one, so the reasoning trail survives.
 |---|---|---|
 | [0001](0001-custom-camera-over-impress-js.md) | Custom camera layer instead of impress.js or reveal.js | Accepted |
 | [0002](0002-json-content-with-zod.md) | JSON content validated by Zod, no CMS | Accepted |
-| [0003](0003-no-backend-qr-first.md) | No backend; QR-first lead capture | Accepted |
+| [0003](0003-no-backend-qr-first.md) | No backend; QR-first lead capture | Accepted, amended by 0007 |
 | [0004](0004-env-as-single-source-of-truth.md) | Committed root `.env` as the version SSOT | Accepted |
 | [0005](0005-nginx-as-the-production-edge.md) | nginx as the production edge | Accepted |
 | [0006](0006-board-palette-over-paper-palette.md) | The board palette, replacing the paper palette | Accepted |
+| [0007](0007-lead-archive-on-a-volume.md) | A write-only lead endpoint and a file archive on a volume | Accepted |
