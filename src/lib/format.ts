@@ -10,6 +10,24 @@ export function toPersianDigits(value: string | number): string {
   return String(value).replace(/\d/g, (digit) => PERSIAN_DIGITS[Number(digit)]!)
 }
 
+const ARABIC_INDIC_ZERO = 0x0660
+const PERSIAN_ZERO = 0x06f0
+
+/**
+ * Renders Persian and Arabic-Indic digits as Latin ones.
+ *
+ * Anything typed on a Persian keyboard arrives as U+06Fx, and anything pasted
+ * from a phone contact list may arrive as U+066x. Both have to reach validation
+ * and storage as `09…` or a valid number is rejected as malformed.
+ */
+export function toLatinDigits(value: string): string {
+  return value.replace(/[\u0660-\u0669\u06f0-\u06f9]/g, (digit) => {
+    const code = digit.codePointAt(0)!
+    const zero = code >= PERSIAN_ZERO ? PERSIAN_ZERO : ARABIC_INDIC_ZERO
+    return String(code - zero)
+  })
+}
+
 /** Formats a Toman price with thousand separators and Persian digits. */
 export function formatPrice(toman: number): string {
   if (toman === 0) return "رایگان"

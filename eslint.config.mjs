@@ -31,9 +31,17 @@ const config = [
     },
   },
   {
-    // The config module is the one permitted reader of process.env, and the engine
-    // owns the LTR maths space that must not use logical properties.
-    files: ["src/config/kiosk.config.ts", "src/engine/**", "scripts/**", "*.config.*"],
+    // The two config modules are the only permitted readers of process.env — and
+    // a test that points one of them at a temp directory has to set it. The
+    // engine owns the LTR maths space that must not use logical properties.
+    files: [
+      "src/config/kiosk.config.ts",
+      "src/config/server.config.ts",
+      "src/**/*.test.ts",
+      "src/engine/**",
+      "scripts/**",
+      "*.config.*",
+    ],
     rules: { "no-restricted-syntax": "off" },
   },
   {

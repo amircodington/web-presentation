@@ -15,6 +15,10 @@ services:
       NEXT_TELEMETRY_DISABLED: "1"
     env_file:
       - .env
+      # Optional: absent on a machine that only ever serves the kiosk itself,
+      # in which case the archive routes stay closed.
+      - path: .env.secrets
+        required: false
     volumes:
       - .:/app
       # A host node_modules built on macOS ARM will not run inside a Linux
