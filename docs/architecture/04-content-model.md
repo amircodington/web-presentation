@@ -162,6 +162,23 @@ column to give it — ever renders it.
 They are separate fields rather than one because the two crop in opposite directions. The +18
 poster placed in a card's 210px strip showed a band of red background and none of its artwork.
 
+## The collaboration form
+
+Each track in `collaboration.json` carries a `form` block: every label, placeholder, hint,
+success line and validation message the on-screen request form shows. It lives per track rather
+than once, because a head teacher is asked for a school and an HR manager for a company.
+
+Two fields are deliberately *not* in it:
+
+- **The role options** are `audience[]` — the same list the scene already shows.
+- **The interest options** are `cards[].title` — so adding a programme to the scene adds it to
+  the form, and the two can never disagree.
+
+`formCta` labels the button that opens the form; `cta` labels the one that goes to the QR panel.
+Keep them plainly different — two buttons whose labels differ by one word read as one button.
+
+Where the submissions go: [07 — The Lead Archive](../operations/07-lead-archive.md).
+
 ## Icons
 
 Content names an icon; `components/ui/Icon.tsx` owns the geometry. The names are a Zod enum in

@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ثبت لید باشگاه ثروت</title>
+<style>
+body{font-family:Tahoma,Arial,sans-serif;background:#f5f7f4;color:#15372b;margin:0}
+.wrap{max-width:820px;margin:auto;padding:18px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+h1{margin:0;font-size:26px}.sub{color:#6b7772;margin-top:4px}.count{background:#0e5a3c;color:#fff;border-radius:14px;padding:10px 16px;text-align:center}
+.card{background:#fff;border:1px solid #d8e1dc;border-radius:18px;padding:16px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button,input,textarea{font:inherit}
+.choice,.product,.status{border:2px solid #d7e0db;background:#fff;border-radius:13px;padding:14px 9px;font-weight:700;min-height:60px;color:#17382c}
+.choice.on,.product.on,.status.on{border-color:#0e5a3c;background:#edf7f2;color:#0e5a3c}
+label{display:block;font-weight:700;margin:11px 0 6px}
+input,textarea{width:100%;box-sizing:border-box;border:1.5px solid #cfd9d3;border-radius:12px;padding:13px;font-size:17px}
+textarea{min-height:72px}
+.main{width:100%;border:0;border-radius:14px;background:#0e5a3c;color:#fff;padding:16px;font-size:19px;font-weight:700}
+.hide{display:none}.small{font-size:13px;color:#6b7772;line-height:1.7}
+.msg{display:none;padding:11px;border-radius:11px;margin:10px 0}.ok{display:block;background:#e8f7ef}.err{display:block;background:#fdecec;color:#8d2929}
+.tools{display:flex;gap:8px;flex-wrap:wrap}.tools button{padding:10px 12px;border:1px solid #d8e1dc;background:#fff;border-radius:10px}
+@media(max-width:650px){.grid{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>ثبت سریع لید غرفه</h1>
+      <div class="sub">باشگاه ثروت — جشنواره باغ کتاب</div>
+    </div>
+    <div class="count">لید امروز<br><b id="count">0</b></div>
+  </div>
+
+  <div id="msg" class="msg"></div>
+
+  <div class="card">
+    <h3>۱) مخاطب کیه؟</h3>
+    <div class="grid" id="audience">
+      <button class="choice" data-v="نوجوان">نوجوان</button>
+      <button class="choice" data-v="والد">والد</button>
+      <button class="choice" data-v="تازه‌کنکوری">تازه‌کنکوری</button>
+      <button class="choice" data-v="مدرسه">مدرسه</button>
+      <button class="choice" data-v="سازمان">سازمان / B2G</button>
+      <button class="choice" data-v="سایر">سایر</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>۲) اطلاعات تماس</h3>
+    <div class="grid2">
+      <div><label>نام *</label><input id="name" placeholder="نام مخاطب"></div>
+      <div><label>موبایل *</label><input id="mobile" inputmode="numeric" maxlength="11" placeholder="09xxxxxxxxx"></div>
+    </div>
+    <div id="orgWrap" class="hide">
+      <label>نام مدرسه / سازمان *</label>
+      <input id="organization" placeholder="نام مجموعه">
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>۳) به چی علاقه‌مند شد؟</h3>
+    <div class="grid" id="products">
+      <button class="product" data-v="+18">+18</button>
+      <button class="product" data-v="Business School">Business School</button>
+      <button class="product" data-v="مسیر ثروت">مسیر ثروت</button>
+      <button class="product" data-v="همکاری مدرسه">همکاری مدرسه</button>
+      <button class="product" data-v="همکاری سازمانی">همکاری سازمانی</button>
+      <button class="product" data-v="فقط آشنایی">فقط آشنایی</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>۴) وضعیتش چیه؟</h3>
+    <div class="grid" id="status">
+      <button class="status" data-v="آماده ثبت‌نام">✅ آماده ثبت‌نام</button>
+      <button class="status" data-v="نیاز به پیگیری">📞 نیاز به پیگیری</button>
+      <button class="status" data-v="درخواست همکاری">🤝 درخواست همکاری</button>
+      <button class="status" data-v="فقط اطلاعات">ℹ️ فقط اطلاعات</button>
+    </div>
+
+    <label>یادداشت کوتاه (اختیاری)</label>
+    <textarea id="notes" placeholder="مثلاً: مادر دانش‌آموز پایه نهم؛ فردا عصر تماس شود."></textarea>
+  </div>
+
+  <button class="main" id="save">ثبت و نفر بعدی ✓</button>
+
+  <div class="card">
+    <h3>پایان روز</h3>
+    <div class="tools">
+      <button id="csv">دانلود CSV</button>
+      <button id="json">بکاپ JSON</button>
+    </div>
+    <p class="small">هر شب هر دو فایل را خروجی بگیرید. اطلاعات روی همین مرورگر ذخیره می‌شود.</p>
+  </div>
+</div>
+
+<script>
+const KEY='wealthClubSimpleLeadsV2';
+let audience='',status='',products=new Set();
+const $=id=>document.getElementById(id);
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}};
+const saveAll=x=>localStorage.setItem(KEY,JSON.stringify(x));
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+
+function updateCount(){ $('count').textContent=load().filter(x=>x.day===today()).length; }
+function flash(t,type='ok'){const m=$('msg');m.className='msg '+type;m.textContent=t;window.scrollTo(0,0);setTimeout(()=>m.className='msg',2500);}
+
+document.querySelectorAll('#audience .choice').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#audience .choice').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); audience=b.dataset.v;
+  $('orgWrap').classList.toggle('hide',!['مدرسه','سازمان'].includes(audience));
+});
+
+document.querySelectorAll('#products .product').forEach(b=>b.onclick=()=>{
+  const v=b.dataset.v;
+  if(products.has(v)){products.delete(v);b.classList.remove('on')}
+  else{products.add(v);b.classList.add('on')}
+});
+
+document.querySelectorAll('#status .status').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#status .status').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); status=b.dataset.v;
+});
+
+function reset(){
+  audience='';status='';products.clear();
+  ['name','mobile','organization','notes'].forEach(x=>$(x).value='');
+  document.querySelectorAll('.on').forEach(x=>x.classList.remove('on'));
+  $('orgWrap').classList.add('hide');
+}
+
+$('save').onclick=()=>{
+  const name=$('name').value.trim();
+  const mobile=$('mobile').value.replace(/\D/g,'');
+  const org=$('organization').value.trim();
+
+  if(!audience)return flash('نوع مخاطب را انتخاب کنید','err');
+  if(name.length<2)return flash('نام را وارد کنید','err');
+  if(!/^09\d{9}$/.test(mobile))return flash('شماره موبایل معتبر نیست','err');
+  if(['مدرسه','سازمان'].includes(audience) && !org)return flash('نام مدرسه / سازمان را وارد کنید','err');
+  if(!products.size)return flash('حداقل یک علاقه‌مندی انتخاب کنید','err');
+  if(!status)return flash('وضعیت مخاطب را انتخاب کنید','err');
+
+  const arr=load();
+  const dup=arr.find(x=>x.mobile===mobile);
+  if(dup && !confirm('این شماره قبلاً ثبت شده. دوباره ثبت شود؟'))return;
+
+  const d=new Date();
+  arr.push({
+    id:'L-'+Date.now(),
+    day:today(),
+    time:d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'}),
+    audience,name,mobile,
+    organization:org,
+    products:[...products].join(' | '),
+    status,
+    notes:$('notes').value.trim()
+  });
+  saveAll(arr);updateCount();reset();flash('ثبت شد ✓');
+};
+
+function download(name,type,text){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([text],{type}));
+  a.download=name;a.click();URL.revokeObjectURL(a.href);
+}
+
+$('json').onclick=()=>{
+  const a=load(); if(!a.length)return flash('هنوز لیدی ثبت نشده','err');
+  download('wealth-club-leads-'+today()+'.json','application/json',JSON.stringify(a,null,2));
+};
+
+$('csv').onclick=()=>{
+  const a=load(); if(!a.length)return flash('هنوز لیدی ثبت نشده','err');
+  const cols=[['day','تاریخ'],['time','ساعت'],['audience','نوع مخاطب'],['name','نام'],['mobile','موبایل'],['organization','مدرسه/سازمان'],['products','علاقه‌مندی'],['status','وضعیت'],['notes','یادداشت']];
+  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const lines=[cols.map(c=>q(c[1])).join(',')];
+  a.forEach(r=>lines.push(cols.map(c=>q(r[c[0]])).join(',')));
+  download('wealth-club-leads-'+today()+'.csv','text/csv;charset=utf-8','\uFEFF'+lines.join('\n'));
+};
+
+updateCount();
+</script>
+</body></html>
