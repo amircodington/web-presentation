@@ -216,9 +216,19 @@ These come from the physical reality of an unattended screen in a loud hall:
   `width`, `height`, `top`, or `left`.
 - **Respect `prefers-reduced-motion`**, but keep the kiosk's own default expressive.
 - **No dead ends.** Every scene has a visible way back to the hub and to the attract loop.
-- **Reserve chrome clearance.** Scenes carry `pb-52` so the persistent controls never
-  cover content. Scenes must also not overlap on the canvas — both are enforced by
+- **Reserve chrome clearance.** Scenes carry `pb-60` so the persistent controls never
+  cover content. The number is derived from the tray's measured height, not chosen —
+  re-derive it whenever the chrome's size changes, as it did when the tray took the ink
+  outline. Scenes must also not overlap on the canvas — both are enforced by
   `npm run validate:content` and a browser measurement pass.
+- **Clip, never hide.** The stage and every scene use `overflow: clip`. `overflow: hidden`
+  is still a scroll container, and the browser scrolls the nearest one when focus lands
+  outside the visible box — which silently shifts the whole canvas against a camera that
+  never moved. See [03-presentation-engine.md](docs/architecture/03-presentation-engine.md).
+- **The cast carries state, not decoration.** A `Mascot`'s mood is derived from what the
+  player has done (`lib/games/cast`), never set for looks. A `MotionIcon`'s loop is chosen
+  by meaning — money falls, charts climb — because a screen that animates the wrong way
+  teaches the wrong thing to a visitor who is here to learn exactly that.
 - **B2B and B2G prices are never displayed.** Both source briefs quote per engagement;
   a figure on a public screen undercuts the conversation the booth exists to start.
 

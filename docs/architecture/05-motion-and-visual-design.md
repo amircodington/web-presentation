@@ -77,45 +77,95 @@ the script's ascenders and diacritics collide at tighter settings.
 
 Sourced from `brand.json` into CSS custom properties, so a rebrand is a JSON edit.
 
-The palette is the booth's own table. At the stand, visitors sit around a green board covered
-in plastic counters, play banknotes and light card mats, and the screen uses the same three
-materials:
+The screen is the board game box the booth already has open on its table. Visitors sit around
+a printed board pushing counters and play banknotes; the screen is built from the same
+materials.
 
 | Material | Token | Role |
 |---|---|---|
-| The table | `--kiosk-bg`, `--kiosk-surface` | Deep board green. The ground everything sits on |
-| Paper mats | `--kiosk-card`, `--kiosk-card-text` | Anything a visitor has to *read* sits on one |
-| The counter | `--kiosk-accent` | The logo's red. Exactly one "touch this" per screen |
+| The printed board | `--kiosk-bg` | Butter yellow. The ground everything is played on |
+| Cards | `--kiosk-card`, `--kiosk-card-text` | White. Anything a visitor has to *read* sits on one |
+| Ink | `--kiosk-border` | Deep navy. Every outline, every shadow, all body text |
+| The counter | `--kiosk-accent` | Sharp red. Exactly one "touch this" per screen |
 
-Two supporting tokens carry meaning and never an action: `--kiosk-money` (gold — scores,
-prices, token values) and `--kiosk-positive` (green — growth, correct answers).
+Three supporting tokens carry meaning and never an action: `--kiosk-money` (marigold — scores,
+prices, coin values), `--kiosk-positive` (turquoise — growth, correct answers), and
+`--kiosk-joy` (grape), which belongs to the characters and says nothing.
 
-**This inverts the original light scheme, deliberately.** Three reasons: the emblem above the
-stand is green and red, and a red-on-cream screen shared nothing with it; a dark screen *glows*
-in a bright hall instead of reflecting it back; and the photographs of real sessions, which are
-the strongest thing on the screen, sit far better on a dark ground than a cream one. The cost —
-long Persian text is harder to read reversed out — is paid off by the mats: every line longer
-than a label is set as ink on paper, so no body copy is ever light-on-dark.
+**This replaces the dark green table, deliberately.** The visitors this screen has to stop are
+nine to sixteen years old. A deep green felt ground with red counters reads to an adult as a
+game table and to a child as a casino — the wrong metaphor for a financial literacy club, and
+the wrong brightness for a stand competing with hall lighting. Butter yellow is warm enough for
+white cards to lift off it and bright enough that the screen reads as *open* rather than as a
+lit panel in a dark room.
 
-Components never hardcode a white or black alpha. Card fill, hairlines, and on-mat text are
-tokens sourced from `brand.json`, so the whole scheme can be inverted again from content.
+The cost is real and worth stating: a light screen reflects overhead lighting more than a dark
+one did, and the photographs of real sessions sat better on the dark ground. Off-white rather
+than pure white in the cards, and 14:1 ink contrast, are what pay for it. Check it on the actual
+TV under the venue's lights; the palette is a JSON edit away either direction.
+
+Components never hardcode a white or black alpha. Card fill, outlines, and on-card text are
+tokens sourced from `brand.json`, so the whole scheme can be changed from content.
 
 Exactly one accent colour signals "touch this". If two things on screen use the accent, the
 visitor has to make a decision, and visitors at a booth do not make decisions — they leave.
-This is why the persistent chrome never takes the solid accent: the navigation must not
-compete with the scene's own call to action.
+This is why the persistent chrome never takes the solid accent.
+
+## Ink and lift
+
+The signature device, and the one place the design spends its boldness.
+
+Every piece a visitor can touch carries a 4px navy outline and a hard, **unblurred** shadow
+offset down and to the right. A blurred shadow says "floating panel". A hard one says "a printed
+piece lying on a board", which is the difference between a screen a child reads and one a child
+touches.
+
+The press is a movement rather than a tint: the piece travels into its own shadow until the
+shadow is gone, the way a physical key does. That is legible from two metres, which a colour
+change is not — and press feedback is the most important animation in the product, because a
+visitor who taps and sees nothing taps again, and the kiosk then has two navigations queued.
+
+Restraint is what keeps this from looking cheap: **outlines belong only to things you can touch
+or pick up.** Headings, body copy and the board itself stay clean.
+
+## The cast
+
+Six characters for the six places money can go, plus the coin itself, in `components/ui/Mascot.tsx`.
+Each has a body drawn on one 100-unit grid at one ink weight, and a face with five moods.
+
+They exist because a nine-year-old will not weigh «پس‌انداز نقدی» against «بورس / صندوق» as
+labels, but will absolutely notice that one character looks delighted and the other looks queasy.
+**The mood is a state channel, never decoration.** `lib/games/cast.ts` derives it from what the
+player has done: a character looks happier as it is fed until the pile becomes a concentration,
+at which point it goes dizzy. A child who has made a character dizzy has already met
+diversification, and the written feedback then names what they saw rather than introducing it.
+
+The character a content option gets is derived from its icon, so adding an allocation option to
+`activities.json` gets a character without a second content edit. A test asserts that content
+cannot introduce an option the cast does not cover — a board of identical fallback coins teaches
+nothing.
+
+## Motion icons
+
+`components/ui/MotionIcon.tsx` gives an icon an idle loop chosen **by meaning**: money falls,
+charts climb, clocks tick, everything else sways. An icon that moves the wrong way is worse than
+one that sits still, because it teaches the wrong thing to a visitor who is here to learn exactly
+that. Transform and opacity only, so a screen full of them still holds 60fps on the TV's own
+media player.
+
+Across a hall, a still screen and a broken screen look identical. These loops are what say the
+thing is running.
 
 ## The chip
 
-The kiosk's one repeated object, and the link between the screen and the table two metres away.
+The kiosk's older repeated object, still used for step markers and schedule counters.
 
 A notched plastic counter, drawn in `components/ui/Chip.tsx` as two background layers: a radial
 gradient paints the face and one pressed groove, and a repeating conic gradient shows through in
-the band the face leaves uncovered to form the rim notches. It carries every icon, every token
-in the allocation game, and every step marker.
+the band the face leaves uncovered to form the rim notches.
 
-A visitor who has just pushed these counters around the board recognises them here. That is the
-whole point — it is not decoration, it is continuity with the physical activity being advertised.
+Inside the games the coin *character* has replaced it: a child drags coins, so the result should
+stack coins. The chip remains where a piece needs to read as a marker rather than as money.
 
 ## The persistent chrome
 
@@ -134,10 +184,16 @@ every screen that is the scene's, not the navigation's.
 
 The most important scene in the product and the only one most passers-by will ever see.
 
-It must be **unmistakably alive at ten metres** — full-bleed muted video or a large-scale
-particle/gradient field, slow continuous drift, and a pulsing touch affordance. It must state
-the value proposition in one line of hero type, and it must show a literal hand-touching-screen
-cue, because a surprising number of people do not know a large screen is interactive.
+It must be **unmistakably alive at ten metres**. The cast is what does that here: five
+characters lined up along the board's printed track, each bobbing on its own period so the row
+never resolves into a single marching block, with coins travelling the track behind them.
+
+The cast is the hero rather than the headline, because the passer-by is usually a child with a
+parent a step behind. Below it sit **two equal doors**, not one primary and one afterthought:
+games and the sixty-second test. The child and the parent want different things from the same
+screen and neither should have to hunt for theirs — and games is the loud one, because «بازی» is
+what a nine-year-old walks toward. The quiz reads far better as the thing they do *after* a game
+has already made them curious.
 
 The camera itself drifts slowly (`drift` preset) around the attract scene rather than sitting
 still. The screen is never truly static.

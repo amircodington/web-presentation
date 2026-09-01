@@ -87,7 +87,8 @@ src/
 │   ├── games/                  # AllocationGame, MarketGame, JudgementGame
 │   ├── charts/                 # PriceChart, ChipStackChart, ScoreGauge, ScheduleRail
 │   ├── media/                  # BackgroundVideo, KenBurnsImage, ParticleField
-│   └── ui/                     # Button, Chip, Icon, Logo, Photo — primitives only, no domain logic
+│   └── ui/                     # Button, Chip, Icon, MotionIcon, Mascot, Logo, Photo
+│                               # primitives only, no domain logic
 │
 ├── content/
 │   ├── schema/                 # one Zod schema per content file
@@ -95,7 +96,8 @@ src/
 │   └── select.ts               # derived queries: activeCourses(), offerFor(courseId)
 │
 ├── lib/
-│   ├── games/                  # pure game logic: allocation rules, market price series
+│   ├── games/                  # pure game logic: allocation rules, market price series,
+│   │                           # and cast.ts — which character and mood a state produces
 │   ├── schedule.ts             # pure: running order → next slot, countdown, day phase
 │   ├── scoring.ts              # quiz answers → raw score
 │   ├── recommendation.ts       # score + audience → ordered product ids
