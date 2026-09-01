@@ -22,6 +22,7 @@ export function KioskTheme() {
     --kiosk-card-muted:${colors.cardMuted};
     --kiosk-money:${colors.money};
     --kiosk-positive:${colors.positive};
+    --kiosk-joy:${colors.joy};
   }`
   return <style dangerouslySetInnerHTML={{ __html: css }} />
 }

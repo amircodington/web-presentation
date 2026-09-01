@@ -1,34 +1,39 @@
 @import "tailwindcss";
 
 /*
- * The booth's own table, rendered.
+ * The board game box, opened.
  *
- * At the stand, visitors sit around a green board covered in plastic counters,
- * play banknotes and light card mats. The screen uses the same three materials:
- * a dark green ground, red as the single "touch this" signal, and light paper
- * mats carrying anything a visitor has to read. A dark ground also means the TV
- * glows in a bright, loud hall instead of competing with it.
+ * The visitors this screen has to stop are nine to sixteen years old, standing in
+ * a loud hall next to a table covered in counters and play banknotes. So the
+ * screen is built out of the same things that table is: a printed butter-yellow
+ * board, white cards drawn in one navy ink, and characters. Every touchable piece
+ * carries a drawn outline and a hard offset shadow, and presses *into* that shadow
+ * when tapped — which is the whole reason a child taps a second time.
  *
  * Colour values mirror content/brand.json. KioskTheme rewrites them at runtime
  * from that file, so a rebrand is a JSON edit.
  */
 @theme {
-  --color-kiosk-bg: #07301d;
-  --color-kiosk-surface: #0c462b;
-  --color-kiosk-card: #f7f4ec;
-  --color-kiosk-border: #1a5c3a;
-  --color-kiosk-accent: #e8404a;
-  --color-kiosk-accent-soft: #fadfe0;
+  --color-kiosk-bg: #fff1d0;
+  --color-kiosk-surface: #ffffff;
+  --color-kiosk-card: #ffffff;
+  --color-kiosk-border: #1b2a4a;
+  --color-kiosk-accent: #ff3b30;
+  --color-kiosk-accent-soft: #ffd9d6;
   --color-kiosk-on-accent: #ffffff;
-  --color-kiosk-text: #eaf4ed;
-  --color-kiosk-muted: #8fb6a0;
-  --color-kiosk-card-text: #0a2116;
-  --color-kiosk-card-muted: #5b7566;
-  --color-kiosk-money: #f0b33c;
-  --color-kiosk-positive: #3fc47c;
+  --color-kiosk-text: #1b2a4a;
+  --color-kiosk-muted: #5c6b8a;
+  --color-kiosk-card-text: #1b2a4a;
+  --color-kiosk-card-muted: #5c6b8a;
+  --color-kiosk-money: #ffb020;
+  --color-kiosk-positive: #00bfa6;
+  --color-kiosk-joy: #7c4dff;
 
   --ease-arrive: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-leave: cubic-bezier(0.4, 0, 1, 1);
+  /* Overshoots. A piece that lands dead-on reads as a slide; one that overshoots
+     reads as a thing with weight, which is what the characters need. */
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   --duration-instant: 120ms;
   --duration-quick: 240ms;
@@ -51,6 +56,11 @@
   --kiosk-card-muted: var(--color-kiosk-card-muted);
   --kiosk-money: var(--color-kiosk-money);
   --kiosk-positive: var(--color-kiosk-positive);
+  --kiosk-joy: var(--color-kiosk-joy);
+
+  /* One ink weight and one shadow offset, so nothing drifts out of the family. */
+  --ink: 4px;
+  --lift: 9px;
 }
 
 html,
@@ -105,45 +115,70 @@ button:disabled,
 }
 
 /*
- * The table. Two soft pools of light rather than a flat fill, so a 1920×1080 field
- * of one green does not read as a dead panel from across the hall.
+ * The printed board. Warm rather than white so white cards laid on it have
+ * something to lift off, with two soft washes of colour so a 1920×1080 field of
+ * one yellow does not read as a dead panel from across the hall.
+ *
+ * Every scene is itself a card on the canvas, so it carries the ink outline too.
  */
 @utility scene-surface {
   background:
-    radial-gradient(80% 55% at 78% -8%, color-mix(in oklab, var(--kiosk-positive) 14%, transparent), transparent 65%),
-    radial-gradient(70% 60% at 8% 106%, color-mix(in oklab, var(--kiosk-accent) 12%, transparent), transparent 62%),
-    linear-gradient(168deg, var(--kiosk-surface), var(--kiosk-bg) 62%);
-  box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--kiosk-border) 70%, transparent);
+    radial-gradient(72% 52% at 84% -6%, color-mix(in oklab, var(--kiosk-money) 34%, transparent), transparent 66%),
+    radial-gradient(58% 50% at 2% 106%, color-mix(in oklab, var(--kiosk-positive) 16%, transparent), transparent 60%),
+    var(--kiosk-bg);
+  box-shadow:
+    inset 0 0 0 var(--ink) var(--kiosk-border),
+    0 24px 0 -6px color-mix(in oklab, var(--kiosk-border) 16%, transparent);
 }
 
 /*
- * A paper mat laid on the table. Everything a visitor reads at length sits on one,
- * which is why it carries its own text colours rather than inheriting the board's.
+ * A card laid on the board: white, drawn in ink, sitting on its own hard shadow.
+ * Everything a visitor reads at length sits on one, which is why it carries its
+ * own text colours rather than inheriting the board's.
+ *
+ * The shadow is offset and unblurred on purpose. A blurred shadow says "floating
+ * panel"; a hard one says "a printed piece lying on a board", and that is the
+ * difference between a screen a child reads and one a child touches.
  */
 @utility mat {
   background: var(--kiosk-card);
   color: var(--kiosk-card-text);
-  box-shadow:
-    0 2px 0 0 color-mix(in oklab, var(--kiosk-card-text) 12%, transparent),
-    0 18px 40px -20px rgb(0 0 0 / 0.65);
+  border: var(--ink) solid var(--kiosk-border);
+  box-shadow: var(--lift) var(--lift) 0 0 var(--kiosk-border);
 }
 
-/* Raised panel that stays on the board rather than becoming paper. */
+/*
+ * The same piece, pressed. Pairs with `mat` on anything touchable: the card
+ * travels into its own shadow, so the press is a movement rather than a tint.
+ */
+@utility mat-press {
+  transition:
+    transform var(--duration-instant) var(--ease-arrive),
+    box-shadow var(--duration-instant) var(--ease-arrive);
+}
+@utility mat-press-active {
+  transform: translate(var(--lift), var(--lift));
+  box-shadow: 0 0 0 0 var(--kiosk-border);
+}
+
+/* Raised panel that stays part of the board rather than becoming a card. */
 @utility felt {
-  background: color-mix(in oklab, var(--kiosk-surface) 82%, black);
-  border: 2px solid var(--kiosk-border);
+  background: color-mix(in oklab, var(--kiosk-money) 22%, var(--kiosk-card));
+  border: var(--ink) solid var(--kiosk-border);
 }
 
 /* Small neutral label: ages, durations, delivery modes. */
 @utility pill {
-  background: color-mix(in oklab, var(--kiosk-text) 10%, transparent);
+  background: var(--kiosk-card);
+  border: 3px solid var(--kiosk-border);
   color: var(--kiosk-text);
 }
 
-/* The same label once it sits on a paper mat. */
+/* The same label once it sits on a card, where a white fill would disappear. */
 @utility pill-on-mat {
-  background: color-mix(in oklab, var(--kiosk-card-text) 8%, transparent);
-  color: var(--kiosk-card-muted);
+  background: color-mix(in oklab, var(--kiosk-money) 24%, var(--kiosk-card));
+  border: 3px solid var(--kiosk-border);
+  color: var(--kiosk-card-text);
 }
 
 /* Display face. Lalezar has one weight and a lot of personality — hero lines only. */
@@ -152,6 +187,22 @@ button:disabled,
   font-weight: 400;
   line-height: 1.22;
   letter-spacing: 0;
+}
+
+/*
+ * The board's printed track: the dashed path a piece travels along.
+ *
+ * It is the same idea the canvas is built on — scenes are stops on a journey —
+ * drawn where a child can see it, and it is why the ground reads as a board
+ * rather than as a coloured rectangle.
+ */
+@utility board-track {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--kiosk-border) 0 26px,
+    transparent 26px 52px
+  );
+  opacity: 0.14;
 }
 
 @keyframes kiosk-pulse {

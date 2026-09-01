@@ -5,82 +5,66 @@ import { useEffect, useState } from "react"
 import { kioskConfig } from "@/config/kiosk.config"
 import { content } from "@/content/load"
 import { NextActivityBadge } from "@/components/kiosk/NextActivityBadge"
-import { Chip } from "@/components/ui/Chip"
-import { Icon } from "@/components/ui/Icon"
 import { Logo } from "@/components/ui/Logo"
-import { Photo } from "@/components/ui/Photo"
-import type { MediaRef } from "@/content/schema/common"
+import { Mascot, type MascotName } from "@/components/ui/Mascot"
+import { MotionIcon } from "@/components/ui/MotionIcon"
+import { toPersianDigits } from "@/lib/format"
 import type { SceneComponentProps } from "@/engine"
 
-const AMBIENT: MediaRef = {
-  kind: "image",
-  src: "/media/workshop-board.jpg",
-  alt: "نوجوان‌ها دور میز بازی مالی باشگاه ثروت",
-  focalPoint: [0.5, 0.42],
-}
+/** The cast that greets a visitor, and the order they arrive in. */
+const GREETERS: readonly MascotName[] = ["piggy", "rocket", "coin", "shop", "sprout"]
 
 /**
  * The most important scene in the product and the only one most passers-by will
- * ever see. It has roughly three seconds to stop someone walking past.
+ * ever see. It has roughly three seconds to stop someone walking past — and the
+ * someone is usually a child, with a parent a step behind.
  *
- * It stops them with a question rather than a claim — a claim about financial
- * literacy is ignorable, a score out of 100 is not — and the rotating lines keep
- * asking a different one so the screen is never the same twice on a walk past.
- * Behind it sits a photograph of the booth's own session: proof, at a glance,
- * that this is something people are actually doing here rather than a poster.
+ * So the cast is the hero rather than a headline: five characters lined up along
+ * the board's track, waving, above two doors. The games door is the loud one,
+ * because "بازی" is what a nine-year-old walks toward and the quiz is what they
+ * will happily do *after* a game has already made them curious.
  */
 export function AttractScene({ state, camera }: SceneComponentProps) {
   const isActive = state === "active"
   const { attract, contextTag } = content.event
+  const gameCount = content.activities.activities.filter((item) => item.game).length
   const line = useRotatingLine(attract.rotating, isActive)
-  const startQuiz = () => camera.goTo("quiz-intro", "dive")
 
   return (
-    <div className="scene-surface relative flex h-full w-full flex-col items-center overflow-hidden rounded-[48px] px-20 pt-14 pb-52 text-center">
-      <AmbientPhoto animate={state !== "far"} />
-      <DriftingChips animate={isActive} />
+    <div className="scene-surface relative flex h-full w-full flex-col items-center overflow-hidden rounded-[48px] px-20 pt-12 pb-52 text-center">
+      <BoardTrack animate={isActive} />
 
-      {/*
-        The whole surface starts the quiz, not just the pill. Plenty of visitors
-        tap the headline or the photo rather than the button, and a screen that
-        ignores that reads as broken rather than as decorative.
-      */}
-      <button type="button" onClick={startQuiz} aria-label={attract.cta} className="absolute inset-0 z-0" />
-
-      <header className="pointer-events-none relative z-10 flex w-full items-center justify-between">
+      <header className="relative z-10 flex w-full items-center justify-between">
         <div className="flex items-center gap-6">
           <Logo height={110} />
-          <span className="felt rounded-full px-7 py-3 text-[24px] font-medium text-[var(--kiosk-muted)]">
+          <span className="pill rounded-full px-7 py-2.5 text-[24px] font-semibold">
             {contextTag}
           </span>
         </div>
         <NextActivityBadge />
       </header>
 
-      {/*
-        Every layer above the tap target opts out of pointer events and the
-        controls opt back in. Without this the headline swallows a tap aimed at
-        the middle of the screen, which is exactly where people aim.
-      */}
-      <div className="pointer-events-none relative z-10 flex flex-1 flex-col items-center justify-center gap-9">
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-4">
+        <Greeters animate={isActive} />
+
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.85, y: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="display max-w-[86%] text-[124px] text-balance"
+          className="display max-w-[92%] text-[80px] text-balance"
         >
           {attract.hook}
         </motion.h1>
 
-        <div className="flex h-[124px] w-full items-center justify-center">
+        <div className="flex h-[92px] w-full items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.p
               key={line}
-              initial={{ opacity: 0, y: 26 }}
+              initial={{ opacity: 0, y: 22 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -26 }}
+              exit={{ opacity: 0, y: -22 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="max-w-[70%] text-[44px] leading-snug text-[var(--kiosk-muted)]"
+              className="max-w-[86%] text-[34px] leading-snug font-medium text-[var(--kiosk-muted)]"
             >
               {line}
             </motion.p>
@@ -88,28 +72,28 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
         </div>
       </div>
 
-      <div className="pointer-events-none relative z-10 flex flex-col items-center gap-7">
-        <motion.button
-          type="button"
-          onClick={startQuiz}
-          animate={isActive ? { scale: [1, 1.05, 1] } : {}}
-          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-          whileTap={{ scale: 0.96 }}
-          className="pointer-events-auto inline-flex min-h-[112px] cursor-pointer items-center gap-6 rounded-full bg-[var(--kiosk-accent)] px-16 text-[var(--kiosk-on-accent)] shadow-[0_12px_0_-2px_color-mix(in_oklab,var(--kiosk-accent)_55%,black),0_36px_80px_-28px_var(--kiosk-accent)]"
-        >
-          <Icon name="play" size={40} />
-          <b className="text-[46px] font-black">{attract.cta}</b>
-          <span className="text-[26px] font-medium opacity-80">۶۰ ثانیه</span>
-        </motion.button>
-
-        <button
-          type="button"
-          onClick={() => camera.goTo("home", "glide")}
-          className="pointer-events-auto inline-flex min-h-[88px] cursor-pointer items-center gap-4 rounded-full border-2 border-[var(--kiosk-card)]/70 bg-[color-mix(in_oklab,var(--kiosk-bg)_70%,black)] px-11 text-[30px] font-bold text-[var(--kiosk-card)]"
-        >
-          یا همه مسیرها را ببین
-          <span aria-hidden className="text-[26px] opacity-70">←</span>
-        </button>
+      {/*
+        Two doors, not one primary and one afterthought. Both are full-size cards
+        because at a booth the child and the parent want different things from the
+        same screen, and neither should have to hunt for theirs.
+      */}
+      <div className="relative z-10 flex w-full items-stretch justify-center gap-8">
+        <DoorCard
+          onClick={() => camera.goTo("live", "dive")}
+          tone="accent"
+          icon="play"
+          title="بازی کنیم!"
+          note={`${toPersianDigits(gameCount)} بازی، همین‌جا روی صفحه`}
+          animate={isActive}
+        />
+        <DoorCard
+          onClick={() => camera.goTo("quiz-intro", "dive")}
+          tone="paper"
+          icon="gauge"
+          title={attract.cta}
+          note="۶۰ ثانیه، نتیجه فوری"
+          animate={isActive}
+        />
       </div>
     </div>
   )
@@ -136,47 +120,96 @@ function useRotatingLine(lines: readonly string[], animate: boolean): string {
   return lines[index % lines.length] ?? lines[0]!
 }
 
-/** The booth's own session, drifting slowly behind the type. */
-function AmbientPhoto({ animate }: { animate: boolean }) {
+/**
+ * The cast, bobbing on the spot.
+ *
+ * No two bob on the same period, so the line never resolves into a single
+ * marching block — which reads as a looping video rather than as characters.
+ */
+function Greeters({ animate }: { animate: boolean }) {
   return (
-    <motion.div
-      aria-hidden
-      animate={animate ? { scale: [1.08, 1.16, 1.08], x: [0, -28, 0] } : { scale: 1.08 }}
-      transition={{ duration: 38, repeat: Infinity, ease: "easeInOut" }}
-      className="pointer-events-none absolute inset-0 opacity-[0.28]"
+    <div className="flex items-end justify-center gap-4">
+      {GREETERS.map((name, index) => (
+        <motion.div
+          key={name}
+          animate={animate ? { y: [0, -18, 0], rotate: [-3, 3, -3] } : { y: 0, rotate: 0 }}
+          transition={{
+            duration: 2.4 + index * 0.35,
+            repeat: animate ? Infinity : 0,
+            ease: "easeInOut",
+            delay: index * 0.18,
+          }}
+        >
+          <Mascot name={name} mood={index === 2 ? "wow" : "happy"} size={index === 2 ? 200 : 164} />
+        </motion.div>
+      ))}
+    </div>
+  )
+}
+
+/** One of the two ways in. A card you press rather than a pill you click. */
+function DoorCard({
+  onClick,
+  tone,
+  icon,
+  title,
+  note,
+  animate,
+}: {
+  onClick: () => void
+  tone: "accent" | "paper"
+  icon: "play" | "gauge"
+  title: string
+  note: string
+  animate: boolean
+}) {
+  const accent = tone === "accent"
+
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      initial={{ boxShadow: "9px 9px 0 0 var(--kiosk-border)" }}
+      whileTap={{ x: 9, y: 9, boxShadow: "0px 0px 0 0 var(--kiosk-border)" }}
+      transition={{ type: "spring", stiffness: 900, damping: 34 }}
+      style={{
+        background: accent ? "var(--kiosk-accent)" : "var(--kiosk-card)",
+        color: accent ? "var(--kiosk-on-accent)" : "var(--kiosk-card-text)",
+      }}
+      className="flex min-h-[176px] w-[520px] cursor-pointer items-center gap-7 rounded-[40px] border-[4px] border-[var(--kiosk-border)] px-11 text-right"
     >
-      <Photo media={AMBIENT} scrim className="h-full w-full" />
-    </motion.div>
+      <MotionIcon name={icon} size={64} animate={animate} />
+      <span className="flex flex-col items-start gap-1">
+        <b className="display text-[54px] leading-none">{title}</b>
+        <span className="text-[26px] font-medium opacity-75">{note}</span>
+      </span>
+    </motion.button>
   )
 }
 
 /**
- * Counters drifting across the table.
+ * The board's printed track, with coins travelling along it.
  *
- * The kiosk's own object rather than the usual blurred gradient orbs, and slow
- * enough to read as ambient. No two loops share a period, so the field never
- * resolves into a repeating pattern that reads as a frozen screen from a distance.
+ * It is the same journey the canvas is built on, drawn where a child can see it:
+ * the stops are ahead of you and something is already moving between them.
  */
-function DriftingChips({ animate }: { animate: boolean }) {
-  const chips = [
-    { id: "a", size: 168, x: "6%", y: "14%", tone: "accent", duration: 29, drift: 90 },
-    { id: "b", size: 124, x: "84%", y: "62%", tone: "money", duration: 37, drift: -70 },
-    { id: "c", size: 96, x: "18%", y: "74%", tone: "board", duration: 43, drift: 60 },
-    { id: "d", size: 140, x: "72%", y: "18%", tone: "positive", duration: 33, drift: -84 },
-  ] as const
-
+function BoardTrack({ animate }: { animate: boolean }) {
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 opacity-25">
-      {chips.map((chip) => (
+    <div aria-hidden className="pointer-events-none absolute inset-0">
+      <div className="board-track absolute top-[34%] right-0 left-0 h-[6px]" />
+      {[0, 1, 2].map((index) => (
         <motion.div
-          key={chip.id}
-          animate={
-            animate ? { y: [0, chip.drift, 0], rotate: [0, chip.drift > 0 ? 22 : -22, 0] } : {}
-          }
-          transition={{ duration: chip.duration, repeat: Infinity, ease: "easeInOut" }}
-          style={{ position: "absolute", insetInlineStart: chip.x, insetBlockStart: chip.y }}
+          key={index}
+          className="absolute top-[34%] right-0 -mt-[27px]"
+          animate={animate ? { x: [0, -1920] } : { x: 0 }}
+          transition={{
+            duration: 26,
+            repeat: animate ? Infinity : 0,
+            ease: "linear",
+            delay: index * 8.6,
+          }}
         >
-          <Chip tone={chip.tone} size={chip.size} />
+          <Mascot name="coin" mood="idle" size={54} />
         </motion.div>
       ))}
     </div>

@@ -8,7 +8,7 @@ interface ButtonProps {
   onClick?: () => void
   /**
    * `accent` is the one "touch this" on a screen. `ghost` sits on the board,
-   * `paper` sits on a mat — the two grounds need opposite polarity to stay legible.
+   * `paper` sits on a card — the two grounds need different fills to stay legible.
    */
   variant?: "accent" | "ghost" | "paper"
   className?: string
@@ -21,25 +21,27 @@ interface ButtonProps {
  * thumb reliably hits on glass at standing height. Press feedback is the most
  * important animation in the product — a visitor who taps and sees nothing taps
  * again, and the kiosk then has two navigations queued.
+ *
+ * So the press is a movement, not a tint: the button travels down-and-into its own
+ * hard shadow until the shadow is gone, the way a physical key does. A child sees
+ * that from two metres away, which a colour change does not survive.
  */
 export function Button({ children, onClick, variant = "accent", className = "" }: ButtonProps) {
   const base =
-    "inline-flex min-h-[88px] cursor-pointer items-center justify-center gap-4 rounded-full px-11 text-[32px] font-semibold transition-colors duration-[var(--duration-instant)]"
+    "inline-flex min-h-[88px] cursor-pointer items-center justify-center gap-4 rounded-full border-[4px] border-[var(--kiosk-border)] px-11 text-[32px] font-bold"
   const skin = {
-    accent:
-      "bg-[var(--kiosk-accent)] text-[var(--kiosk-on-accent)] shadow-[0_10px_0_-2px_color-mix(in_oklab,var(--kiosk-accent)_55%,black),0_26px_50px_-22px_var(--kiosk-accent)]",
-    ghost:
-      "border-2 border-[var(--kiosk-border)] bg-[color-mix(in_oklab,var(--kiosk-surface)_75%,black)] text-[var(--kiosk-text)]",
-    paper:
-      "border-2 border-[color-mix(in_oklab,var(--kiosk-card-text)_18%,transparent)] bg-transparent text-[var(--kiosk-card-text)]",
+    accent: "bg-[var(--kiosk-accent)] text-[var(--kiosk-on-accent)]",
+    ghost: "bg-[var(--kiosk-card)] text-[var(--kiosk-text)]",
+    paper: "bg-[var(--kiosk-money)] text-[var(--kiosk-card-text)]",
   }[variant]
 
   return (
     <motion.button
       type="button"
       onClick={onClick}
-      whileTap={{ scale: 0.96 }}
-      transition={{ type: "spring", stiffness: 700, damping: 30 }}
+      initial={{ boxShadow: "7px 7px 0 0 var(--kiosk-border)" }}
+      whileTap={{ x: 7, y: 7, boxShadow: "0px 0px 0 0 var(--kiosk-border)" }}
+      transition={{ type: "spring", stiffness: 900, damping: 34 }}
       className={`${base} ${skin} ${className}`}
     >
       {children}
