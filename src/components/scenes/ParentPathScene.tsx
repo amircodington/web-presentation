@@ -25,7 +25,7 @@ export function ParentPathScene({ state, camera }: SceneComponentProps) {
   if (!parent?.followUp) return null
 
   return (
-    <div className="scene-surface flex h-full w-full items-stretch gap-14 rounded-[48px] px-20 pt-16 pb-52">
+    <div className="scene-surface flex h-full w-full items-stretch gap-14 rounded-[48px] px-20 pt-16 pb-60">
       <div className="flex flex-1 flex-col justify-center gap-10">
         <div className="flex flex-col gap-4">
           <p className="text-[27px] font-medium text-[var(--kiosk-money)]">{parent.label}</p>

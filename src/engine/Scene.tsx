@@ -65,7 +65,9 @@ export const Scene = memo(function Scene({
         // A scene is a card: decorative layers (ambient orbs, the offer scene's
         // radial rays) must not paint outside it, or the overview map's computed
         // extent understates what is actually drawn and the outer scenes clip.
-        overflow: "hidden",
+        // `clip`, not `hidden`: a scene must never become a scroll container.
+        // See the stage in SceneGraph for what focus does to one.
+        overflow: "clip",
         borderRadius: 48,
         pointerEvents: overview || state === "active" ? "auto" : "none",
         willChange: state === "far" && !overview ? "auto" : "transform",

@@ -91,11 +91,13 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
     <div
       ref={viewportRef}
       data-viewport
-      className="absolute inset-0 overflow-hidden"
+      className="absolute inset-0"
       /* Deeper than the board, so the stage reads as a card lying on a surround. */
       style={{
         touchAction: "none",
         overscrollBehavior: "none",
+        // `clip`, never `hidden` — see the stage below.
+        overflow: "clip",
         background: "color-mix(in oklab, var(--kiosk-bg) 72%, var(--kiosk-border))",
       }}
     >
@@ -121,7 +123,19 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
           height: design.height,
           transform: `translate(-50%, -50%) scale(${scale})`,
           transformOrigin: "center center",
-          overflow: "hidden",
+          /*
+           * `clip` rather than `hidden`, and the difference is not cosmetic.
+           *
+           * `overflow: hidden` still makes a scroll container, and the browser
+           * scrolls the nearest one when focus lands on an element outside the
+           * visible box. A scene that renders a button on a state change — a game
+           * showing its result, a quiz advancing — therefore scrolls the stage,
+           * which shifts every scene relative to a camera that has not moved. The
+           * frame ends up permanently off-centre with no transform to blame.
+           *
+           * `overflow: clip` clips without ever becoming scrollable.
+           */
+          overflow: "clip",
           // The board itself. Without it the overview map, where the camera pulls
           // back past the scenes, shows the surround through the stage and the card
           // frame disappears at exactly the moment the map needs a table to sit on.

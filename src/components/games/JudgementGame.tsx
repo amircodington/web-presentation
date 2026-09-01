@@ -5,6 +5,8 @@ import { useState } from "react"
 import type { JudgementGame as JudgementGameContent } from "@/content/schema/activities"
 import { toPersianDigits } from "@/lib/format"
 import { Button } from "@/components/ui/Button"
+import { Mascot } from "@/components/ui/Mascot"
+import { MotionIcon } from "@/components/ui/MotionIcon"
 import { Icon } from "@/components/ui/Icon"
 
 interface Props {
@@ -91,8 +93,10 @@ export function JudgementGame({ game, onFinish }: Props) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col gap-5"
+            className="flex items-start gap-8"
           >
+            <Mascot name="shop" mood={wasRight ? "happy" : "worried"} size={104} />
+            <div className="flex flex-1 flex-col gap-5">
             <p className="flex items-center gap-4 text-[36px] font-bold">
               <span
                 style={{
@@ -115,6 +119,7 @@ export function JudgementGame({ game, onFinish }: Props) {
               >
                 {index + 1 < game.scenarios.length ? "پیشنهاد بعدی ←" : "نتیجه ←"}
               </Button>
+            </div>
             </div>
           </motion.div>
         ) : (
@@ -160,14 +165,16 @@ function VerdictButton({
     <button
       type="button"
       onClick={onClick}
-      className="flex min-h-[140px] cursor-pointer items-center justify-center gap-5 rounded-3xl border-4 text-[40px] font-bold"
+      className="mat-press active:mat-press-active flex min-h-[140px] cursor-pointer items-center justify-center gap-5 rounded-3xl border-[4px] border-[var(--kiosk-border)] text-[40px] font-bold"
       style={{
-        borderColor: risky ? "var(--kiosk-accent)" : "var(--kiosk-positive)",
-        background: risky ? "var(--kiosk-accent-soft)" : "#E4F6EC",
+        background: risky
+          ? "var(--kiosk-accent-soft)"
+          : "color-mix(in oklab, var(--kiosk-positive) 20%, var(--kiosk-card))",
         color: risky ? "var(--kiosk-accent)" : "var(--kiosk-positive)",
+        boxShadow: "7px 7px 0 0 var(--kiosk-border)",
       }}
     >
-      <Icon name={risky ? "flag" : "check"} size={48} />
+      <MotionIcon name={risky ? "flag" : "check"} size={48} />
       {label}
     </button>
   )

@@ -255,10 +255,32 @@ over. The check computes each scene's rotated axis-aligned box and reports every
 colliding pair.
 
 **Every scene reserves clearance for the chrome bar.** The persistent controls sit
-outside the stage at a fixed pixel size, occupying roughly 170 design pixels at the
-bottom. Scenes therefore carry `pb-52`; without it, the last row of content sits
-underneath the navigation. Verified by measuring, for each scene, whether any leaf
-element intersects the chrome's bounding box.
+outside the stage at a fixed pixel size, occupying roughly 204 design pixels at the
+bottom. Scenes therefore carry `pb-60`; without it, the last row of content sits
+underneath the navigation. The constant is derived from the tray's measured height
+rather than chosen, and must be re-derived when the chrome changes size — it moved
+from `pb-52` when the tray took the ink outline and grew. Verified by measuring, for
+each scene, whether any leaf element intersects the chrome's bounding box.
+
+Padding alone does not guarantee clearance. A scene whose content is taller than its
+box overflows *past* its own padding, so a footer can sit under the tray however much
+`pb-` is applied. When a measurement shows an overlap, check the content height before
+reaching for more padding.
+
+## Clip, never hide
+
+`overflow: hidden` creates a scroll container. The browser scrolls the nearest one when
+focus lands on an element outside the visible box — and React moving focus after a state
+change is enough. A game rendering its result button therefore scrolled the *stage*,
+which shifts every scene relative to a camera whose transform is unchanged.
+
+That failure is genuinely hard to read: the camera transform is byte-for-byte correct,
+every scene's placement is correct, the stage's own box is correct, and the frame is
+still wrong. The only visible symptom is that a 0×0 absolutely-positioned camera node
+reports a moved `getBoundingClientRect` — which is the scroll offset, not a transform.
+
+The stage and every scene therefore use `overflow: clip`, which clips without ever
+becoming scrollable.
 
 ## The RTL trap
 

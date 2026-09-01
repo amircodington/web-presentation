@@ -7,6 +7,8 @@ import { priceAfter } from "@/lib/games/market"
 import { toPersianDigits } from "@/lib/format"
 import { PriceChart } from "@/components/charts/PriceChart"
 import { Button } from "@/components/ui/Button"
+import { Mascot } from "@/components/ui/Mascot"
+import { MotionIcon } from "@/components/ui/MotionIcon"
 import { Icon } from "@/components/ui/Icon"
 
 interface Props {
@@ -48,7 +50,19 @@ export function MarketGame({ game, onFinish }: Props) {
             ? "پایان بازی"
             : `خبر ${toPersianDigits(round + 1)} از ${toPersianDigits(game.rounds.length)}`}
         </span>
-        <div className="flex items-baseline gap-3">
+        <div className="flex items-center gap-3">
+          <motion.span
+            animate={
+              !answered ? { y: 0 } : current?.effect === "up" ? { y: -14 } : { y: 14 }
+            }
+            transition={{ type: "spring", stiffness: 320, damping: 18 }}
+          >
+            <Mascot
+              name="rocket"
+              mood={!answered ? "idle" : current?.effect === "up" ? "wow" : "dizzy"}
+              size={76}
+            />
+          </motion.span>
           <span className="text-[25px] text-[var(--kiosk-muted)]">قیمت</span>
           <motion.b
             key={roundsDrawn}
@@ -158,10 +172,10 @@ function ChoiceButton({ direction, onClick }: { direction: "up" | "down"; onClic
     <button
       type="button"
       onClick={onClick}
-      className="mat flex min-h-[124px] cursor-pointer items-center justify-center gap-5 rounded-[28px] text-[38px] font-bold"
+      className="mat mat-press active:mat-press-active flex min-h-[124px] cursor-pointer items-center justify-center gap-5 rounded-[28px] text-[38px] font-bold"
     >
       <span style={{ color: up ? "var(--kiosk-positive)" : "var(--kiosk-accent)" }}>
-        <Icon name={up ? "up" : "down"} size={50} />
+        <MotionIcon name={up ? "up" : "down"} size={50} />
       </span>
       {up ? "بالا می‌رود" : "پایین می‌آید"}
     </button>

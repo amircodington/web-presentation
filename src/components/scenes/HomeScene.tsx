@@ -37,7 +37,7 @@ export function HomeScene({ state, camera }: SceneComponentProps) {
   }
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col gap-7 rounded-[48px] px-20 pt-12 pb-52">
+    <div className="scene-surface flex h-full w-full flex-col gap-7 rounded-[48px] px-20 pt-12 pb-60">
       <header className="flex items-center justify-between gap-8">
         <div className="flex items-center gap-6">
           <Logo height={82} />

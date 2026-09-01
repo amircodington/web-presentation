@@ -4,7 +4,8 @@ import { content } from "@/content/load"
 import { AllocationGame } from "@/components/games/AllocationGame"
 import { JudgementGame } from "@/components/games/JudgementGame"
 import { MarketGame } from "@/components/games/MarketGame"
-import { Chip } from "@/components/ui/Chip"
+import { Mascot } from "@/components/ui/Mascot"
+import { castFor } from "@/lib/games/cast"
 import { toPersianDigits } from "@/lib/format"
 import type { SceneComponentProps } from "@/engine"
 
@@ -26,12 +27,12 @@ export function GameScene({ state, camera, props }: SceneComponentProps) {
   const finish = () => camera.goTo("quiz-intro", "dive")
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col gap-6 rounded-[48px] px-16 pt-12 pb-52">
+    <div className="scene-surface flex h-full w-full flex-col gap-4 rounded-[48px] px-16 pt-12 pb-60">
       <header className="flex items-start justify-between gap-8">
         <div className="flex items-center gap-6">
-          <Chip icon={activity.icon} tone="accent" size={80} />
+          <Mascot name={castFor(activity.icon)} mood="happy" size={72} />
           <div className="flex flex-col">
-            <h2 className="display text-[44px]">{activity.title}</h2>
+            <h2 className="display text-[40px]">{activity.title}</h2>
             <p className="text-[25px] text-[var(--kiosk-muted)]">{activity.hook}</p>
           </div>
         </div>

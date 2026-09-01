@@ -49,7 +49,7 @@ const FIELD =
  * the idle reset unmounts the whole scene tree — a half-typed phone number must
  * never greet the next person.
  *
- * It also carries the scenes' `pb-52` chrome clearance and never scrolls: the
+ * It also carries the scenes' `pb-60` chrome clearance and never scrolls: the
  * persistent controls float above everything, and a field or a submit button
  * hidden under them is a form nobody can finish.
  */
