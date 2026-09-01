@@ -8,6 +8,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-09-01
+
+### Added
+- **booth:** add the staff capture tablet (ee48d67)
+
 ## [0.3.0] — 2026-09-01
 
 ### Added
