@@ -21,7 +21,7 @@ export function QuizIntroScene({ state, camera }: SceneComponentProps) {
   const questions = content.quiz.questions.length
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col items-center justify-center gap-10 rounded-[48px] px-24 pb-52 text-center">
+    <div className="scene-surface flex h-full w-full flex-col items-center justify-center gap-10 rounded-[48px] px-24 pb-60 text-center">
       <motion.div
         animate={isActive ? { y: [0, -14, 0] } : {}}
         transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}

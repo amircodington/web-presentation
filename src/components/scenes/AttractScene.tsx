@@ -31,7 +31,7 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
   const line = useRotatingLine(attract.rotating, isActive)
 
   return (
-    <div className="scene-surface relative flex h-full w-full flex-col items-center overflow-hidden rounded-[48px] px-20 pt-12 pb-52 text-center">
+    <div className="scene-surface relative flex h-full w-full flex-col items-center overflow-hidden rounded-[48px] px-20 pt-12 pb-60 text-center">
       <BoardTrack animate={isActive} />
 
       <header className="relative z-10 flex w-full items-center justify-between">

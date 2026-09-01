@@ -28,7 +28,7 @@ export function CoursesScene({ state, camera }: SceneComponentProps) {
   const columns = Math.max(1, courses.length)
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col gap-9 rounded-[48px] px-20 pt-14 pb-52">
+    <div className="scene-surface flex h-full w-full flex-col gap-9 rounded-[48px] px-20 pt-14 pb-60">
       <div className="flex items-end justify-between gap-10">
         <div className="flex flex-col gap-3">
           <p className="text-[26px] font-medium text-[var(--kiosk-money)]">مسیرها</p>

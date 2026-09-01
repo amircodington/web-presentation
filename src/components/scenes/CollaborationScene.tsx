@@ -31,7 +31,7 @@ export function CollaborationScene({ state, camera, props }: SceneComponentProps
   if (!track) return null
 
   return (
-    <div className="scene-surface relative flex h-full w-full flex-col justify-center gap-9 rounded-[48px] px-20 pt-14 pb-52">
+    <div className="scene-surface relative flex h-full w-full flex-col justify-center gap-9 rounded-[48px] px-20 pt-14 pb-60">
       <div className="flex flex-col gap-4">
         <p className="text-[26px] font-medium text-[var(--kiosk-money)]">{track.title}</p>
         <h2 className="display max-w-[85%] text-[58px] text-balance">{track.heroTitle}</h2>

@@ -21,7 +21,7 @@ export function QuizResultScene({ state, camera }: SceneComponentProps) {
   const recommended = recommendFor(score, audience)
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col justify-center gap-8 rounded-[48px] px-20 pt-14 pb-52">
+    <div className="scene-surface flex h-full w-full flex-col justify-center gap-8 rounded-[48px] px-20 pt-14 pb-60">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={isActive ? { opacity: 1, scale: 1 } : { opacity: 0.85, scale: 1 }}

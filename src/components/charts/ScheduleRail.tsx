@@ -31,8 +31,8 @@ export function ScheduleRail({ rows }: ScheduleRailProps) {
                 background: current
                   ? "var(--kiosk-accent)"
                   : done
-                    ? "color-mix(in oklab, var(--kiosk-muted) 45%, transparent)"
-                    : "var(--kiosk-border)",
+                    ? "color-mix(in oklab, var(--kiosk-border) 40%, transparent)"
+                    : "color-mix(in oklab, var(--kiosk-border) 18%, transparent)",
               }}
             />
             <span

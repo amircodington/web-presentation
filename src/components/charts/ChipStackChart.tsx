@@ -1,10 +1,14 @@
 "use client"
 
 import { motion } from "motion/react"
-import { Chip, type ChipTone } from "@/components/ui/Chip"
+import { Mascot } from "@/components/ui/Mascot"
 import { toPersianDigits } from "@/lib/format"
 import type { AllocationGame } from "@/content/schema/activities"
 import type { Allocation } from "@/lib/games/allocation"
+
+/** Tallest a column may draw, so the result always fits beside its feedback. */
+const MAX_COLUMN = 300
+const OVERLAP = 0.4
 
 interface ChipStackChartProps {
   game: AllocationGame
@@ -12,14 +16,14 @@ interface ChipStackChartProps {
 }
 
 /**
- * Where the money went, drawn as the stacks of counters the visitor just built.
+ * Where the money went, drawn as the stacks of coins the visitor just built.
  *
  * A pie or a bar chart would abstract the split back into a shape the visitor did
- * not make. Stacking the same chips they tapped keeps the result readable as their
+ * not make. Stacking the same coins they dragged keeps the result readable as their
  * own decision, and the column heights compare as directly as bars do because every
- * chip is worth the same.
+ * coin is worth the same.
  *
- * Chip colour ramps with risk — paper, gold, red — so the shape of the risk taken
+ * Coin colour ramps with risk — white, gold, red — so the shape of the risk taken
  * is visible before a single word of feedback is read.
  */
 export function ChipStackChart({ game, allocation }: ChipStackChartProps) {
@@ -27,8 +31,12 @@ export function ChipStackChart({ game, allocation }: ChipStackChartProps) {
   const placed = game.options.filter((option) => (allocation[option.id] ?? 0) > 0)
   const tallest = Math.max(1, ...placed.map((option) => allocation[option.id] ?? 0))
 
-  const chipSize = 78
-  const overlap = Math.round(chipSize * 0.4)
+  // The tallest column is what decides the coin size, so ten coins in one place
+  // and two coins each in five places both fit the same band. Without this a
+  // concentrated split — the split the game most wants to show — overflows the
+  // scene, and the visitor never sees the result of the mistake they just made.
+  const chipSize = Math.min(78, Math.floor(MAX_COLUMN / (1 + OVERLAP * (tallest - 1))))
+  const overlap = Math.round(chipSize * OVERLAP)
 
   return (
     <div
@@ -57,10 +65,11 @@ export function ChipStackChart({ game, allocation }: ChipStackChartProps) {
                   className="absolute inset-x-0"
                   style={{ bottom: tokenIndex * overlap }}
                 >
-                  <Chip
+                  <Mascot
+                    name="coin"
+                    mood={tokenIndex === count - 1 ? "happy" : "idle"}
                     tone={riskTone(option.risk)}
                     size={chipSize}
-                    icon={tokenIndex === count - 1 ? option.icon : undefined}
                   />
                 </motion.span>
               ))}
@@ -81,8 +90,8 @@ export function ChipStackChart({ game, allocation }: ChipStackChartProps) {
   )
 }
 
-function riskTone(risk: AllocationGame["options"][number]["risk"]): ChipTone {
-  if (risk === "high") return "accent"
-  if (risk === "none") return "paper"
-  return "money"
+function riskTone(risk: AllocationGame["options"][number]["risk"]): string {
+  if (risk === "high") return "var(--kiosk-accent)"
+  if (risk === "none") return "var(--kiosk-card)"
+  return "var(--kiosk-money)"
 }

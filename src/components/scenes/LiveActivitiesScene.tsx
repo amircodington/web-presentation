@@ -4,7 +4,8 @@ import { motion } from "motion/react"
 import { content } from "@/content/load"
 import { ScheduleRail } from "@/components/charts/ScheduleRail"
 import { useSchedule } from "@/components/kiosk/useSchedule"
-import { Chip } from "@/components/ui/Chip"
+import { Mascot } from "@/components/ui/Mascot"
+import { castFor } from "@/lib/games/cast"
 import { toPersianDigits } from "@/lib/format"
 import type { SceneComponentProps } from "@/engine"
 
@@ -21,7 +22,7 @@ export function LiveActivitiesScene({ state, camera }: SceneComponentProps) {
   const schedule = useSchedule()
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col gap-6 rounded-[48px] px-20 pt-12 pb-52">
+    <div className="scene-surface flex h-full w-full flex-col gap-6 rounded-[48px] px-20 pt-12 pb-60">
       <div className="flex items-end justify-between gap-10">
         <div className="flex flex-col gap-3">
           <p className="text-[26px] font-medium text-[var(--kiosk-money)]">همین حالا در غرفه</p>
@@ -51,7 +52,7 @@ export function LiveActivitiesScene({ state, camera }: SceneComponentProps) {
               whileTap={{ scale: 0.97 }}
               className="mat relative flex cursor-pointer gap-6 rounded-[32px] p-7 text-start"
             >
-              <Chip icon={activity.icon} tone={isNext ? "accent" : "board"} size={76} />
+              <Mascot name={castFor(activity.icon)} mood={isNext ? "wow" : "happy"} size={84} />
 
               <div className="flex flex-1 flex-col gap-2.5">
                 <div className="flex items-baseline gap-4">

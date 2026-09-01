@@ -60,6 +60,7 @@ export function PriceChart({ game, roundsPlayed, unit }: PriceChartProps) {
             y2={y(price)}
             stroke="var(--kiosk-border)"
             strokeWidth={2}
+            strokeOpacity={0.22}
             strokeDasharray="8 10"
           />
           <text
