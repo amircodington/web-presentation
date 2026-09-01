@@ -1,15 +1,18 @@
+import { toRow, type LeadRow } from "./view"
 import type { LeadRecord } from "./schema"
 
-const COLUMNS: readonly (readonly [keyof LeadRecord | "date" | "time", string])[] = [
+const COLUMNS: readonly (readonly [keyof LeadRow, string])[] = [
   ["date", "تاریخ"],
   ["time", "ساعت"],
-  ["track", "مسیر"],
+  ["sourceLabel", "محل ثبت"],
+  ["audience", "نوع مخاطب"],
   ["name", "نام"],
   ["role", "سمت"],
   ["organization", "مدرسه / سازمان"],
   ["mobile", "موبایل"],
   ["city", "شهر"],
   ["interests", "علاقه‌مندی"],
+  ["status", "وضعیت"],
   ["notes", "توضیح"],
   ["id", "شناسه"],
 ]
@@ -25,14 +28,8 @@ const quote = (value: unknown) => `"${String(value ?? "").replace(/"/g, '""')}"`
 export function leadsToCsv(records: readonly LeadRecord[]): string {
   const header = COLUMNS.map(([, label]) => quote(label)).join(",")
   const rows = records.map((record) => {
-    const at = new Date(record.submittedAt)
-    const cells = COLUMNS.map(([key]) => {
-      if (key === "date") return at.toISOString().slice(0, 10)
-      if (key === "time") return at.toISOString().slice(11, 16)
-      if (key === "interests") return record.interests.join(" | ")
-      return record[key]
-    })
-    return cells.map(quote).join(",")
+    const row = toRow(record)
+    return COLUMNS.map(([key]) => quote(row[key])).join(",")
   })
   return "﻿" + [header, ...rows].join("\r\n") + "\r\n"
 }

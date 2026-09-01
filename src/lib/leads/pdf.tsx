@@ -4,6 +4,7 @@ import React from "react"
 import { Document, Font, Page, StyleSheet, Text, View, renderToBuffer } from "@react-pdf/renderer"
 import { content } from "@/content/load"
 import { toPersianDigits } from "@/lib/format"
+import { toRow } from "./view"
 import type { LeadRecord } from "./schema"
 
 /**
@@ -134,10 +135,7 @@ const styles = StyleSheet.create({
  */
 const rtl = (text: string) => `\u200f${text}`
 
-const TRACK_LABELS: Record<LeadRecord["track"], string> = {
-  schools: content.collaboration.schools.title,
-  organizations: content.collaboration.organizations.title,
-}
+
 
 /**
  * Jalali date and 24-hour clock in Tehran, which is the only clock anyone
@@ -174,26 +172,36 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 function LeadCard({ record }: { record: LeadRecord }) {
+  const row = toRow(record)
   const stamp = formatStamp(record.submittedAt)
   return (
     <View style={styles.card} wrap={false}>
       <View style={styles.cardTop}>
         <Text style={styles.cardName}>{rtl(record.name)}</Text>
-        <Text style={styles.trackTag}>{TRACK_LABELS[record.track]}</Text>
+        <Text style={styles.trackTag}>{row.audience}</Text>
       </View>
 
-      <Field label="سمت">
-        <Text style={styles.value}>{rtl(record.role)}</Text>
-      </Field>
-      <Field label="مدرسه / سازمان">
-        <Text style={styles.value}>{rtl(record.organization)}</Text>
-      </Field>
+      {row.role ? (
+        <Field label="سمت">
+          <Text style={styles.value}>{rtl(row.role)}</Text>
+        </Field>
+      ) : null}
+      {row.status ? (
+        <Field label="وضعیت">
+          <Text style={styles.value}>{rtl(row.status)}</Text>
+        </Field>
+      ) : null}
+      {row.organization ? (
+        <Field label="مدرسه / سازمان">
+          <Text style={styles.value}>{rtl(row.organization)}</Text>
+        </Field>
+      ) : null}
       <Field label="موبایل">
         <Text style={styles.mobile}>{toPersianDigits(record.mobile)}</Text>
       </Field>
-      {record.city ? (
+      {row.city ? (
         <Field label="شهر">
-          <Text style={styles.value}>{rtl(record.city)}</Text>
+          <Text style={styles.value}>{rtl(row.city)}</Text>
         </Field>
       ) : null}
       <Field label="علاقه‌مندی">

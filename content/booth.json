@@ -1,0 +1,61 @@
+{
+  "title": "ثبت سریع لید غرفه",
+  "subtitle": "باشگاه ثروت — جشنواره باغ کتاب",
+  "audienceLabel": "۱) مخاطب کیه؟",
+  "contactLabel": "۲) اطلاعات تماس",
+  "interestLabel": "۳) به چی علاقه‌مند شد؟",
+  "interestHint": "می‌توانید بیش از یکی را انتخاب کنید",
+  "statusLabel": "۴) وضعیتش چیه؟",
+  "nameLabel": "نام *",
+  "namePlaceholder": "نام مخاطب",
+  "mobileLabel": "موبایل *",
+  "mobilePlaceholder": "09xxxxxxxxx",
+  "organizationLabel": "نام مدرسه / سازمان *",
+  "organizationPlaceholder": "نام مجموعه",
+  "notesLabel": "یادداشت کوتاه (اختیاری)",
+  "notesPlaceholder": "مثلاً: مادر دانش‌آموز پایه نهم؛ فردا عصر تماس شود.",
+  "saveLabel": "ثبت و نفر بعدی ✓",
+  "savingLabel": "در حال ثبت…",
+  "todayLabel": "لید امروز",
+  "exportTitle": "پایان روز",
+  "exportHint": "هر شب هر دو فایل را خروجی بگیرید. لیدها روی سرور ذخیره می‌شوند، نه روی این تبلت.",
+  "csvLabel": "دانلود CSV",
+  "jsonLabel": "بکاپ JSON",
+  "pdfLabel": "چاپ PDF",
+  "recentLabel": "آخرین ثبت‌ها",
+  "duplicateWarning": "این شماره امروز ثبت شده. باز هم ثبت شود؟",
+  "queuedLabel": "در انتظار ارسال",
+  "retryLabel": "تلاش دوباره",
+  "audiences": [
+    { "id": "teen", "label": "نوجوان", "needsOrganization": false },
+    { "id": "parent", "label": "والد", "needsOrganization": false },
+    { "id": "konkur", "label": "تازه‌کنکوری", "needsOrganization": false },
+    { "id": "school", "label": "مدرسه", "needsOrganization": true },
+    { "id": "organization", "label": "سازمان / B2G", "needsOrganization": true },
+    { "id": "other", "label": "سایر", "needsOrganization": false }
+  ],
+  "interests": [
+    { "id": "plus18", "label": "+18" },
+    { "id": "business-school", "label": "Business School" },
+    { "id": "masir-servat", "label": "مسیر ثروت" },
+    { "id": "school-partnership", "label": "همکاری مدرسه" },
+    { "id": "org-partnership", "label": "همکاری سازمانی" },
+    { "id": "just-looking", "label": "فقط آشنایی" }
+  ],
+  "statuses": [
+    { "id": "ready", "label": "آماده ثبت‌نام", "tone": "positive" },
+    { "id": "follow-up", "label": "نیاز به پیگیری", "tone": "money" },
+    { "id": "partnership", "label": "درخواست همکاری", "tone": "joy" },
+    { "id": "info-only", "label": "فقط اطلاعات", "tone": "neutral" }
+  ],
+  "errors": {
+    "audience": "نوع مخاطب را انتخاب کنید",
+    "name": "نام را وارد کنید",
+    "mobile": "شماره موبایل معتبر نیست",
+    "organization": "نام مدرسه / سازمان را وارد کنید",
+    "interests": "حداقل یک علاقه‌مندی انتخاب کنید",
+    "status": "وضعیت مخاطب را انتخاب کنید",
+    "network": "ثبت روی سرور انجام نشد؛ روی همین تبلت نگه داشته شد و دوباره تلاش می‌شود."
+  },
+  "savedMessage": "ثبت شد ✓"
+}

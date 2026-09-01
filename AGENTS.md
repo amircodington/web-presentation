@@ -229,6 +229,11 @@ These come from the physical reality of an unattended screen in a loud hall:
   player has done (`lib/games/cast`), never set for looks. A `MotionIcon`'s loop is chosen
   by meaning — money falls, charts climb — because a screen that animates the wrong way
   teaches the wrong thing to a visitor who is here to learn exactly that.
+- **Two capture surfaces, one archive.** The kiosk form is filled in by a visitor; the
+  `/booth` tablet is filled in by staff about a visitor. They store different fields and are
+  told apart by `source` on the record. A record written before `source` existed is read as
+  `kiosk` — never make that shape stop parsing, because `listLeads` skips what it cannot parse
+  and a silently empty archive is the worst way to lose leads.
 - **B2B and B2G prices are never displayed.** Both source briefs quote per engagement;
   a figure on a public screen undercuts the conversation the booth exists to start.
 

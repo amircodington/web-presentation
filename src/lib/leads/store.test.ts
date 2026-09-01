@@ -15,6 +15,7 @@ async function withStore(dir: string) {
 }
 
 const SUBMISSION: LeadSubmission = {
+  source: "kiosk",
   track: "schools",
   name: "مریم رضایی",
   role: "مدیر مدرسه",
@@ -97,7 +98,7 @@ describe("the archive", () => {
   it("empties the archive and counts what it removed", async () => {
     const { saveLead, deleteAllLeads, listLeads } = await withStore(dir)
     await saveLead(SUBMISSION)
-    await saveLead({ ...SUBMISSION, track: "organizations" })
+    await saveLead({ ...SUBMISSION, track: "organizations" as const })
 
     expect(await deleteAllLeads()).toBe(2)
     expect(await listLeads()).toEqual([])

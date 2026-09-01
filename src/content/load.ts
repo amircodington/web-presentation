@@ -1,6 +1,7 @@
 import { z } from "zod"
 import activitiesJson from "@content/activities.json"
 import audiencesJson from "@content/audiences.json"
+import boothJson from "@content/booth.json"
 import brandJson from "@content/brand.json"
 import contactJson from "@content/contact.json"
 import collaborationJson from "@content/collaboration.json"
@@ -12,6 +13,7 @@ import quizJson from "@content/quiz.json"
 import resultsJson from "@content/results.json"
 import scenesJson from "@content/scenes.json"
 import workshopsJson from "@content/workshops.json"
+import { BoothSchema } from "./schema/booth"
 import { BrandSchema } from "./schema/brand"
 import { ActivitiesSchema } from "./schema/activities"
 import { AudiencesSchema, CoursesSchema, WorkshopsSchema } from "./schema/catalogue"
@@ -44,6 +46,7 @@ function parse<T>(name: string, schema: z.ZodType<T>, raw: unknown): T {
 }
 
 const brand = parse("brand", BrandSchema, brandJson)
+const booth = parse("booth", BoothSchema, boothJson)
 const festival = parse("festival", FestivalSchema, festivalJson)
 const event = parse("event", EventSchema, eventJson)
 const contact = parse("contact", ContactSchema, contactJson)
@@ -121,6 +124,7 @@ checkCrossReferences()
 
 export const content = Object.freeze({
   brand,
+  booth,
   festival,
   event,
   contact,
