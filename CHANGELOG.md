@@ -8,6 +8,12 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-09-01
+
+### Added
+- **games:** make the board playable by hand and fix the frame it broke (7dc0583)
+- **design:** rebuild the kiosk as a board game for children (04eb4d3)
+
 ## [0.2.0] — 2026-09-01
 
 ### Added
