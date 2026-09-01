@@ -4,12 +4,8 @@ import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
 import { Icon } from "@/components/ui/Icon"
 import { toPersianDigits } from "@/lib/format"
+import { toRow } from "@/lib/leads/view"
 import type { LeadRecord } from "@/lib/leads/schema"
-
-const TRACK_LABELS: Record<LeadRecord["track"], string> = {
-  schools: "مدرسه",
-  organizations: "سازمان",
-}
 
 /**
  * The booth lead's view of the archive: read, download, delete.
@@ -87,7 +83,9 @@ export function LeadArchive({ token, records }: { token: string; records: LeadRe
       ) : null}
 
       <ul className="flex flex-col gap-4">
-        {records.map((record) => (
+        {records.map((record) => {
+          const row = toRow(record)
+          return (
           <li
             key={record.id}
             className="flex flex-col gap-3 rounded-2xl border border-[var(--kiosk-border)] bg-[var(--kiosk-surface)] p-5"
@@ -95,15 +93,19 @@ export function LeadArchive({ token, records }: { token: string; records: LeadRe
             <div className="flex flex-wrap items-baseline justify-between gap-3">
               <h2 className="text-xl font-bold">{record.name}</h2>
               <span className="rounded-full bg-[var(--kiosk-accent)] px-3 py-1 text-sm font-bold text-[var(--kiosk-on-accent)]">
-                {TRACK_LABELS[record.track]}
+                {row.audience}
+              </span>
+              <span className="rounded-full bg-[var(--kiosk-money)] px-3 py-1 text-sm font-bold text-[var(--kiosk-card-text)]">
+                {row.sourceLabel}
               </span>
             </div>
 
             <dl className="grid gap-x-6 gap-y-1 text-[var(--kiosk-text)] sm:grid-cols-2">
-              <Row label="سمت" value={record.role} />
-              <Row label="مدرسه / سازمان" value={record.organization} />
+              {row.role ? <Row label="سمت" value={row.role} /> : null}
+              {row.status ? <Row label="وضعیت" value={row.status} /> : null}
+              {row.organization ? <Row label="مدرسه / سازمان" value={row.organization} /> : null}
               <Row label="موبایل" value={toPersianDigits(record.mobile)} />
-              {record.city ? <Row label="شهر" value={record.city} /> : null}
+              {row.city ? <Row label="شهر" value={row.city} /> : null}
               <Row label="علاقه‌مندی" value={record.interests.join("، ")} />
               <Row label="زمان ثبت" value={formatStamp(record.submittedAt)} />
             </dl>
@@ -125,7 +127,8 @@ export function LeadArchive({ token, records }: { token: string; records: LeadRe
               />
             </div>
           </li>
-        ))}
+          )
+        })}
       </ul>
     </main>
   )

@@ -24,7 +24,8 @@ function stampedName(extension: string): string {
 export async function GET(request: Request): Promise<Response> {
   if (!isAuthorised(request)) return notFound()
 
-  const format = new URL(request.url).searchParams.get("format") ?? "json"
+  const params = new URL(request.url).searchParams
+  const format = params.get("format") ?? "json"
   const records = await listLeads()
 
   if (format === "pdf") {
@@ -48,7 +49,14 @@ export async function GET(request: Request): Promise<Response> {
     })
   }
 
-  return Response.json({ count: records.length, records }, { headers: { "cache-control": "no-store" } })
+  // `?download=1` turns the same JSON into a saved file. The archive page reads
+  // this route inline; the booth tablet offers it as the lossless nightly backup,
+  // and a backup that opens in a tab is one nobody actually keeps.
+  const headers: Record<string, string> = { "cache-control": "no-store" }
+  if (params.get("download")) {
+    headers["content-disposition"] = `attachment; filename="${stampedName("json")}"`
+  }
+  return Response.json({ count: records.length, records }, { headers })
 }
 
 /** Empties the archive. The one destructive action, so it names what it did. */

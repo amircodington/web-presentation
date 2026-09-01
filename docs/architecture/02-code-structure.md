@@ -61,6 +61,7 @@ src/
 │   ├── globals.css             # Tailwind layers, CSS custom properties from brand.json
 │   ├── admin/page.tsx          # hidden overlay: version, CSV export, content reload
 │   ├── leads/page.tsx          # the lead archive, gated on ?token=. Linked from nowhere
+│   ├── booth/page.tsx          # the staff capture tablet, same token. Also linked from nowhere
 │   └── api/
 │       ├── health/route.ts     # liveness probe
 │       └── leads/
@@ -79,6 +80,7 @@ src/
 │
 ├── components/
 │   ├── kiosk/                  # AttractLoop, IdleReset, TouchHint, ProgressRail, LeadForm
+│   ├── booth/                  # BoothCapture — the staff tablet, not part of the kiosk UI
 │   ├── leads/                  # LeadArchive — the operator's view, not part of the kiosk UI
 │   ├── scenes/                 # one component per scene type, named in scenes.json
 │   ├── quiz/                   # QuestionCard, OptionButton, ScoreMeter, ResultReveal
@@ -104,7 +106,9 @@ src/
 │   ├── idle.ts                 # inactivity detection and reset orchestration
 │   ├── qr.ts                   # local QR rendering
 │   ├── analytics.ts            # KPI counters into IndexedDB, no network
-│   ├── leads/                  # server-only: schema, file store, access token, PDF, CSV
+│   ├── leads/                  # server-only: schema, file store, access token, PDF, CSV,
+│   │                           # and view.ts — the one projection both capture
+│   │                           # shapes are flattened through
 │   └── storage.ts              # IndexedDB wrapper
 │
 ├── store/

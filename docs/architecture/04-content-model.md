@@ -112,6 +112,15 @@ question has at least two options.
 
 ## Playable booth activities
 
+`booth.json` carries every label and option on the staff capture tablet: the audience types, the
+product list, the follow-up statuses and the validation messages. It is content rather than code
+for the same reason the rest is — the product names and the follow-up vocabulary change between
+festivals, and neither should need a rebuild by a developer who is not at the stand.
+
+An audience option carries `needsOrganization`, which is the one rule the shape depends on: a
+school lead without a school name is not a lead anybody can follow up, while a parent has no
+organisation to give.
+
 `activities.json` carries the live mini-workshops from the activations brief. Each
 may include a `game` object, and the kiosk plays a short version on screen while a
 visitor waits for the next live run.
