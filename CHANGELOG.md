@@ -8,6 +8,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.10.0] — 2026-09-02
+
+### Added
+- **adults:** build the adults world and retire the generic quiz (5381dbb)
+
 ## [0.9.0] — 2026-09-02
 
 ### Added
