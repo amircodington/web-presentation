@@ -1,13 +1,19 @@
 "use client"
 
+import { useState } from "react"
 import { content } from "@/content/load"
 import { useSession } from "@/store/session"
 import { AllocationGame } from "@/components/games/AllocationGame"
 import { JudgementGame } from "@/components/games/JudgementGame"
 import { MarketGame } from "@/components/games/MarketGame"
+import { ShopGame } from "@/components/games/ShopGame"
+import { SortGame } from "@/components/games/SortGame"
+import { StallGame } from "@/components/games/StallGame"
+import { Celebration } from "@/components/kiosk/Celebration"
 import { Mascot } from "@/components/ui/Mascot"
 import { castFor } from "@/lib/games/cast"
 import { toPersianDigits } from "@/lib/format"
+import type { Activity } from "@/content/schema/activities"
 import type { SceneComponentProps } from "@/engine"
 
 /** Brief §12: the way out of a game is an invitation, never a dead end. */
@@ -20,11 +26,16 @@ const FINISH_LABEL = "یه بازی دیگه هم بزن! ←"
  * board and the next visitor never walks up to someone else's half-finished game.
  * That is the guarantee the idle reset gives the quiz, applied locally — and it
  * keeps inactive scenes cheap, which the lifecycle contract requires.
+ *
+ * An activity that carries a badge gets its celebration here rather than inside
+ * each game, so all six mechanics end the same way and none of them has to know
+ * what a badge is.
  */
 export function GameScene({ state, camera, props }: SceneComponentProps) {
   const activityId = String(props.activityId ?? "")
   const activity = content.activities.activities.find((item) => item.id === activityId)
   const complete = useSession((store) => store.complete)
+  const [celebrating, setCelebrating] = useState(false)
 
   if (!activity?.game) return null
 
@@ -38,11 +49,15 @@ export function GameScene({ state, camera, props }: SceneComponentProps) {
    */
   const finish = () => {
     complete(activityId)
+    if (activity.badge) {
+      setCelebrating(true)
+      return
+    }
     camera.back()
   }
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col gap-4 rounded-[48px] px-16 pt-12 pb-60">
+    <div className="scene-surface relative flex h-full w-full flex-col gap-4 rounded-[48px] px-16 pt-12 pb-60">
       <header className="flex items-start justify-between gap-8">
         <div className="flex items-center gap-6">
           <Mascot name={castFor(activity.icon)} mood="happy" size={72} />
@@ -63,16 +78,30 @@ export function GameScene({ state, camera, props }: SceneComponentProps) {
           <AllocationGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
         ) : game.kind === "market" ? (
           <MarketGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
-        ) : (
+        ) : game.kind === "judgement" ? (
           <JudgementGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
+        ) : game.kind === "sort" ? (
+          <SortGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
+        ) : game.kind === "shop" ? (
+          <ShopGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
+        ) : (
+          <StallGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
         )}
       </div>
+
+      <Celebration
+        badge={celebrating ? activity.badge : undefined}
+        onDone={() => {
+          setCelebrating(false)
+          camera.back()
+        }}
+      />
     </div>
   )
 }
 
 /** What an inactive game scene shows: the lesson, not a frozen board. */
-function GamePreview({ learning }: { learning: readonly string[] }) {
+function GamePreview({ learning }: { learning: Activity["learning"] }) {
   return (
     <div className="flex h-full flex-wrap content-center gap-4">
       {learning.map((item) => (

@@ -15,8 +15,14 @@ import { AudioManager } from "@/lib/audio/manager"
 import type { AudienceGroup } from "@/content/schema/common"
 
 interface SoundApi {
-  /** Sounds a cue by name and raises its caption. Safe to call anywhere. */
-  play(cueId: string): void
+  /**
+   * Sounds a cue by name and raises its caption. Safe to call anywhere.
+   *
+   * Pass `caption: false` when the screen is already showing the same words —
+   * a celebration whose headline *is* the spoken line does not need it printed
+   * twice, and the duplicate lands on top of the badge underneath it.
+   */
+  play(cueId: string, options?: { caption?: boolean }): void
   muted: boolean
   toggleMuted(): void
   /** The caption currently showing, if any. */
@@ -69,9 +75,9 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   useEffect(() => () => clearTimeout(captionTimer.current), [])
 
   const play = useCallback(
-    (cueId: string) => {
+    (cueId: string, options?: { caption?: boolean }) => {
       const fired = manager.play(cueId)
-      if (!fired?.subtitle) return
+      if (!fired?.subtitle || options?.caption === false) return
       setSubtitle(fired.subtitle)
       clearTimeout(captionTimer.current)
       captionTimer.current = setTimeout(() => setSubtitle(undefined), fired.holdMs)

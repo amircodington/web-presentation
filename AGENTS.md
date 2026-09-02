@@ -346,7 +346,7 @@ same commit sequence that merges it. A branch with no row here is an incomplete 
 | `feat/audience-worlds` | Three-world model, Audience Gateway, B2B secondary route | merged |
 | `feat/attract-worlds` | Animated three-portal attract loop | merged |
 | `feat/audio-manager` | Central audio manager, mute, subtitles | merged |
-| `feat/kids-world` | Kids world home, four experiences, celebration, course reveal | planned |
+| `feat/kids-world` | Kids world home, four experiences, celebration, course reveal | merged |
 | `feat/teens-world` | Teen world home, four experiences, level-up, recommendations | planned |
 | `feat/adults-world` | Adult world home, four experiences, config question bank, profile result | planned |
 | `chore/production-image` | Verification pass and the production image | planned |
