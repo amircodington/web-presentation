@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react"
 import { useState } from "react"
 import type { JudgementGame as JudgementGameContent } from "@/content/schema/activities"
 import { toPersianDigits } from "@/lib/format"
+import { useSound } from "@/components/kiosk/AudioProvider"
 import { Button } from "@/components/ui/Button"
 import { Mascot } from "@/components/ui/Mascot"
 import { MotionIcon } from "@/components/ui/MotionIcon"
@@ -24,9 +25,16 @@ interface Props {
  * lesson, and they only land while the visitor still remembers what they chose.
  */
 export function JudgementGame({ game, onFinish, finishLabel }: Props) {
+  const { play } = useSound()
   const [index, setIndex] = useState(0)
   const [answer, setAnswer] = useState<"safe" | "risky">()
   const [correct, setCorrect] = useState(0)
+
+  /** Scores the answer and says so, because a verdict read is a verdict forgotten. */
+  const judge = (right: boolean) => {
+    if (right) setCorrect((c) => c + 1)
+    play(right ? "good" : "warn")
+  }
 
   const scenario = game.scenarios[index]
   const finished = index >= game.scenarios.length
@@ -131,7 +139,7 @@ export function JudgementGame({ game, onFinish, finishLabel }: Props) {
               label={game.riskyLabel}
               onClick={() => {
                 setAnswer("risky")
-                if (scenario.verdict === "risky") setCorrect((c) => c + 1)
+                judge(scenario.verdict === "risky")
               }}
             />
             <VerdictButton
@@ -139,7 +147,7 @@ export function JudgementGame({ game, onFinish, finishLabel }: Props) {
               label={game.safeLabel}
               onClick={() => {
                 setAnswer("safe")
-                if (scenario.verdict === "safe") setCorrect((c) => c + 1)
+                judge(scenario.verdict === "safe")
               }}
             />
           </motion.div>

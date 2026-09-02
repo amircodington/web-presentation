@@ -12,7 +12,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "validate:content": "tsx scripts/validate-content.ts",
-    "release": "tsx scripts/release.ts"
+    "release": "tsx scripts/release.ts",
+    "assets:sfx": "node scripts/generate-sfx.mjs"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.9.0",

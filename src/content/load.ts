@@ -1,5 +1,6 @@
 import { z } from "zod"
 import activitiesJson from "@content/activities.json"
+import audioJson from "@content/audio.json"
 import audiencesJson from "@content/audiences.json"
 import boothJson from "@content/booth.json"
 import brandJson from "@content/brand.json"
@@ -14,6 +15,7 @@ import resultsJson from "@content/results.json"
 import scenesJson from "@content/scenes.json"
 import worldsJson from "@content/worlds.json"
 import workshopsJson from "@content/workshops.json"
+import { AudioSchema } from "./schema/audio"
 import { BoothSchema } from "./schema/booth"
 import { BrandSchema } from "./schema/brand"
 import { ActivitiesSchema } from "./schema/activities"
@@ -48,6 +50,7 @@ function parse<T>(name: string, schema: z.ZodType<T>, raw: unknown): T {
 }
 
 const brand = parse("brand", BrandSchema, brandJson)
+const audio = parse("audio", AudioSchema, audioJson)
 const booth = parse("booth", BoothSchema, boothJson)
 const festival = parse("festival", FestivalSchema, festivalJson)
 const event = parse("event", EventSchema, eventJson)
@@ -109,6 +112,17 @@ function checkCrossReferences(): void {
 
   const audienceIds = new Set(audiences.map((audience) => audience.id))
 
+  for (const world of worlds.worlds) {
+    if (audio.worldVolume[world.id] === undefined) {
+      throw new Error(`content/audio.json: no worldVolume for "${world.id}"`)
+    }
+    if (world.greetingCue && audio.cues[world.greetingCue] === undefined) {
+      throw new Error(
+        `content/worlds.json: world "${world.id}" greets with unknown cue "${world.greetingCue}"`,
+      )
+    }
+  }
+
   const sceneIds = new Set(scenes.scenes.map((scene) => scene.id))
   const sceneWorlds = new Map(scenes.scenes.map((scene) => [scene.id, scene.meta?.world]))
 
@@ -161,6 +175,7 @@ checkCrossReferences()
 
 export const content = Object.freeze({
   brand,
+  audio,
   booth,
   festival,
   event,

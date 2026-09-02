@@ -1,10 +1,12 @@
 "use client"
 
 import { motion } from "motion/react"
+import { useEffect } from "react"
 import { activeExperiences, worldById } from "@/content/select"
 import { castFor } from "@/lib/games/cast"
 import { toPersianDigits } from "@/lib/format"
 import { useSession } from "@/store/session"
+import { useSound } from "@/components/kiosk/AudioProvider"
 import { Icon } from "@/components/ui/Icon"
 import { Logo } from "@/components/ui/Logo"
 import { Mascot } from "@/components/ui/Mascot"
@@ -26,6 +28,14 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
   const groupId = String(props.world ?? "") as AudienceGroup
   const world = worldById(groupId)
   const completed = useSession((store) => store.completed)
+  const { play } = useSound()
+
+  // Greeted on arrival, not on every render: a world re-entered after a game
+  // says hello again, but a state change inside it does not.
+  const greeting = world?.greetingCue
+  useEffect(() => {
+    if (isActive && greeting) play(greeting)
+  }, [greeting, isActive, play])
 
   if (!world) return null
 

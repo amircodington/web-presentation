@@ -1,0 +1,69 @@
+{
+  "enabled": true,
+  "masterVolume": 0.55,
+  "attractVolume": 0.35,
+  "worldVolume": {
+    "kids": 0.65,
+    "teens": 0.55,
+    "adults": 0.35
+  },
+  "debounceMs": 70,
+  "maxConcurrent": 2,
+  "cues": {
+    "tap": {
+      "src": "/audio/ui/tap.wav",
+      "byWorld": {
+        "kids": "/audio/kids/pop.wav",
+        "teens": "/audio/teens/click.wav",
+        "adults": "/audio/adults/click.wav"
+      }
+    },
+    "back": { "src": "/audio/ui/back.wav" },
+    "move": {
+      "src": "/audio/ui/whoosh.wav",
+      "byWorld": {
+        "kids": "/audio/kids/boing.wav",
+        "teens": "/audio/teens/swipe.wav",
+        "adults": "/audio/adults/whoosh.wav"
+      }
+    },
+    "place": {
+      "src": "/audio/ui/tap.wav",
+      "byWorld": {
+        "kids": "/audio/kids/coin.wav",
+        "teens": "/audio/teens/tick.wav",
+        "adults": "/audio/adults/click.wav"
+      }
+    },
+    "good": {
+      "src": "/audio/kids/sparkle.wav",
+      "byWorld": {
+        "kids": "/audio/kids/sparkle.wav",
+        "teens": "/audio/teens/notification.wav",
+        "adults": "/audio/adults/chart.wav"
+      }
+    },
+    "warn": {
+      "src": "/audio/teens/warning.wav",
+      "byWorld": {
+        "kids": "/audio/kids/oops.wav",
+        "teens": "/audio/teens/warning.wav",
+        "adults": "/audio/adults/alert.wav"
+      }
+    },
+    "reveal": {
+      "src": "/audio/adults/reveal.wav",
+      "byWorld": {
+        "kids": "/audio/kids/bell.wav",
+        "teens": "/audio/teens/levelup.wav",
+        "adults": "/audio/adults/reveal.wav"
+      }
+    },
+    "purchase": { "src": "/audio/kids/register.wav" },
+    "celebrate": { "src": "/audio/kids/celebration.wav", "gain": 0.9 },
+    "voice-lets-play": { "subtitle": "بزن بریم بازی کنیم!" },
+    "voice-well-done": { "subtitle": "آفرین!" },
+    "voice-count-again": { "subtitle": "پولت کافیه؟ یه بار دیگه حساب کن!" },
+    "voice-smarter": { "subtitle": "آفرین! تو امروز پول‌بلدتر شدی!" }
+  }
+}

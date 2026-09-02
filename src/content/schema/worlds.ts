@@ -56,6 +56,13 @@ const WorldSchema = z.object({
   intro: z.string().min(1),
   /** Which catalogue audiences this world's product reveal draws from. */
   audiences: z.array(AudienceIdSchema).min(1),
+  /**
+   * Cue sounded on arrival in this world. Brief §51 recommends a spoken greeting
+   * for the kids' world specifically, because some children read slowly and a
+   * screen that only writes its welcome has not welcomed them. Its caption is in
+   * `audio.json` beside it, so the line reaches a muted screen too.
+   */
+  greetingCue: z.string().min(1).optional(),
   palette: WorldPaletteSchema,
   experiences: z.array(WorldExperienceSchema).length(4),
   /**

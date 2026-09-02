@@ -69,7 +69,8 @@
           "active": false
         }
       ],
-      "attractLine": "سکه‌ها، قلک و یه عالمه بازی"
+      "attractLine": "سکه‌ها، قلک و یه عالمه بازی",
+      "greetingCue": "voice-lets-play"
     },
     {
       "id": "teens",
