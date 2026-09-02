@@ -95,7 +95,8 @@ Lifecycle: branch from `main` → small commits → rebase on `main` → merge b
 outlives that, it was too big a task.
 
 Prefer reusing an existing open branch when the work belongs to the same feature;
-open a new branch when the work is independently mergeable.
+open a new branch when the work is independently mergeable. Which branch, and what every
+branch so far was for, is recorded in §12 — add your row there when you open it.
 
 Commits follow **Conventional Commits** — this is not cosmetic, the release tooling parses it:
 
@@ -300,11 +301,50 @@ When you add or change any of the following, update the named section here in th
 | A naming, comment, or style convention | §3 |
 | A content file, schema, or icon name | §2, and `docs/architecture/04-content-model.md` |
 | A branch or commit convention | §4, and `docs/operations/03-git-workflow.md` |
+| Opened or merged a branch | §12 — the row goes in when the branch is opened |
 | A locked technical decision | §2 + a new ADR in `docs/architecture/adr/` |
 | A kiosk hardware or UX constraint | §8 |
 
 Keep it terse. This file is loaded into every agent's context — every sentence costs budget.
 Prefer a one-line rule plus a link to the deep doc over a paragraph here.
+
+## 12. Branch registry
+
+§4 says one unit of work, one branch. This section says **which** branch, and records what each
+one was for — so an agent picking the work up mid-stream can tell at a glance whether its task
+belongs on an open branch or needs a new one.
+
+**Reuse the open branch** when the work is the same feature and is not independently mergeable:
+a follow-up fix to something that branch introduced and has not merged yet, or the second half
+of a slice that only makes sense shipped together.
+
+**Open a new branch** otherwise — and "otherwise" is the common case. Different feature,
+different bug, different doc, or work that could ship on its own: new branch off the latest
+`main`. When in doubt, new branch: a branch that merges cleanly is free, a branch that grew two
+unrelated features cannot be reverted without taking both.
+
+Add a row **when you open the branch**, not when you merge it, and set Status to `merged` in the
+same commit sequence that merges it. A branch with no row here is an incomplete change (Rule 0).
+
+| Branch | Delivered | Status |
+|---|---|---|
+| `chore/scaffold` | Next.js App Router + TypeScript strict + Tailwind, RTL root layout, lint rules | merged |
+| `chore/env-config` | `.env` as version SSOT, `src/config/kiosk.config.ts` | merged |
+| `chore/docker` | Multi-stage Dockerfile, dev and prod compose files | merged |
+| `feat/collaboration-lead-form` | Volume-backed lead archive, collaboration capture | merged |
+| `feat/kid-theme` | The board-game visual direction | merged |
+| `feat/playable-characters` | The mascot cast, hand-playable games | merged |
+| `feat/booth-capture` | The `/booth` staff capture tablet | merged |
+| `docs/redesign-branch-registry` | The master-brief execution plan and this registry | merged |
+| `feat/audience-worlds` | Three-world model, Audience Gateway, B2B secondary route | planned |
+| `feat/attract-worlds` | Animated three-portal attract loop | planned |
+| `feat/audio-manager` | Central audio manager, mute, subtitles | planned |
+| `feat/kids-world` | Kids world home, four experiences, celebration, course reveal | planned |
+| `feat/teens-world` | Teen world home, four experiences, level-up, recommendations | planned |
+| `feat/adults-world` | Adult world home, four experiences, config question bank, profile result | planned |
+| `chore/production-image` | Verification pass and the production image | planned |
+
+Current programme of work: [`docs/my/REDESIGN-PLAN.md`](docs/my/REDESIGN-PLAN.md).
 
 <!-- BEGIN:nextjs-agent-rules -->
 
