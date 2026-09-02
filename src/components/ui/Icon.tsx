@@ -185,6 +185,118 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <path d="m20 9.5-5 5" />
     </>
   ),
+  /*
+   * The things a child sorts, buys and sells. They are drawn at the same weight
+   * as the rest of the set rather than as illustrations, so a row mixing a bike
+   * with a chart still reads as one family — and so any of them can be tinted to
+   * mark a verdict, which is how the sorting game gives its feedback.
+   */
+  book: (
+    <>
+      <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2.5 2.5 0 0 1 2 1v13a2.5 2.5 0 0 0-2-1H5.5A1.5 1.5 0 0 1 4 15.5v-10Z" />
+      <path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H14a2.5 2.5 0 0 0-2 1v13a2.5 2.5 0 0 1 2-1h4.5a1.5 1.5 0 0 0 1.5-1.5v-10Z" />
+    </>
+  ),
+  water: (
+    <>
+      <path d="M12 3.5c3.5 4 5.5 6.6 5.5 9.4a5.5 5.5 0 0 1-11 0c0-2.8 2-5.4 5.5-9.4Z" />
+      <path d="M9.5 13.5a2.5 2.5 0 0 0 2.5 2.5" />
+    </>
+  ),
+  food: (
+    <>
+      <path d="M4 10.5h16a8 8 0 0 1-8 7 8 8 0 0 1-8-7Z" />
+      <path d="M3 20.5h18" />
+      <path d="M8.5 7V4.5" />
+      <path d="M12 7V4" />
+      <path d="M15.5 7V4.5" />
+    </>
+  ),
+  shoe: (
+    <>
+      <path d="M2.5 16.5V10h4l2.5 2.5h4.5c3.5 0 8 1.4 8 4v2h-19a2 2 0 0 1-2-2Z" />
+      <path d="M6.5 10v3" />
+      <path d="M10.5 13v3" />
+    </>
+  ),
+  toy: (
+    <>
+      <circle cx="12" cy="12" r="8" />
+      <circle cx="12" cy="12" r="2.75" />
+      <path d="M12 4v5.25" />
+      <path d="m18.9 16-4.5-2.6" />
+      <path d="m5.1 16 4.5-2.6" />
+    </>
+  ),
+  console: (
+    <>
+      <path d="M6.5 8.5h11a4.5 4.5 0 0 1 0 9h-11a4.5 4.5 0 0 1 0-9Z" />
+      <path d="M8 11v3" />
+      <path d="M6.5 12.5h3" />
+      <circle cx="16" cy="12" r="1" />
+      <circle cx="18" cy="14" r="1" />
+    </>
+  ),
+  icecream: (
+    <>
+      <path d="M8 10.5a4 4 0 0 1 8 0" />
+      <path d="M7 10.5h10L12 21 7 10.5Z" />
+      <path d="M8.5 14h7" />
+    </>
+  ),
+  bike: (
+    <>
+      <circle cx="6" cy="16.5" r="3.5" />
+      <circle cx="18" cy="16.5" r="3.5" />
+      <path d="M6 16.5 10 8h5l3 8.5" />
+      <path d="M9 8h4" />
+      <path d="M10 16.5h6" />
+    </>
+  ),
+  bag: (
+    <>
+      <path d="M5 8.5h14l-1 11.5H6L5 8.5Z" />
+      <path d="M9 8.5V7a3 3 0 0 1 6 0v1.5" />
+    </>
+  ),
+  pencil: (
+    <>
+      <path d="M4 20.5V16L16.5 3.5 21 8 8.5 20.5H4Z" />
+      <path d="m14.5 5.5 4.5 4.5" />
+      <path d="M4 16h4.5v4.5" />
+    </>
+  ),
+  juice: (
+    <>
+      <path d="M7 7h10l-1.2 12.5a1.5 1.5 0 0 1-1.5 1.4h-4.6a1.5 1.5 0 0 1-1.5-1.4L7 7Z" />
+      <path d="M6.5 11h11" />
+      <path d="M13 7V3.5h4" />
+    </>
+  ),
+  bracelet: (
+    <>
+      <circle cx="12" cy="12" r="7.5" />
+      <circle cx="12" cy="4.5" r="1.8" />
+      <circle cx="18.6" cy="15.6" r="1.5" />
+      <circle cx="5.4" cy="15.6" r="1.5" />
+    </>
+  ),
+  painting: (
+    <>
+      <rect x="3.5" y="4.5" width="17" height="15" rx="1.5" />
+      <path d="M3.5 15.5 8 11l4 4 3-2.5 5.5 4.5" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+    </>
+  ),
+  cookie: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <circle cx="9.5" cy="10" r="1.1" />
+      <circle cx="14.5" cy="9.5" r="1.1" />
+      <circle cx="12.5" cy="14.5" r="1.1" />
+      <circle cx="8.5" cy="14.5" r="1" />
+    </>
+  ),
   gift: (
     <>
       <rect x="3" y="9" width="18" height="4" rx="1" />

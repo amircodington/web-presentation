@@ -84,6 +84,27 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
         ))}
       </div>
 
+      {/*
+       * Products appear only once something has been played. Brief §46 puts the
+       * reveal after a result, and the ordering is the product argument in one
+       * rule: experience, then result, then offer — never a catalogue first.
+       */}
+      {world.reveal && done > 0 ? (
+        <motion.button
+          type="button"
+          onClick={() => camera.goTo(world.reveal!.scene, "rise")}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className="flex min-h-[104px] cursor-pointer items-center gap-6 rounded-[32px] border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-accent)] px-10 text-start text-[var(--kiosk-on-accent)]"
+          style={{ boxShadow: "8px 8px 0 0 var(--kiosk-border)" }}
+        >
+          <Icon name="gift" size={42} />
+          <b className="text-[34px] font-bold">{world.reveal.title}</b>
+          <span className="ms-auto text-[28px] font-bold">{world.reveal.cta} ←</span>
+        </motion.button>
+      ) : null}
+
       {diagnostic ? (
         <button
           type="button"

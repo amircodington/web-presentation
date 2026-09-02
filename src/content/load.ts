@@ -157,6 +157,11 @@ function checkCrossReferences(): void {
         )
       }
     }
+    if (world.reveal && !sceneIds.has(world.reveal.scene)) {
+      throw new Error(
+        `content/worlds.json: world "${world.id}" reveals products at unknown scene "${world.reveal.scene}"`,
+      )
+    }
     if (!world.experiences.some((experience) => experience.active) && !world.diagnostic?.active) {
       throw new Error(`content/worlds.json: world "${world.id}" has nothing active to offer`)
     }

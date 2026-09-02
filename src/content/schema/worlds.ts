@@ -72,6 +72,20 @@ const WorldSchema = z.object({
    * allowed to say something about them.
    */
   diagnostic: WorldExperienceSchema.optional(),
+  /**
+   * Where this world's products are shown. Brief §46: the reveal comes *after*
+   * a result, never before an experience, so it is a scene the world points at
+   * rather than a card on the world home.
+   */
+  reveal: z
+    .object({
+      scene: z.string().min(1),
+      title: z.string().min(1),
+      body: z.string().min(1),
+      topics: z.array(z.string().min(1)).min(1),
+      cta: z.string().min(1),
+    })
+    .optional(),
 })
 
 /**

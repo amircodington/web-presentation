@@ -70,10 +70,106 @@ const JudgementGameSchema = z.object({
     .min(2),
 })
 
+
+/**
+ * Sort objects into bins — "نیاز یا خواسته؟".
+ *
+ * `depends` is the point of the game rather than a third category nobody uses:
+ * brief §18 wants a child to learn that a money decision is not always yes or
+ * no, so an item marked `depends` is accepted into either bin and answered with
+ * "it depends on the situation" instead of a tick or a cross.
+ */
+const SortGameSchema = z.object({
+  kind: z.literal("sort"),
+  prompt: z.string().min(1),
+  bins: z
+    .array(z.object({ id: z.string().min(1), label: z.string().min(1), icon: IconNameSchema }))
+    .length(2),
+  items: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        label: z.string().min(1),
+        icon: IconNameSchema,
+        /** A bin id, or `depends` when either answer is defensible. */
+        verdict: z.string().min(1),
+        explain: z.string().min(1),
+      }),
+    )
+    .min(4),
+  praise: z.string().min(1),
+  dependsNote: z.string().min(1),
+})
+
+/** Spend a fixed budget in a shop — "فروشگاه کوچک". */
+const ShopGameSchema = z.object({
+  kind: z.literal("shop"),
+  prompt: z.string().min(1),
+  budget: z.number().int().positive(),
+  currency: z.string().min(1),
+  products: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        label: z.string().min(1),
+        icon: IconNameSchema,
+        price: z.number().int().positive(),
+        /** Marks the things a child actually needs, for the closing feedback. */
+        essential: z.boolean(),
+      }),
+    )
+    .min(5),
+  /** Shown instead of an error when the basket costs more than the purse holds. */
+  shortOfMoney: z.string().min(1),
+  feedback: z.record(
+    z.string().min(1),
+    z.object({ title: z.string().min(1), body: z.string().min(1) }),
+  ),
+})
+
+/** Run a stall: pick a product, pick a price, meet the customers — "کسب‌وکار کوچولوی من". */
+const StallGameSchema = z.object({
+  kind: z.literal("stall"),
+  prompt: z.string().min(1),
+  currency: z.string().min(1),
+  products: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        label: z.string().min(1),
+        icon: IconNameSchema,
+        /** What it costs to make one. Selling below it is the lesson. */
+        cost: z.number().int().positive(),
+        /** The prices the child may choose between, cheapest first. */
+        prices: z.array(z.number().int().positive()).min(3),
+      }),
+    )
+    .min(3),
+  /**
+   * The queue. Each customer pays up to `willingToPay`, so a price is not right
+   * or wrong — it trades how many buy against what each one pays.
+   */
+  customers: z
+    .array(z.object({ name: z.string().min(1), willingToPay: z.number().int().positive() }))
+    .min(4),
+  reactions: z.object({
+    buys: z.string().min(1),
+    tooExpensive: z.string().min(1),
+    bargain: z.string().min(1),
+  }),
+  feedback: z.record(
+    z.string().min(1),
+    z.object({ title: z.string().min(1), body: z.string().min(1) }),
+  ),
+})
+
 const GameSchema = z.discriminatedUnion("kind", [
   AllocationGameSchema,
   MarketGameSchema,
   JudgementGameSchema,
+  SortGameSchema,
+  ShopGameSchema,
+  StallGameSchema,
 ])
 
 const ActivitySchema = z.object({
@@ -87,6 +183,18 @@ const ActivitySchema = z.object({
   cta: z.string().min(1),
   /** Present when the activity is playable on the screen as well as at the stand. */
   game: GameSchema.optional(),
+  /**
+   * What finishing this activity earns. Brief §22 makes the celebration
+   * mandatory in the kids' world, and a badge is what a child names when they
+   * describe the screen to someone else — so the wording is content, not code.
+   */
+  badge: z
+    .object({
+      title: z.string().min(1),
+      label: z.string().min(1),
+      note: z.string().min(1),
+    })
+    .optional(),
 })
 
 /**
@@ -104,3 +212,6 @@ export type Game = z.infer<typeof GameSchema>
 export type AllocationGame = z.infer<typeof AllocationGameSchema>
 export type MarketGame = z.infer<typeof MarketGameSchema>
 export type JudgementGame = z.infer<typeof JudgementGameSchema>
+export type SortGame = z.infer<typeof SortGameSchema>
+export type ShopGame = z.infer<typeof ShopGameSchema>
+export type StallGame = z.infer<typeof StallGameSchema>

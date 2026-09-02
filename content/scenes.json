@@ -417,6 +417,79 @@
       "props": {
         "track": "organizations"
       }
+    },
+    {
+      "id": "kids-needs-wants",
+      "component": "GameScene",
+      "camera": {
+        "x": -8400,
+        "y": 1900,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "back": "world-kids",
+      "meta": {
+        "world": "kids"
+      },
+      "props": {
+        "activityId": "kids-needs-wants"
+      }
+    },
+    {
+      "id": "kids-little-shop",
+      "component": "GameScene",
+      "camera": {
+        "x": -11200,
+        "y": 1900,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "back": "world-kids",
+      "meta": {
+        "world": "kids"
+      },
+      "props": {
+        "activityId": "kids-little-shop"
+      }
+    },
+    {
+      "id": "kids-my-business",
+      "component": "GameScene",
+      "camera": {
+        "x": -14000,
+        "y": 1900,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "back": "world-kids",
+      "meta": {
+        "world": "kids"
+      },
+      "props": {
+        "activityId": "kids-my-business"
+      }
+    },
+    {
+      "id": "kids-course",
+      "component": "CourseRevealScene",
+      "camera": {
+        "x": -16800,
+        "y": 1900,
+        "scale": 1.1,
+        "rotate": 0
+      },
+      "transition": "rise",
+      "next": "connect",
+      "back": "world-kids",
+      "meta": {
+        "world": "kids"
+      },
+      "props": {
+        "world": "kids"
+      }
     }
   ]
 }

@@ -125,13 +125,33 @@ organisation to give.
 may include a `game` object, and the kiosk plays a short version on screen while a
 visitor waits for the next live run.
 
-Three mechanics cover all four activities, discriminated on `game.kind`:
+Six mechanics, discriminated on `game.kind`:
 
 | Kind | Activity | Mechanic |
 |---|---|---|
-| `allocation` | چالش ۱۰۰ میلیون · سبدت رو بچین | Split a fixed pot of tokens between options |
+| `allocation` | چالش ۱۰۰ میلیون · سبدت رو بچین · قلک من | Split a fixed pot of tokens between options |
 | `market` | راز نوسان قیمت | Predict which way each headline moves the price |
 | `judgement` | فرصته یا کلاهبرداری؟ | Judge each offer reasonable or suspicious |
+| `sort` | نیاز یا خواسته؟ | Drag each object into one of two bins |
+| `shop` | فروشگاه کوچک | Spend a fixed purse, watching it empty |
+| `stall` | کسب‌وکار کوچولوی من | Pick a product, pick a price, meet the queue |
+
+Two rules the kids' mechanics exist to teach, and which the code encodes rather than the copy:
+
+- **`sort` has a third verdict, `depends`, and it is never wrong.** Brief §18's lesson is that a
+  money decision is not always yes or no, and a game that marks a defensible answer incorrect
+  teaches the opposite of that.
+- **`shop` never shows an error.** Running out of money is answered with "count again" and the
+  product stays on the shelf. A hard error at a booth reads as a broken screen and the child
+  stops touching it (§20). The product button stays live and merely dims — a control that goes
+  dead under a finger is the same failure in a quieter costume.
+- **`stall` has no right price.** Charge little and everyone buys for almost nothing; charge a
+  lot and one person buys. Playing twice is what teaches the trade (§21).
+
+An activity may also carry a `badge`. Brief §22 makes the celebration mandatory in the kids'
+world, and `GameScene` runs it for any activity that has one — so all six mechanics end the same
+way and none of them has to know what a badge is. It is deliberately not a score: a child who
+spent everything on ice cream gets exactly the same confetti.
 
 The split is deliberate: **rules live in code, wording lives in content.**
 `lib/games/allocation.ts` decides which lessons an allocation demonstrates and
@@ -174,6 +194,11 @@ built yet, or which the team wants off for one event, is declared and switched o
 home renders what is on and never a dead card. Only active entries are cross-checked against
 `scenes.json`; an inactive one names the scene it *will* use, which is a forward declaration
 rather than a broken link. A world with nothing active fails the build.
+
+**`reveal` is where a world's products are shown**, and the world home only offers it once
+something has been played. Brief §46 puts the offer after a result, never before an experience —
+and §23 is why it needed a field at all: the kids' classes were missing from the previous build
+entirely, because the only place a product could appear was a catalogue aimed at teenagers.
 
 **`diagnostic` is separate from the experiences on purpose.** An experience produces a lesson; a
 diagnostic produces a result. Only the diagnostic is allowed to say something about the visitor.
