@@ -8,6 +8,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.10.2] — 2026-09-02
+
+### Fixed
+- **gateway:** stop the world cards clipping their own CTA (a35d6f5)
+
 ## [0.10.1] — 2026-09-02
 
 ### Fixed
