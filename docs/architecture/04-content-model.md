@@ -135,7 +135,9 @@ Six mechanics, discriminated on `game.kind`:
 | `sort` | نیاز یا خواسته؟ | Drag each object into one of two bins |
 | `shop` | فروشگاه کوچک | Spend a fixed purse, watching it empty |
 | `stall` | کسب‌وکار کوچولوی من | Pick a product, pick a price, meet the queue |
-| `profile` | چالش هوش مالی · پروفایل بزرگسال | Scenario questions scoring across several dimensions |
+| `profile` | چالش هوش مالی · پروفایل بزرگسال · خبر داغ | Scenario questions scoring across several dimensions |
+| `budget` | قدرت خریدت چقدر مقاومه؟ | Rebalance a household budget under a cost shock |
+| `instalment` | قسط واقعاً ارزون‌تره؟ | Guess the total cost, then watch the payments assemble |
 
 Two rules the kids' mechanics exist to teach, and which the code encodes rather than the copy:
 
@@ -159,6 +161,17 @@ Each dimension is scored against the best *that dimension* could have reached gi
 actually asked — not against a fixed maximum. Otherwise a dimension only two questions touch is
 permanently capped low and reads as a weakness the visitor never demonstrated, which is the
 fastest way to make a profile untrustworthy to the person reading it about themselves.
+
+`budget` applies its shock as a **multiplier on the essentials**, never as a printed figure, and
+an essential's floor is shocked too — so the rise cannot be cut away. Brief §58: "essential costs
+have risen" stays true past this festival, while a percentage on screen is stale within weeks.
+The lines are adjusted with steppers rather than a range input: a native thumb is about sixteen
+pixels across, which on glass at standing height is a coin toss, not a control.
+
+`instalment` asks for the **guess before the reveal**, and that ordering is the experience. Shown
+a total, a visitor reads a number; asked to guess and then shown the payments stacking past their
+guess, they feel the gap — which is what §39 is teaching, since the plan is sold on the size of
+the monthly figure and never on the size of the sum.
 
 An `allocation` game may also carry a `horizon` question, asked after the split and before the
 result (§27). It is what turns the game from "was my split correct" into "was my split consistent
@@ -217,6 +230,11 @@ something has been played. Brief §46 puts the offer after a result, never befor
 and §23 is why it needed a field at all: the kids' classes were missing from the previous build
 entirely, because the only place a product could appear was a catalogue aimed at teenagers.
 
+**`qualifier` is one question that re-files the visitor into a narrower catalogue audience.**
+Brief §44: "امسال کنکور دادی؟" is the only thing separating a school-leaver from every other
+adult, and it decides whether +18 leads the reveal. It is one question on the world home rather
+than a fourth world, because §45 is explicit that +18 must not be pushed at children.
+
 **`diagnostic` is separate from the experiences on purpose.** An experience produces a lesson; a
 diagnostic produces a result. Only the diagnostic is allowed to say something about the visitor.
 
@@ -229,6 +247,21 @@ and the surround the stage sits on.
 Anything with a **card fill** (`mat`, `pill`, `felt`, the chrome tray) must take
 `--kiosk-card-text`, never `--kiosk-text`. In a light-board world the two are the same colour and
 the mistake is invisible; in the navy and deep-green worlds they are opposites.
+
+## The adults' question bank
+
+`content/adult-scenarios.json` is the adults' questions, in its own file and its own shape, with
+a `lastUpdated` date and a `note` addressed to whoever opens it next.
+
+Brief §57 asks for exactly this: the team must be able to retire a scenario and write a new one
+without a developer. So the bank is not embedded in a game's mechanics — a profile game names
+`questionSource: "adult-scenarios"` instead of writing `questions`, and `content/select.ts`
+resolves it. The loader checks that every dimension the bank scores is one the game declares,
+because a schema cannot see across files.
+
+The old four-question quiz, its result bands and `lib/scoring.ts` are gone. Brief §42 rules out
+showing an adult a single score, and a generic test that ran before any experience is what §8
+removes from the front of the product.
 
 ## Sound
 

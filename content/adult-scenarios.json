@@ -1,0 +1,126 @@
+{
+  "lastUpdated": "2026-09-02",
+  "note": "بانک سؤال بزرگسال. برای به‌روزرسانی، فقط همین فایل را ویرایش کنید؛ نیازی به تغییر کد نیست.",
+  "scenarios": [
+    {
+      "id": "inflation",
+      "prompt": "کدام اقدام اولویت بالاتری دارد؟",
+      "scenario": "درآمد شما برای مدتی ثابت مانده، ولی هزینه‌های ضروری افزایش پیدا کرده‌اند.",
+      "options": [
+        { "id": "savings", "label": "استفاده کامل از پس‌انداز", "icon": "save", "detail": "تا وقتی تمام شود", "scores": { "resilience": 0, "liquidity": 0 } },
+        { "id": "cut-all", "label": "حذف همه هزینه‌های غیرضروری", "icon": "cross", "detail": "بدون بازنگری بقیه", "scores": { "resilience": 1, "decision": 1 } },
+        { "id": "rebuild", "label": "بازنگری بودجه و ساختن حاشیه امن", "icon": "gauge", "detail": "اولویت‌بندی دوباره", "scores": { "resilience": 3, "decision": 3, "liquidity": 2 } },
+        { "id": "debt", "label": "گرفتن بدهی جدید برای حفظ سبک زندگی", "icon": "cash", "scores": { "debt": 0 } }
+      ],
+      "insight": "بودجه انعطاف‌پذیر و یک حاشیه امن، دو چیزی هستند که فشار هزینه را قابل تحمل می‌کنند — نه خالی کردن پس‌انداز."
+    },
+    {
+      "id": "short-horizon",
+      "prompt": "مهم‌ترین ویژگی این پول چیست؟",
+      "scenario": "پولی دارید که سه ماه دیگر برای یک هزینه قطعی به آن نیاز خواهید داشت.",
+      "options": [
+        { "id": "return", "label": "بیشترین بازده ممکن", "icon": "up", "scores": { "liquidity": 0 } },
+        { "id": "liquid", "label": "نقدشوندگی و دسترسی", "icon": "cash", "scores": { "liquidity": 3, "risk": 3, "decision": 3 } },
+        { "id": "hype", "label": "هیجان بازار", "icon": "market", "scores": { "fomo": 0 } },
+        { "id": "friends", "label": "توصیه دوستان", "icon": "chat", "scores": { "decision": 0 } }
+      ],
+      "insight": "برای پولی که تاریخ مصرف نزدیک دارد، نقدشوندگی از بازده مهم‌تر است."
+    },
+    {
+      "id": "after-a-rally",
+      "prompt": "بهترین سؤال قبل از ورود چیست؟",
+      "scenario": "قیمت یک دارایی طی مدت کوتاهی شدیداً بالا رفته است.",
+      "options": [
+        { "id": "how-much", "label": "چقدر دیگر بالا می‌رود؟", "icon": "up", "scores": { "fomo": 0 } },
+        { "id": "fit", "label": "با هدف، زمان و تحمل ریسک من هماهنگ است؟", "icon": "flag", "scores": { "fomo": 3, "decision": 3, "risk": 3 } },
+        { "id": "others", "label": "بقیه چقدر خریده‌اند؟", "icon": "chat", "scores": { "fomo": 0 } },
+        { "id": "channel", "label": "کدام کانال گفته بخریم؟", "icon": "telegram", "scores": { "scam": 0 } }
+      ],
+      "insight": "ترتیب منطقی این است: هدف ← افق زمانی ← نقدشوندگی ← ریسک ← ابزار. نه: خبر ← خرید ← بررسی بعدی."
+    },
+    {
+      "id": "emergency",
+      "prompt": "کدام پول نباید به‌سادگی وارد دارایی پرنوسان شود؟",
+      "scenario": "اگر یکی از منابع درآمدی‌تان ناگهان قطع شود، باید چند ماه هزینه ضروری را پوشش دهید.",
+      "options": [
+        { "id": "emergency", "label": "ذخیره اضطراری", "icon": "save", "scores": { "resilience": 3, "liquidity": 3, "risk": 3 } },
+        { "id": "fun", "label": "پول تفریح", "icon": "gift", "scores": { "risk": 1 } },
+        { "id": "long", "label": "پول بلندمدت", "icon": "chart", "scores": { "risk": 1 } },
+        { "id": "education", "label": "سرمایه آموزشی", "icon": "education", "scores": { "risk": 1 } }
+      ],
+      "insight": "ذخیره اضطراری کارش این است که وقتی همه‌چیز بد پیش می‌رود در دسترس باشد؛ پس نباید همان موقع کم شده باشد."
+    },
+    {
+      "id": "instalment-risk",
+      "prompt": "مهم‌ترین ریسک چیست؟",
+      "scenario": "مجموع اقساط ماهانه بخش بزرگی از درآمد شما را مصرف می‌کند.",
+      "options": [
+        { "id": "interest", "label": "پرداخت کارمزد بیشتر", "icon": "cash", "scores": { "debt": 1 } },
+        { "id": "flexibility", "label": "کاهش نقدینگی و انعطاف مالی", "icon": "gauge", "scores": { "debt": 3, "liquidity": 3, "resilience": 3 } },
+        { "id": "score", "label": "خراب شدن اعتبار", "icon": "flag", "scores": { "debt": 1 } },
+        { "id": "none", "label": "ریسک خاصی ندارد", "icon": "check", "scores": { "debt": 0 } }
+      ],
+      "insight": "قسط سنگین فقط پول نمی‌برد؛ توان واکنش شما به اتفاق بعدی را هم می‌برد."
+    },
+    {
+      "id": "concentration",
+      "prompt": "مسئله اصلی چیست؟",
+      "scenario": "تمام سرمایه‌تان فقط در یک نوع دارایی است.",
+      "options": [
+        { "id": "returns", "label": "بازده کمتر از حد ممکن", "icon": "down", "scores": { "risk": 1 } },
+        { "id": "concentration", "label": "تمرکز ریسک", "icon": "gauge", "scores": { "risk": 3, "decision": 3, "resilience": 2 } },
+        { "id": "fees", "label": "کارمزد بیشتر", "icon": "cash", "scores": { "risk": 0 } },
+        { "id": "nothing", "label": "اگر آن دارایی خوب باشد مسئله‌ای نیست", "icon": "check", "scores": { "risk": 0 } }
+      ],
+      "insight": "تنوع برای این نیست که بازده را بیشتر کند؛ برای این است که یک اشتباه، همه‌چیز را با خودش نبرد."
+    },
+    {
+      "id": "red-flag",
+      "prompt": "کدام جمله پرچم قرمز است؟",
+      "scenario": "چهار پیشنهاد سرمایه‌گذاری به دست شما رسیده است.",
+      "options": [
+        { "id": "guaranteed", "label": "این سود کاملاً تضمینی است و امکان ضرر ندارد.", "icon": "cross", "scores": { "scam": 3, "risk": 3, "decision": 2 } },
+        { "id": "range", "label": "بازده در گذشته بین این دو عدد نوسان داشته است.", "icon": "chart", "scores": { "scam": 1 } },
+        { "id": "risky", "label": "این دارایی پرریسک است و ممکن است ضرر کنید.", "icon": "gauge", "scores": { "scam": 1 } },
+        { "id": "licensed", "label": "مجوز و صورت‌های مالی ما در دسترس است.", "icon": "check", "scores": { "scam": 1 } }
+      ],
+      "insight": "سود تضمینی بدون امکان ضرر وجود ندارد. هر جا این جمله را دیدید، همان‌جا بایستید."
+    },
+    {
+      "id": "unknown-platform",
+      "prompt": "قبل از انتقال پول چه چیزی را اول بررسی می‌کنید؟",
+      "scenario": "قصد دارید پول را به یک پلتفرم یا کیف پول ناشناس منتقل کنید.",
+      "options": [
+        { "id": "profit", "label": "میزان سودی که وعده داده", "icon": "up", "scores": { "scam": 0 } },
+        { "id": "identity", "label": "هویت، سابقه، و امکان برداشت", "icon": "check", "scores": { "scam": 3, "decision": 3, "risk": 2 } },
+        { "id": "followers", "label": "تعداد دنبال‌کننده‌هایش", "icon": "chat", "scores": { "scam": 0 } },
+        { "id": "screenshots", "label": "اسکرین‌شات‌های سود کاربران", "icon": "market", "scores": { "scam": 0 } }
+      ],
+      "insight": "اسکرین‌شات سود بالا تقریباً هیچ چیزی درباره ریسک واقعی یا پایداری عملکرد ثابت نمی‌کند."
+    },
+    {
+      "id": "income-side",
+      "prompt": "برنامه مالی باید روی چه چیزی تمرکز کند؟",
+      "scenario": "هزینه‌ها در حال رشد هستند و فشار بودجه بیشتر شده است.",
+      "options": [
+        { "id": "cut-only", "label": "فقط کم کردن خرج", "icon": "down", "scores": { "resilience": 1 } },
+        { "id": "both", "label": "مدیریت هزینه، رشد مهارت، و افزایش ظرفیت درآمد", "icon": "education", "scores": { "resilience": 3, "decision": 3, "liquidity": 1 } },
+        { "id": "borrow", "label": "جبران با بدهی تا شرایط بهتر شود", "icon": "cash", "scores": { "debt": 0 } },
+        { "id": "invest-more", "label": "ریسک بیشتر برای جبران سریع‌تر", "icon": "up", "scores": { "risk": 0, "fomo": 0 } }
+      ],
+      "insight": "هزینه یک سقف دارد؛ درآمد ندارد. سرمایه‌گذاری روی مهارتی که درآمد را بالا می‌برد، سرمایه انسانی است."
+    },
+    {
+      "id": "hot-market",
+      "prompt": "واکنش شما چیست؟",
+      "scenario": "خبرها می‌گویند یک دارایی رکورد زده و «همه دارند می‌خرند».",
+      "options": [
+        { "id": "now", "label": "الان اقدام می‌کنم", "icon": "up", "scores": { "fomo": 0 } },
+        { "id": "research", "label": "بیشتر بررسی می‌کنم", "icon": "chart", "scores": { "fomo": 2, "decision": 2 } },
+        { "id": "align", "label": "با هدف و افق خودم تطبیق می‌دهم", "icon": "flag", "scores": { "fomo": 3, "decision": 3, "risk": 3 } },
+        { "id": "reject", "label": "ردش می‌کنم", "icon": "cross", "scores": { "fomo": 2, "risk": 1 } }
+      ],
+      "insight": "تصمیم سردتر در بازار داغ. «همه دارند می‌خرند» یک داده درباره رفتار آدم‌هاست، نه درباره ارزش دارایی."
+    }
+  ]
+}

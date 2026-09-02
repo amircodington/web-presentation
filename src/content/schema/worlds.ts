@@ -73,6 +73,22 @@ const WorldSchema = z.object({
    */
   diagnostic: WorldExperienceSchema.optional(),
   /**
+   * One question that re-files the visitor into a narrower catalogue audience.
+   *
+   * Brief §44: "امسال کنکور دادی؟" is the only thing that separates a
+   * school-leaver from every other adult, and it decides whether +18 leads the
+   * reveal. It is deliberately one question on the world home rather than a
+   * fourth world — §45 is explicit that +18 must not be pushed at children.
+   */
+  qualifier: z
+    .object({
+      prompt: z.string().min(1),
+      options: z
+        .array(z.object({ label: z.string().min(1), audience: AudienceIdSchema }))
+        .min(2),
+    })
+    .optional(),
+  /**
    * Where this world's products are shown. Brief §46: the reveal comes *after*
    * a result, never before an experience, so it is a scene the world points at
    * rather than a card on the world home.

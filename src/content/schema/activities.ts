@@ -204,6 +204,14 @@ const ProfileGameSchema = z
     dimensions: z
       .array(z.object({ id: z.string().min(1), label: z.string().min(1), icon: IconNameSchema }))
       .min(2),
+    /**
+     * Where the questions come from instead of being written here.
+     *
+     * The adults' bank lives in its own file so the team can retire a scenario
+     * and write a new one without touching a game's mechanics — brief §57. A
+     * game names the source; `content/select.ts` resolves it.
+     */
+    questionSource: z.literal("adult-scenarios").optional(),
     questions: z
       .array(
         z.object({
@@ -227,7 +235,8 @@ const ProfileGameSchema = z
           insight: z.string().min(1),
         }),
       )
-      .min(4),
+      .min(4)
+      .optional(),
     /** Bands over the total percentage, cheapest first. */
     levels: z
       .array(
@@ -240,12 +249,34 @@ const ProfileGameSchema = z
       .min(2),
     /** Named per world: a teenager gets a score, an adult gets a profile. */
     resultTitle: z.string().min(1),
+    /**
+     * The closing read-back: what you did well, what to look at, and the order
+     * to think in. Brief §43 — an adult who sees only bars has been measured;
+     * an adult who is told which bar to look at first has been taught something.
+     *
+     * The two labels are templates: `{dimension}` is replaced with the name of
+     * the highest and lowest dimension, so the copy stays true whichever they are.
+     */
+    conclusion: z
+      .object({
+        strength: z.string().min(1),
+        improve: z.string().min(1),
+        framework: z.string().min(1),
+      })
+      .optional(),
     /** Brief §43: an educational result is not investment advice, and says so. */
     disclaimer: z.string().optional(),
   })
   .superRefine((game, ctx) => {
+    if ((game.questions === undefined) === (game.questionSource === undefined)) {
+      ctx.addIssue({
+        code: "custom",
+        message: "a profile needs either its own `questions` or a `questionSource`, not both",
+      })
+    }
+
     const dimensionIds = new Set(game.dimensions.map((dimension) => dimension.id))
-    for (const question of game.questions) {
+    for (const question of game.questions ?? []) {
       for (const option of question.options) {
         for (const id of Object.keys(option.scores)) {
           if (!dimensionIds.has(id)) {
@@ -264,6 +295,89 @@ const ProfileGameSchema = z
     }
   })
 
+/**
+ * Rebalance a household budget under pressure — "قدرت خریدت چقدر مقاومه؟".
+ *
+ * The shock is applied to the essentials rather than announced as a number, per
+ * brief §58: a percentage printed on screen has a shelf life measured in weeks,
+ * while "essential costs have risen" stays true and stays useful.
+ */
+const BudgetGameSchema = z
+  .object({
+    kind: z.literal("budget"),
+    prompt: z.string().min(1),
+    income: z.number().int().positive(),
+    unit: z.string().min(1),
+    lines: z
+      .array(
+        z.object({
+          id: z.string().min(1),
+          label: z.string().min(1),
+          icon: IconNameSchema,
+          amount: z.number().int().nonnegative(),
+          /** Essentials take the shock; only the rest can be cut to nothing. */
+          essential: z.boolean(),
+          /** The least this line can realistically go to. */
+          floor: z.number().int().nonnegative(),
+        }),
+      )
+      .min(5),
+    shock: z.object({
+      title: z.string().min(1),
+      body: z.string().min(1),
+      /** Multiplier applied to every essential line. */
+      essentialMultiplier: z.number().min(1),
+    }),
+    question: z.string().min(1),
+    options: z
+      .array(
+        z.object({
+          id: z.string().min(1),
+          label: z.string().min(1),
+          icon: IconNameSchema,
+          verdict: z.object({ title: z.string().min(1), body: z.string().min(1) }),
+        }),
+      )
+      .min(3),
+    /** Named so the closing copy can talk about the gap the player left. */
+    bufferLabel: z.string().min(1),
+  })
+  .superRefine((game, ctx) => {
+    for (const line of game.lines) {
+      if (line.floor > line.amount) {
+        ctx.addIssue({ code: "custom", message: `line "${line.id}" has a floor above its amount` })
+      }
+    }
+  })
+
+/** Guess what an instalment plan really costs — "قسط واقعاً ارزون‌تره؟". */
+const InstalmentGameSchema = z.object({
+  kind: z.literal("instalment"),
+  prompt: z.string().min(1),
+  unit: z.string().min(1),
+  item: z.string().min(1),
+  cashPrice: z.number().int().positive(),
+  deposit: z.number().int().nonnegative(),
+  instalments: z.number().int().positive(),
+  monthly: z.number().int().positive(),
+  /** The guesses offered, one of which is the real total. */
+  guesses: z.array(z.number().int().positive()).min(3),
+  reveal: z.object({ title: z.string().min(1), body: z.string().min(1) }),
+  /** Round two: the same plan as a share of monthly income. */
+  burden: z.object({
+    prompt: z.string().min(1),
+    options: z
+      .array(
+        z.object({
+          id: z.string().min(1),
+          label: z.string().min(1),
+          verdict: z.object({ title: z.string().min(1), body: z.string().min(1) }),
+        }),
+      )
+      .min(2),
+  }),
+})
+
 const GameSchema = z.discriminatedUnion("kind", [
   AllocationGameSchema,
   MarketGameSchema,
@@ -272,6 +386,8 @@ const GameSchema = z.discriminatedUnion("kind", [
   ShopGameSchema,
   StallGameSchema,
   ProfileGameSchema,
+  BudgetGameSchema,
+  InstalmentGameSchema,
 ])
 
 const ActivitySchema = z.object({
@@ -318,3 +434,5 @@ export type SortGame = z.infer<typeof SortGameSchema>
 export type ShopGame = z.infer<typeof ShopGameSchema>
 export type StallGame = z.infer<typeof StallGameSchema>
 export type ProfileGame = z.infer<typeof ProfileGameSchema>
+export type BudgetGame = z.infer<typeof BudgetGameSchema>
+export type InstalmentGame = z.infer<typeof InstalmentGameSchema>

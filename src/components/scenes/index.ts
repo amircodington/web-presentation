@@ -9,9 +9,6 @@ import { GameScene } from "./GameScene"
 import { GatewayScene } from "./GatewayScene"
 import { LiveActivitiesScene } from "./LiveActivitiesScene"
 import { OfferScene } from "./OfferScene"
-import { QuizIntroScene } from "./QuizIntroScene"
-import { QuizQuestionScene } from "./QuizQuestionScene"
-import { QuizResultScene } from "./QuizResultScene"
 import { WorldHomeScene } from "./WorldHomeScene"
 
 /**
@@ -29,8 +26,5 @@ export const sceneRegistry: SceneRegistry = {
   GameScene,
   CollaborationScene,
   OfferScene,
-  QuizIntroScene,
-  QuizQuestionScene,
-  QuizResultScene,
   ConnectScene,
 }

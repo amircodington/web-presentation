@@ -197,7 +197,7 @@
           "hook": "هزینه‌های ضروری بالا رفته‌اند. بودجه را بازنگری کن.",
           "icon": "gauge",
           "scene": "adults-purchasing-power",
-          "active": false
+          "active": true
         },
         {
           "id": "adults-all-in-one-place",
@@ -213,7 +213,7 @@
           "hook": "هزینه کل قرارداد را حدس بزن.",
           "icon": "cash",
           "scene": "adults-instalments",
-          "active": false
+          "active": true
         },
         {
           "id": "adults-hot-news",
@@ -221,18 +221,44 @@
           "hook": "بازار داغ است. تصمیم تو چیست؟",
           "icon": "flag",
           "scene": "adults-hot-news",
-          "active": false
+          "active": true
         }
       ],
       "diagnostic": {
         "id": "adults-decision-profile",
         "title": "پروفایل تصمیم‌گیری مالی",
-        "hook": "چند سؤال جدی، و یک پروفایل چندبعدی از تصمیم‌های مالی‌ات.",
+        "hook": "چند موقعیت جدی، و یک پروفایل چندبعدی از تصمیم‌های مالی‌ات.",
         "icon": "gauge",
-        "scene": "quiz-intro",
+        "scene": "adults-decision-profile",
         "active": true
       },
-      "attractLine": "تصمیم سردتر در بازار داغ"
+      "attractLine": "تصمیم سردتر در بازار داغ",
+      "qualifier": {
+        "prompt": "امسال کنکور دادی؟",
+        "options": [
+          {
+            "label": "بله",
+            "audience": "recent-konkur"
+          },
+          {
+            "label": "نه",
+            "audience": "young-adult"
+          }
+        ]
+      },
+      "reveal": {
+        "scene": "adults-path",
+        "title": "قدم بعدی شما",
+        "body": "بر اساس مسیری که انتخاب کردید، این برنامه‌ها به شرایط شما نزدیک‌ترند.",
+        "topics": [
+          "مدیریت پول",
+          "اقتصاد و بازار",
+          "سرمایه‌گذاری",
+          "مدیریت ریسک",
+          "شناخت کلاهبرداری"
+        ],
+        "cta": "اطلاعات ثبت‌نام"
+      }
     }
   ]
 }

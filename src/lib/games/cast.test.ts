@@ -1,15 +1,14 @@
 import { describe, expect, it } from "vitest"
 import { MASCOT_BY_ICON, moodFor } from "./cast"
-import allocationContent from "@content/activities.json"
+import { content } from "@/content/load"
 
 describe("castFor", () => {
   it("covers every allocation option in the shipped content", () => {
-    const icons = allocationContent.activities
-      .flatMap((activity) => ("game" in activity && activity.game?.kind === "allocation"
-        ? activity.game.options
-        : []))
-      .map((option) => option?.icon)
-      .filter((icon): icon is string => typeof icon === "string")
+    // Through the loader, not the raw JSON: the parsed union is what the app
+    // actually renders, and it narrows on `kind` the way the components do.
+    const icons = content.activities.activities
+      .flatMap((activity) => (activity.game?.kind === "allocation" ? activity.game.options : []))
+      .map((option) => option.icon)
 
     expect(icons.length).toBeGreaterThan(0)
     // A new option in content must arrive with a character, not silently fall
