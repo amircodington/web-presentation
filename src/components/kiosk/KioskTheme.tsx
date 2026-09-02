@@ -11,9 +11,8 @@ import type { WorldPalette } from "@/content/schema/worlds"
  * The worlds are selected by `data-world`, which two things carry: every scene
  * that declares `meta.world`, and the document element, written by
  * `WorldSurface` from the active scene. Custom properties inherit, so the scene
- * attribute dresses that scene's own subtree — which is what lets the overview
- * map show three worlds side by side — while the document attribute dresses the
- * board and the surround the stage sits on.
+ * attribute dresses that scene's own subtree, while the document attribute
+ * dresses the board and the surround the stage sits on.
  *
  * The world blocks are emitted after the `:root` block deliberately: they match
  * at the same specificity, so source order is what makes a world win.

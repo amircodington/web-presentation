@@ -3,10 +3,8 @@ import {
   canvasBounds,
   canvasToViewport,
   clampZoom,
-  fitBounds,
   fitScale,
   project,
-  sceneExtent,
 } from "./projection"
 import type { ScenePlacement, Size } from "./types"
 
@@ -143,71 +141,4 @@ describe("fitScale", () => {
   })
 })
 
-describe("sceneExtent", () => {
-  const design: Size = { width: 1920, height: 1080 }
 
-  it("covers a single scene's full rectangle, not just its centre", () => {
-    expect(sceneExtent([placement()], design)).toEqual({
-      minX: -960,
-      minY: -540,
-      maxX: 960,
-      maxY: 540,
-    })
-  })
-
-  it("grows with a scene's authored scale", () => {
-    const extent = sceneExtent([placement({ scale: 2 })], design)
-    expect(extent.maxX - extent.minX).toBeCloseTo(3840)
-  })
-
-  it("accounts for rotation so a tilted scene is not clipped", () => {
-    const extent = sceneExtent([placement({ rotate: 90 })], design)
-    expect(extent.maxX - extent.minX).toBeCloseTo(1080)
-    expect(extent.maxY - extent.minY).toBeCloseTo(1920)
-  })
-
-  it("spans every scene on the canvas", () => {
-    const extent = sceneExtent([placement(), placement({ x: 5000 })], design)
-    expect(extent.minX).toBeCloseTo(-960)
-    expect(extent.maxX).toBeCloseTo(5960)
-  })
-})
-
-describe("fitBounds", () => {
-  const viewport: Size = { width: 1920, height: 1080 }
-
-  it("centres the region in the viewport", () => {
-    const camera = fitBounds({ minX: 0, minY: 0, maxX: 4000, maxY: 2000 }, viewport, 0)
-    const centre = canvasToViewport({ x: 2000, y: 1000 }, camera)
-    expect(centre.x).toBeCloseTo(960)
-    expect(centre.y).toBeCloseTo(540)
-  })
-
-  it("fits the whole region inside the viewport", () => {
-    const bounds = { minX: -3000, minY: -1000, maxX: 9000, maxY: 5000 }
-    const camera = fitBounds(bounds, viewport, 0)
-    const topLeft = canvasToViewport({ x: bounds.minX, y: bounds.minY }, camera)
-    const bottomRight = canvasToViewport({ x: bounds.maxX, y: bounds.maxY }, camera)
-    expect(topLeft.x).toBeGreaterThanOrEqual(-0.001)
-    expect(topLeft.y).toBeGreaterThanOrEqual(-0.001)
-    expect(bottomRight.x).toBeLessThanOrEqual(viewport.width + 0.001)
-    expect(bottomRight.y).toBeLessThanOrEqual(viewport.height + 0.001)
-  })
-
-  it("honours asymmetric padding", () => {
-    const bounds = { minX: 0, minY: 0, maxX: 1920, maxY: 1080 }
-    const camera = fitBounds(bounds, viewport, { top: 50, right: 50, bottom: 250, left: 50 })
-    const topLeft = canvasToViewport({ x: bounds.minX, y: bounds.minY }, camera)
-    const bottomRight = canvasToViewport({ x: bounds.maxX, y: bounds.maxY }, camera)
-    expect(topLeft.x).toBeGreaterThanOrEqual(49)
-    expect(topLeft.y).toBeGreaterThanOrEqual(49)
-    expect(viewport.width - bottomRight.x).toBeGreaterThanOrEqual(49)
-    expect(viewport.height - bottomRight.y).toBeGreaterThanOrEqual(249)
-  })
-
-  it("leaves the requested padding", () => {
-    const camera = fitBounds({ minX: 0, minY: 0, maxX: 1920, maxY: 1080 }, viewport, 100)
-    const topLeft = canvasToViewport({ x: 0, y: 0 }, camera)
-    expect(topLeft.x).toBeGreaterThanOrEqual(99)
-  })
-})

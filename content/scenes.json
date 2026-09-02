@@ -192,19 +192,6 @@
       }
     },
     {
-      "id": "courses",
-      "component": "CoursesScene",
-      "camera": {
-        "x": -2800,
-        "y": 5700,
-        "scale": 1.0,
-        "rotate": 0
-      },
-      "transition": "dive",
-      "next": "course-masir-servat",
-      "back": "gateway"
-    },
-    {
       "id": "course-masir-servat",
       "component": "CourseDetailScene",
       "camera": {
@@ -215,7 +202,7 @@
       },
       "transition": "dive",
       "next": "course-business-school",
-      "back": "courses",
+      "back": "gateway",
       "props": {
         "courseId": "masir-servat"
       }
@@ -231,7 +218,7 @@
       },
       "transition": "glide",
       "next": "course-plus18",
-      "back": "course-masir-servat",
+      "back": "gateway",
       "props": {
         "courseId": "business-school"
       }
@@ -247,7 +234,7 @@
       },
       "transition": "glide",
       "next": "offer",
-      "back": "course-business-school",
+      "back": "gateway",
       "props": {
         "courseId": "plus18"
       }
@@ -264,19 +251,6 @@
       "transition": "rise",
       "next": "connect",
       "back": "course-plus18"
-    },
-    {
-      "id": "live",
-      "component": "LiveActivitiesScene",
-      "camera": {
-        "x": -2800,
-        "y": -3800,
-        "scale": 1.05,
-        "rotate": 0
-      },
-      "transition": "dive",
-      "next": "collab-schools",
-      "back": "gateway"
     },
     {
       "id": "collab-schools",

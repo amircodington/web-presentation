@@ -228,7 +228,13 @@ These come from the physical reality of an unattended screen in a loud hall:
 - **60fps or it does not ship.** Animate `transform` and `opacity` only. Never animate
   `width`, `height`, `top`, or `left`.
 - **Respect `prefers-reduced-motion`**, but keep the kiosk's own default expressive.
-- **No dead ends.** Every scene has a visible way back to the hub and to the attract loop.
+- **No dead ends, and no dead routes either.** Every scene has a visible way back to the hub.
+  A `camera.goTo` naming a scene that no longer exists fails silently — it is a button that does
+  nothing on an unattended screen, which is worse than a crash. Check both directions after
+  removing a scene: what points at it, and what it points at.
+- **Navigation is back, home and mute.** Brief §63 names a sitemap as something this kiosk must
+  not have. A visitor in a hall has one question — how do I get back — and every extra control on
+  the tray is a second question.
 - **Reserve chrome clearance.** Scenes carry `pb-60` so the persistent controls never
   cover content. The number is derived from the tray's measured height, not chosen —
   re-derive it whenever the chrome's size changes, as it did when the tray took the ink
@@ -354,7 +360,7 @@ same commit sequence that merges it. A branch with no row here is an incomplete 
 | `feat/kids-world` | Kids world home, four experiences, celebration, course reveal | merged |
 | `feat/teens-world` | Teen world home, four experiences, level-up, recommendations | merged |
 | `feat/adults-world` | Adult world home, four experiences, config question bank, profile result | merged |
-| `chore/production-image` | Verification pass and the production image | planned |
+| `chore/production-image` | Acceptance pass against the brief, dead-route removal, production image | merged |
 
 Current programme of work: [`docs/my/REDESIGN-PLAN.md`](docs/my/REDESIGN-PLAN.md).
 

@@ -62,7 +62,7 @@ export function CourseRevealScene({ state, camera, props }: SceneComponentProps)
             <motion.button
               key={course.id}
               type="button"
-              onClick={() => camera.goTo("connect", "dive")}
+              onClick={() => camera.goTo(`course-${course.id}`, "dive")}
               initial={{ opacity: 0, y: 50 }}
               animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
