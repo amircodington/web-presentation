@@ -8,6 +8,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.10.1] — 2026-09-02
+
+### Fixed
+- **kiosk:** close the routes the three-world redesign left behind (00a73ee)
+
 ## [0.10.0] — 2026-09-02
 
 ### Added
