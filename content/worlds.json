@@ -68,7 +68,8 @@
           "scene": "kids-my-business",
           "active": false
         }
-      ]
+      ],
+      "attractLine": "سکه‌ها، قلک و یه عالمه بازی"
     },
     {
       "id": "teens",
@@ -129,7 +130,8 @@
           "scene": "teens-financial-iq",
           "active": false
         }
-      ]
+      ],
+      "attractLine": "اگر ۱۰۰ میلیون داشتی، چی کار می‌کردی؟"
     },
     {
       "id": "adults",
@@ -199,7 +201,8 @@
         "icon": "gauge",
         "scene": "quiz-intro",
         "active": true
-      }
+      },
+      "attractLine": "تصمیم سردتر در بازار داغ"
     }
   ]
 }

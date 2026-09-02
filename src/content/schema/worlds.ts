@@ -49,6 +49,8 @@ const WorldSchema = z.object({
   display: z.string().min(1),
   subtext: z.string().min(1),
   icon: IconNameSchema,
+  /** What this world's portal says while the attract loop is passing through it. */
+  attractLine: z.string().min(1),
   /** The world home's own headline, once the visitor is inside. */
   headline: z.string().min(1),
   intro: z.string().min(1),
