@@ -7,6 +7,7 @@ import { evaluateAllocation, tokensLeft } from "@/lib/games/allocation"
 import { castFor, moodFor } from "@/lib/games/cast"
 import { toPersianDigits } from "@/lib/format"
 import { ChipStackChart } from "@/components/charts/ChipStackChart"
+import { useSound } from "@/components/kiosk/AudioProvider"
 import { Button } from "@/components/ui/Button"
 import { Mascot } from "@/components/ui/Mascot"
 
@@ -32,6 +33,7 @@ const TRAY_LIMIT = 10
  * stops working for the shortest visitors.
  */
 export function AllocationGame({ game, onFinish, finishLabel }: Props) {
+  const { play } = useSound()
   const [allocation, setAllocation] = useState<Record<string, number>>({})
   const [submitted, setSubmitted] = useState(false)
   const [target, setTarget] = useState<string>()
@@ -42,6 +44,7 @@ export function AllocationGame({ game, onFinish, finishLabel }: Props) {
 
   const place = (id: string) => {
     if (left === 0) return
+    play("place")
     setAllocation((current) => ({ ...current, [id]: (current[id] ?? 0) + 1 }))
   }
 
@@ -146,6 +149,7 @@ export function AllocationGame({ game, onFinish, finishLabel }: Props) {
                 else buckets.current.delete(option.id)
               }}
               className="relative"
+              data-sound="own"
             >
               <motion.button
                 type="button"
@@ -204,7 +208,14 @@ export function AllocationGame({ game, onFinish, finishLabel }: Props) {
             {toPersianDigits(left)} سکه مانده
           </span>
         ) : (
-          <Button onClick={() => setSubmitted(true)}>نتیجه را ببین</Button>
+          <Button
+            onClick={() => {
+              play("reveal")
+              setSubmitted(true)
+            }}
+          >
+            نتیجه را ببین
+          </Button>
         )}
         {Object.keys(allocation).length > 0 ? (
           <Button variant="ghost" onClick={() => setAllocation({})}>

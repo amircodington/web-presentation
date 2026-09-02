@@ -54,6 +54,8 @@ export const IconNameSchema = z.enum([
   "spark",
   "map",
   "home",
+  "sound",
+  "mute",
   "back",
   "next",
 ])

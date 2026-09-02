@@ -6,6 +6,7 @@ import type { MarketGame as MarketGameContent } from "@/content/schema/activitie
 import { priceAfter } from "@/lib/games/market"
 import { toPersianDigits } from "@/lib/format"
 import { PriceChart } from "@/components/charts/PriceChart"
+import { useSound } from "@/components/kiosk/AudioProvider"
 import { Button } from "@/components/ui/Button"
 import { Mascot } from "@/components/ui/Mascot"
 import { MotionIcon } from "@/components/ui/MotionIcon"
@@ -28,6 +29,7 @@ interface Props {
  * wrong memorable rather than abstract.
  */
 export function MarketGame({ game, onFinish, finishLabel }: Props) {
+  const { play } = useSound()
   const [round, setRound] = useState(0)
   const [guess, setGuess] = useState<"up" | "down">()
   const [correct, setCorrect] = useState(0)
@@ -37,6 +39,12 @@ export function MarketGame({ game, onFinish, finishLabel }: Props) {
   const answered = guess !== undefined
   // The candle for the round in play is drawn only once it has been answered.
   const roundsDrawn = round + (answered ? 1 : 0)
+
+  /** Scores the guess and says so, because a verdict read is a verdict forgotten. */
+  const judge = (right: boolean) => {
+    if (right) setCorrect((value) => value + 1)
+    play(right ? "good" : "warn")
+  }
 
   const restart = () => {
     setRound(0)
@@ -149,14 +157,14 @@ export function MarketGame({ game, onFinish, finishLabel }: Props) {
                   direction="up"
                   onClick={() => {
                     setGuess("up")
-                    if (current.effect === "up") setCorrect((value) => value + 1)
+                    judge(current.effect === "up")
                   }}
                 />
                 <ChoiceButton
                   direction="down"
                   onClick={() => {
                     setGuess("down")
-                    if (current.effect === "down") setCorrect((value) => value + 1)
+                    judge(current.effect === "down")
                   }}
                 />
               </motion.div>

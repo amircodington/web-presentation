@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useCameraApi } from "@/engine"
+import { useSound } from "./AudioProvider"
 
 /**
  * Dresses the document in the active scene's world palette.
@@ -14,15 +15,31 @@ import { useCameraApi } from "@/engine"
  * A scene with no `meta.world` clears the attribute rather than keeping the last
  * one, so returning to the attract loop or the gateway always lands on the shared
  * brand palette.
+ *
+ * It publishes the same fact to the mixer, and sounds the arrival. Both belong
+ * here because this is the one component that sits inside the camera and knows
+ * which world is on screen — see `AudioProvider`, which sits outside it.
  */
 export function WorldSurface() {
-  const world = useCameraApi().current.meta?.world
+  const scene = useCameraApi().current
+  const world = scene.meta?.world
+  const { play, setWorld } = useSound()
 
   useEffect(() => {
     const root = document.documentElement
     if (world) root.dataset.world = world
     else delete root.dataset.world
-  }, [world])
+    setWorld(world)
+  }, [setWorld, world])
+
+  // The world is set above in the same commit, so an arrival is already heard in
+  // the voice of the world being arrived in.
+  const arrivedAt = useRef(scene.id)
+  useEffect(() => {
+    if (arrivedAt.current === scene.id) return
+    arrivedAt.current = scene.id
+    play("move")
+  }, [play, scene.id])
 
   return null
 }

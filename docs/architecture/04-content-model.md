@@ -188,6 +188,49 @@ Anything with a **card fill** (`mat`, `pill`, `felt`, the chrome tray) must take
 `--kiosk-card-text`, never `--kiosk-text`. In a light-board world the two are the same colour and
 the mistake is invisible; in the navy and deep-green worlds they are opposites.
 
+## Sound
+
+`content/audio.json` is the whole sound design. Components ask for a cue **by meaning** —
+`play("tap")`, `play("reveal")` — and the world decides how it sounds:
+
+```jsonc
+"tap": {
+  "src": "/audio/ui/tap.wav",
+  "byWorld": {
+    "kids":   "/audio/kids/pop.wav",
+    "teens":  "/audio/teens/click.wav",
+    "adults": "/audio/adults/click.wav"
+  }
+}
+```
+
+Sound personality is part of a world's identity (brief §10), so the same gesture is a boing in
+the kids' world and a restrained click in the adults'. Volumes are per world too: the kids' world
+plays to a corridor, the adults' world plays to someone standing at the glass.
+
+Rules the schema and the mixer enforce:
+
+| Rule | Where |
+|---|---|
+| A cue needs a `src`, a `subtitle`, or both | `schema/audio.ts` — a written-but-unrecorded line still captions |
+| Every world has a `worldVolume` | loader cross-check |
+| A world's `greetingCue` names a real cue | loader cross-check |
+| Same cue twice inside `debounceMs` is swallowed | `lib/audio/mixer.ts` |
+| Never more than `maxConcurrent` sounds at once | `lib/audio/mixer.ts` — brief §54 bans stacking |
+| Volume is master × world × cue gain | `lib/audio/mixer.ts` |
+
+The assets are **generated, not licensed** — `npm run assets:sfx` synthesises every WAV into
+`public/audio/`. Two reasons: the kiosk has to work with the network unplugged, so every sound
+is a file on the machine; and one synth with one envelope shape and one tuning gives a coherent
+family, which a bag of downloaded clips never is. They are uncompressed WAV because they decode
+with no delay and the whole set is about a megabyte.
+
+Voice lines are declared with their `subtitle` and no `src` until the team records them. That is
+a valid, useful state, not a placeholder: the line still reaches the visitor.
+
+**Browsers will not sound anything before a user gesture.** The attract loop is therefore silent
+by design; the first tap — always the one entering the gateway — unlocks the kiosk.
+
 ## Event configuration
 
 `content/event.json` holds everything that changes when the booth moves to a different event:

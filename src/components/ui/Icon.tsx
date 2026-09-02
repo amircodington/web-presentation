@@ -171,6 +171,20 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <path d="M7 11h.01M12 11h.01M17 11h.01" />
     </>
   ),
+  sound: (
+    <>
+      <path d="M11 5.5 6.5 9H3.5v6h3L11 18.5v-13Z" />
+      <path d="M14.75 9.25a3.75 3.75 0 0 1 0 5.5" />
+      <path d="M17.5 6.5a7.5 7.5 0 0 1 0 11" />
+    </>
+  ),
+  mute: (
+    <>
+      <path d="M11 5.5 6.5 9H3.5v6h3L11 18.5v-13Z" />
+      <path d="m15 9.5 5 5" />
+      <path d="m20 9.5-5 5" />
+    </>
+  ),
   gift: (
     <>
       <rect x="3" y="9" width="18" height="4" rx="1" />

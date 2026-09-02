@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react"
 import { kioskConfig } from "@/config/kiosk.config"
 import { Icon } from "@/components/ui/Icon"
 import { useCameraApi } from "@/engine"
+import { useSound } from "./AudioProvider"
 import type { IconName } from "@/content/schema/common"
 
 /**
@@ -18,6 +19,7 @@ import type { IconName } from "@/content/schema/common"
  */
 export function KioskChrome() {
   const camera = useCameraApi()
+  const sound = useSound()
 
   const atAttract = camera.current.meta?.idleReturn === true
   const atHub = camera.current.meta?.hub === true
@@ -69,6 +71,13 @@ export function KioskChrome() {
               <ChromeButton onClick={() => camera.overview()} icon="map" variant="marked">
                 نقشه کامل
               </ChromeButton>
+              <ChromeButton
+                onClick={sound.toggleMuted}
+                icon={sound.muted ? "mute" : "sound"}
+                label={sound.muted ? "روشن کردن صدا" : "قطع صدا"}
+              >
+                {sound.muted ? "صدا خاموش" : "صدا"}
+              </ChromeButton>
               {!atAttract && camera.current.next ? (
                 <ChromeButton onClick={() => camera.next()} icon="next">
                   ادامه
@@ -106,11 +115,14 @@ function ChromeButton({
   children,
   onClick,
   icon,
+  label,
   variant = "quiet",
 }: {
   children: string
   onClick: () => void
   icon: IconName
+  /** Overrides the accessible name when the visible label is a state, not an action. */
+  label?: string
   variant?: "quiet" | "marked"
 }) {
   // The chrome never takes the solid accent. Exactly one thing on screen should
@@ -122,6 +134,7 @@ function ChromeButton({
     <motion.button
       type="button"
       onClick={onClick}
+      aria-label={label}
       whileTap={{ scale: 0.95 }}
       transition={{ type: "spring", stiffness: 700, damping: 30 }}
       className="inline-flex min-h-[84px] cursor-pointer items-center gap-3.5 rounded-full px-8 text-[28px] font-semibold"
