@@ -490,6 +490,43 @@
       "props": {
         "world": "kids"
       }
+    },
+    {
+      "id": "teens-financial-iq",
+      "component": "GameScene",
+      "camera": {
+        "x": -14000,
+        "y": -1900,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "back": "world-teens",
+      "meta": {
+        "world": "teens"
+      },
+      "props": {
+        "activityId": "teens-financial-iq"
+      }
+    },
+    {
+      "id": "teens-path",
+      "component": "CourseRevealScene",
+      "camera": {
+        "x": -16800,
+        "y": -1900,
+        "scale": 1.1,
+        "rotate": 0
+      },
+      "transition": "rise",
+      "next": "connect",
+      "back": "world-teens",
+      "meta": {
+        "world": "teens"
+      },
+      "props": {
+        "world": "teens"
+      }
     }
   ]
 }

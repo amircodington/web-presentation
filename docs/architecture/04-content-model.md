@@ -135,6 +135,7 @@ Six mechanics, discriminated on `game.kind`:
 | `sort` | نیاز یا خواسته؟ | Drag each object into one of two bins |
 | `shop` | فروشگاه کوچک | Spend a fixed purse, watching it empty |
 | `stall` | کسب‌وکار کوچولوی من | Pick a product, pick a price, meet the queue |
+| `profile` | چالش هوش مالی · پروفایل بزرگسال | Scenario questions scoring across several dimensions |
 
 Two rules the kids' mechanics exist to teach, and which the code encodes rather than the copy:
 
@@ -147,6 +148,22 @@ Two rules the kids' mechanics exist to teach, and which the code encodes rather 
   dead under a finger is the same failure in a quieter costume.
 - **`stall` has no right price.** Charge little and everyone buys for almost nothing; charge a
   lot and one person buys. Playing twice is what teaches the trade (§21).
+
+`profile` is the one mechanic shared across worlds, and the reason is in its shape: every option
+scores across several **dimensions** rather than being right or wrong. A teenager sees a score
+out of 100 and a level (§30–31); an adult sees the same run rendered as six bars (§42). "How many
+did you get right" is the wrong question for either, and an option nobody can be caught out by is
+what makes a visitor answer honestly.
+
+Each dimension is scored against the best *that dimension* could have reached given the questions
+actually asked — not against a fixed maximum. Otherwise a dimension only two questions touch is
+permanently capped low and reads as a weakness the visitor never demonstrated, which is the
+fastest way to make a profile untrustworthy to the person reading it about themselves.
+
+An `allocation` game may also carry a `horizon` question, asked after the split and before the
+result (§27). It is what turns the game from "was my split correct" into "was my split consistent
+with my own horizon" — the only question the kiosk is allowed to answer, since §73 bans
+investment advice in every world and a game that grades an allocation is giving exactly that.
 
 An activity may also carry a `badge`. Brief §22 makes the celebration mandatory in the kids'
 world, and `GameScene` runs it for any activity that has one — so all six mechanics end the same

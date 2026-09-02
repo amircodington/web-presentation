@@ -205,6 +205,10 @@ These come from the physical reality of an unattended screen in a loud hall:
 - **Touch targets ≥ 88px.** Fingers, on glass, at standing height. No hover-only affordances.
 - **A full-bleed tap target needs `pointer-events-none` on every layer above it.** Otherwise the
   headline swallows the tap aimed at the middle of the screen, which is where people aim.
+- **A card fill takes the card's text colour.** `mat`, `pill`, `felt`, `Button`, the chrome tray:
+  all of them use `--kiosk-card-text`, never `--kiosk-text`. In the light-board worlds the two are
+  the same colour and the mistake is invisible; in the navy and deep-green worlds they are
+  opposites, and the control disappears.
 - **Anything read at length sits on a light mat.** The ground is the dark board; body copy is
   never reversed out of it. See [05 — Colour](docs/architecture/05-motion-and-visual-design.md).
 - **One design size, scaled.** Scenes are authored at `ENGINE_DESIGN_WIDTH` ×
@@ -347,7 +351,7 @@ same commit sequence that merges it. A branch with no row here is an incomplete 
 | `feat/attract-worlds` | Animated three-portal attract loop | merged |
 | `feat/audio-manager` | Central audio manager, mute, subtitles | merged |
 | `feat/kids-world` | Kids world home, four experiences, celebration, course reveal | merged |
-| `feat/teens-world` | Teen world home, four experiences, level-up, recommendations | planned |
+| `feat/teens-world` | Teen world home, four experiences, level-up, recommendations | merged |
 | `feat/adults-world` | Adult world home, four experiences, config question bank, profile result | planned |
 | `chore/production-image` | Verification pass and the production image | planned |
 

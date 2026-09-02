@@ -6,6 +6,7 @@ import { useSession } from "@/store/session"
 import { AllocationGame } from "@/components/games/AllocationGame"
 import { JudgementGame } from "@/components/games/JudgementGame"
 import { MarketGame } from "@/components/games/MarketGame"
+import { ProfileGame } from "@/components/games/ProfileGame"
 import { ShopGame } from "@/components/games/ShopGame"
 import { SortGame } from "@/components/games/SortGame"
 import { StallGame } from "@/components/games/StallGame"
@@ -84,6 +85,8 @@ export function GameScene({ state, camera, props }: SceneComponentProps) {
           <SortGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
         ) : game.kind === "shop" ? (
           <ShopGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
+        ) : game.kind === "profile" ? (
+          <ProfileGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
         ) : (
           <StallGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
         )}
