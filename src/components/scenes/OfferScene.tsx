@@ -55,7 +55,7 @@ export function OfferScene({ state, camera }: SceneComponentProps) {
       <Button
         variant="ghost"
         className="relative !border-[var(--kiosk-on-accent)] !bg-[var(--kiosk-on-accent)] !text-[var(--kiosk-accent)]"
-        onClick={() => camera.goTo("quiz-intro")}
+        onClick={() => camera.goTo("connect", "dive")}
       >
         ببین کدام مسیر مناسب توست ←
       </Button>

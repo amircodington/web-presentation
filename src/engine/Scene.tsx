@@ -8,16 +8,12 @@ interface SceneProps {
   id: string
   placement: ScenePlacement
   state: SceneState
-  /** In overview mode every scene is visible and selectable, whatever its state. */
-  overview?: boolean
   /**
    * Which world's palette this scene wears, from `meta.world`. Published as a
    * data attribute the theme selects on, so a scene carries its own colours
-   * rather than borrowing whichever world the camera happens to be in — which is
-   * what lets the overview map show all three worlds at once.
+   * rather than borrowing whichever world the camera happens to be in.
    */
   world?: string
-  onSelect?: () => void
   children: ReactNode
 }
 
@@ -34,9 +30,7 @@ export const Scene = memo(function Scene({
   id,
   placement,
   state,
-  overview = false,
   world,
-  onSelect,
   children,
 }: SceneProps) {
   const ref = useRef<HTMLElement>(null)
@@ -59,8 +53,8 @@ export const Scene = memo(function Scene({
       data-scene={id}
       data-state={state}
       data-world={world}
-      aria-hidden={state !== "active" && !overview}
-      inert={state !== "active" && !overview ? true : undefined}
+      aria-hidden={state !== "active"}
+      inert={state !== "active" ? true : undefined}
       style={{
         position: "absolute",
         // Positioned in the canvas's LTR maths space (see Camera), then switched
@@ -72,48 +66,18 @@ export const Scene = memo(function Scene({
         height: designHeight,
         transform: `translate(-50%, -50%) translate(${placement.x}px, ${placement.y}px) rotate(${placement.rotate}deg) scale(${placement.scale})`,
         // A scene is a card: decorative layers (ambient orbs, the offer scene's
-        // radial rays) must not paint outside it, or the overview map's computed
-        // extent understates what is actually drawn and the outer scenes clip.
+        // radial rays) must not paint outside it, or a scene bleeds over its
+        // neighbour on the canvas.
         // `clip`, not `hidden`: a scene must never become a scroll container.
         // See the stage in SceneGraph for what focus does to one.
         overflow: "clip",
         borderRadius: 48,
-        pointerEvents: overview || state === "active" ? "auto" : "none",
-        willChange: state === "far" && !overview ? "auto" : "transform",
+        pointerEvents: state === "active" ? "auto" : "none",
+        willChange: state === "far" ? "auto" : "transform",
       }}
     >
       {children}
-      {overview ? <OverviewTarget id={id} active={state === "active"} onSelect={onSelect} /> : null}
     </section>
   )
 })
 
-/**
- * Covers a scene while the overview map is open so the whole card is one target.
- * Without it, a visitor would have to hit whatever button happens to sit under
- * their finger in a scene shrunk to thumbnail size.
- */
-function OverviewTarget({
-  id,
-  active,
-  onSelect,
-}: {
-  id: string
-  active: boolean
-  onSelect?: () => void
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      aria-label={`رفتن به ${id}`}
-      className="absolute inset-0 cursor-pointer rounded-[48px] transition-colors"
-      style={{
-        border: `6px solid ${active ? "var(--kiosk-accent)" : "var(--kiosk-border)"}`,
-        background: active
-          ? "transparent"
-          : "color-mix(in oklab, var(--kiosk-bg) 45%, transparent)",
-      }}
-    />
-  )
-}

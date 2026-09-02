@@ -4,10 +4,8 @@ import { CollaborationScene } from "./CollaborationScene"
 import { ConnectScene } from "./ConnectScene"
 import { CourseDetailScene } from "./CourseDetailScene"
 import { CourseRevealScene } from "./CourseRevealScene"
-import { CoursesScene } from "./CoursesScene"
 import { GameScene } from "./GameScene"
 import { GatewayScene } from "./GatewayScene"
-import { LiveActivitiesScene } from "./LiveActivitiesScene"
 import { OfferScene } from "./OfferScene"
 import { WorldHomeScene } from "./WorldHomeScene"
 
@@ -19,10 +17,8 @@ export const sceneRegistry: SceneRegistry = {
   AttractScene,
   GatewayScene,
   WorldHomeScene,
-  CoursesScene,
   CourseDetailScene,
   CourseRevealScene,
-  LiveActivitiesScene,
   GameScene,
   CollaborationScene,
   OfferScene,

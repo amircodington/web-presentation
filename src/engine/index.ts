@@ -7,13 +7,9 @@ export {
   canvasBounds,
   canvasToViewport,
   clampZoom,
-  fitBounds,
   fitScale,
   project,
-  sceneExtent,
   toCss,
-  type Bounds,
-  type Padding,
 } from "./projection"
 export type {
   CameraTransform,

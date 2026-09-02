@@ -226,32 +226,33 @@ Because the camera always works in design space, its maths is resolution
 independent. Only the gesture layer needs the stage scale, so a drag moves the
 canvas by the distance the finger actually travelled.
 
-## The overview map
+## Why there is no overview map
 
-`camera.overview()` frames the entire canvas at once, so a visitor can see the whole
-presentation and jump anywhere in one tap. It is built from `sceneExtent` (the box
-enclosing every scene, accounting for each scene's own size and rotation) and
-`fitBounds`, which accepts asymmetric padding — the map reserves extra room at the
-bottom so the chrome bar does not cover the scenes it exists to let you choose
-between.
+An earlier build had one: `camera.overview()` framed the whole canvas so a visitor could see the
+presentation and jump anywhere in one tap. It is gone, and it is worth recording why rather than
+leaving the next person to rebuild it.
 
-While the map is open every scene is selectable, not just the active one, and each
-gets a full-card hit target. Shrunk to thumbnail size, individual buttons inside a
-scene are far too small to aim at.
+Brief §63 names a sitemap as something this kiosk must not have. A visitor standing in a loud hall
+has exactly one navigation question — how do I get back — and a second mode that rearranges the
+whole screen is a question they did not ask. The three-world redesign also made the map less
+useful than it looks: the scenes a visitor may go to are the four cards already on their world
+home, and everything else on the canvas belongs to somebody else's world.
 
-Scenes therefore clip to their own bounds (`overflow: hidden`). Without that,
-decorative layers that deliberately overflow — the attract scene's ambient orbs, the
-offer scene's radial rays — would paint outside the box `sceneExtent` computes, and
-the outermost scenes would be clipped by the stage.
+`sceneExtent` and `fitBounds` went with it. They were the map's geometry and nothing else used
+them.
+
+Scenes still clip to their own bounds (`overflow: clip`, never `hidden` — see above). Decorative
+layers that deliberately overflow, such as the offer scene's radial rays, would otherwise paint
+over the neighbouring scene during a wide transition.
 
 ## Canvas layout rules
 
 Two invariants are enforced by `scripts/validate-content.ts` rather than left to
-review, because both fail in ways that are easy to miss until the map is opened:
+review, because both fail in ways that are easy to miss on the scene you are working on:
 
-**Scenes must not overlap in canvas space.** Overlapping scenes look broken in the
-overview map, and a `dive` transition flies *through* content it should be passing
-over. The check computes each scene's rotated axis-aligned box and reports every
+**Scenes must not overlap in canvas space.** A `dive` transition pulls the camera back
+between two scenes, and overlapping scenes mean it flies *through* content it should
+be passing over. The check computes each scene's rotated axis-aligned box and reports every
 colliding pair.
 
 **Every scene reserves clearance for the chrome bar.** The persistent controls sit

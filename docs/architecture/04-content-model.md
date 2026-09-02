@@ -240,9 +240,9 @@ diagnostic produces a result. Only the diagnostic is allowed to say something ab
 
 **Palettes are applied by `data-world`, not by class.** `KioskTheme` emits one custom-property
 block per world; `Scene` stamps `meta.world` onto each scene wrapper and `WorldSurface` stamps
-the active scene's world onto `<html>`. Scenes therefore carry their own colours — which is what
-lets the overview map show three worlds at once — while the document attribute paints the board
-and the surround the stage sits on.
+the active scene's world onto `<html>`. Scenes therefore carry their own colours rather than
+borrowing whichever world the camera is in, while the document attribute paints the board and the
+surround the stage sits on.
 
 Anything with a **card fill** (`mat`, `pill`, `felt`, the chrome tray) must take
 `--kiosk-card-text`, never `--kiosk-text`. In a light-board world the two are the same colour and

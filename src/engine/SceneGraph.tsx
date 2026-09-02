@@ -136,9 +136,9 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
            * `overflow: clip` clips without ever becoming scrollable.
            */
           overflow: "clip",
-          // The board itself. Without it the overview map, where the camera pulls
-          // back past the scenes, shows the surround through the stage and the card
-          // frame disappears at exactly the moment the map needs a table to sit on.
+          // The board itself. Without it a wide transition, where the camera pulls
+          // back between two scenes, shows the surround through the stage and the
+          // card frame disappears mid-flight.
           background: "var(--kiosk-bg)",
           // Matches the radius every scene carries, so the stage clips to the same
           // card silhouette the scenes are drawn as.
@@ -156,9 +156,7 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
               id={scene.id}
               placement={scene.camera}
               state={state}
-              overview={camera.isOverview}
               world={scene.meta?.world}
-              onSelect={() => camera.goTo(scene.id, "dive")}
             >
               {Component ? (
                 <Component state={state} camera={camera} props={scene.props ?? {}} />

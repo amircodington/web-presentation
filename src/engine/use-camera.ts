@@ -3,7 +3,7 @@
 import { useAnimate } from "motion/react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { kioskConfig } from "@/config/kiosk.config"
-import { canvasToViewport, fitBounds, project, sceneExtent, toCss } from "./projection"
+import { canvasToViewport, project, toCss } from "./projection"
 import { transitionSpec } from "./transitions"
 import type { CameraTransform, SceneNode, Size, TransitionName } from "./types"
 
@@ -26,14 +26,9 @@ export interface CameraApi {
   nudge(delta: Partial<CameraTransform>): void
   /** Eases back to the current scene's authored framing. */
   recenter(): void
-  /** Pulls the camera back to frame the entire canvas — the overview map. */
-  overview(): void
-  /** Leaves the overview and returns to the current scene. */
-  exitOverview(): void
   readonly current: SceneNode
   readonly isMoving: boolean
   readonly isFreeform: boolean
-  readonly isOverview: boolean
 }
 
 interface UseCameraOptions {
@@ -56,7 +51,6 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
   const [currentId, setCurrentId] = useState(initialSceneId)
   const [isMoving, setIsMoving] = useState(false)
   const [isFreeform, setIsFreeform] = useState(false)
-  const [isOverview, setIsOverview] = useState(false)
   const freeformTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   const byId = useMemo(
@@ -122,7 +116,6 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
     (sceneId: string, transition?: TransitionName) => {
       const scene = byId.get(sceneId)
       if (!scene) return
-      setIsOverview(false)
       if (sceneId === currentId) {
         void flyTo(scene, transition)
         return
@@ -146,27 +139,7 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
 
   const recenter = useCallback(() => {
     setIsFreeform(false)
-    if (isOverview) return
     void flyTo(current, "glide")
-  }, [current, flyTo, isOverview])
-
-  const overview = useCallback(() => {
-    setIsFreeform(false)
-    setIsOverview(true)
-    const extent = sceneExtent(
-      scenes.map((scene) => scene.camera),
-      viewport,
-    )
-    // Extra room at the bottom keeps the chrome bar clear of the scene cards.
-    void flyToTransform(
-      fitBounds(extent, viewport, { top: 90, right: 90, bottom: 300, left: 90 }),
-      "home",
-    )
-  }, [flyToTransform, scenes, viewport])
-
-  const exitOverview = useCallback(() => {
-    setIsOverview(false)
-    void flyTo(current, "dive")
   }, [current, flyTo])
 
   const nudge = useCallback(
@@ -187,10 +160,10 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
   // leave the screen in a state the next visitor cannot understand.
   useEffect(() => {
     clearTimeout(freeformTimer.current)
-    if (!isFreeform || isOverview) return
+    if (!isFreeform) return
     freeformTimer.current = setTimeout(recenter, kioskConfig.gestureRecenterMs)
     return () => clearTimeout(freeformTimer.current)
-  }, [isFreeform, isOverview, recenter])
+  }, [isFreeform, recenter])
 
   // Frame the initial scene without animating, and reframe on viewport resize.
   useEffect(() => {
@@ -207,12 +180,9 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
     attract,
     nudge,
     recenter,
-    overview,
-    exitOverview,
     current,
     isMoving,
     isFreeform,
-    isOverview,
   }
 
   return { scope, camera: api }

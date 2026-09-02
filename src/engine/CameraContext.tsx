@@ -13,7 +13,7 @@ export const CameraProvider = CameraContext.Provider
  * Context rather than a callback prop on purpose: the camera API object is rebuilt
  * on every render, and a `onReady`-style callback can only re-publish it when its
  * dependency list says so. That leaves overlays holding a stale API and silently
- * reading last render's `isOverview` or `isMoving`.
+ * reading last render's `isMoving`.
  */
 export function useCameraApi(): CameraApi {
   const camera = useContext(CameraContext)
