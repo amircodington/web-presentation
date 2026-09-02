@@ -8,6 +8,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-09-02
+
+### Added
+- **worlds:** make the first decision three age worlds, not seven audiences (0820a3b)
+
 ## [0.4.0] — 2026-09-01
 
 ### Added
