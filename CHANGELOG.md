@@ -8,6 +8,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.9.0] — 2026-09-02
+
+### Added
+- **teens:** complete the teens world with a profile, a score and a path (ef8685c)
+
 ## [0.8.0] — 2026-09-02
 
 ### Added
