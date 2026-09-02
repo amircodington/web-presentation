@@ -37,7 +37,8 @@ Do not relitigate these. To change one, write an ADR in `docs/architecture/adr/`
 | Motion | Motion (`motion/react`) for UI enter/exit + layout; GSAP timelines for scene choreography |
 | Zoom engine | Custom camera layer (`src/engine/`). **Not** impress.js, **not** reveal.js |
 | Content | Typed JSON in `content/`, validated by Zod. No hardcoded copy, prices, or URLs |
-| Per-event config | `content/event.json` — hours, running order, audience priority, product order |
+| Per-event config | `content/event.json` — hours, running order, product order |
+| Audience model | Three worlds in `content/worlds.json`. The first interactive decision is which world, not which course — see [04](docs/architecture/04-content-model.md) |
 | Icons | Named in content, drawn in `components/ui/Icon.tsx`. **No emoji in the UI** |
 | Backend | One write-only route (`POST /api/leads`) plus token-guarded archive routes. No database: leads are JSON files on a Docker volume. QR stays the default path — [ADR 0007](docs/architecture/adr/0007-lead-archive-on-a-volume.md) |
 | Locale | `fa-IR` only, `dir="rtl"` |
@@ -336,7 +337,7 @@ same commit sequence that merges it. A branch with no row here is an incomplete 
 | `feat/playable-characters` | The mascot cast, hand-playable games | merged |
 | `feat/booth-capture` | The `/booth` staff capture tablet | merged |
 | `docs/redesign-branch-registry` | The master-brief execution plan and this registry | merged |
-| `feat/audience-worlds` | Three-world model, Audience Gateway, B2B secondary route | planned |
+| `feat/audience-worlds` | Three-world model, Audience Gateway, B2B secondary route | merged |
 | `feat/attract-worlds` | Animated three-portal attract loop | planned |
 | `feat/audio-manager` | Central audio manager, mute, subtitles | planned |
 | `feat/kids-world` | Kids world home, four experiences, celebration, course reveal | planned |

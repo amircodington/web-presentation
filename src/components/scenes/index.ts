@@ -5,13 +5,13 @@ import { ConnectScene } from "./ConnectScene"
 import { CourseDetailScene } from "./CourseDetailScene"
 import { CoursesScene } from "./CoursesScene"
 import { GameScene } from "./GameScene"
-import { HomeScene } from "./HomeScene"
+import { GatewayScene } from "./GatewayScene"
 import { LiveActivitiesScene } from "./LiveActivitiesScene"
 import { OfferScene } from "./OfferScene"
-import { ParentPathScene } from "./ParentPathScene"
 import { QuizIntroScene } from "./QuizIntroScene"
 import { QuizQuestionScene } from "./QuizQuestionScene"
 import { QuizResultScene } from "./QuizResultScene"
+import { WorldHomeScene } from "./WorldHomeScene"
 
 /**
  * Maps the `component` field in `scenes.json` to a React component. A scene that
@@ -19,8 +19,8 @@ import { QuizResultScene } from "./QuizResultScene"
  */
 export const sceneRegistry: SceneRegistry = {
   AttractScene,
-  HomeScene,
-  ParentPathScene,
+  GatewayScene,
+  WorldHomeScene,
   CoursesScene,
   CourseDetailScene,
   LiveActivitiesScene,

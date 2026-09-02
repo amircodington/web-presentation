@@ -1,0 +1,93 @@
+import { z } from "zod"
+import { AudienceGroupSchema, AudienceIdSchema, IconNameSchema } from "./common"
+
+const HexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/, "expected a #rrggbb hex colour")
+
+/**
+ * A world's palette. Every key in `brand.json` that a world is allowed to
+ * override, and no others: the logo, the ink weight and the card silhouette stay
+ * shared, because the three worlds are three rooms in one building rather than
+ * three products.
+ */
+const WorldPaletteSchema = z.object({
+  background: HexColor,
+  surface: HexColor,
+  card: HexColor,
+  border: HexColor,
+  accent: HexColor,
+  accentSoft: HexColor,
+  onAccent: HexColor,
+  text: HexColor,
+  textMuted: HexColor,
+  cardText: HexColor,
+  cardMuted: HexColor,
+  money: HexColor,
+  positive: HexColor,
+  joy: HexColor,
+})
+
+/**
+ * One of the four experiences a world offers.
+ *
+ * `active` is a switch, not a placeholder: an experience whose scene is not yet
+ * built, or which the team wants off for one event, is declared here and simply
+ * not offered. The world home renders what is on and never a dead card.
+ */
+const WorldExperienceSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  hook: z.string().min(1),
+  icon: IconNameSchema,
+  /** Scene id in `scenes.json`. Cross-checked by the loader. */
+  scene: z.string().min(1),
+  active: z.boolean(),
+})
+
+const WorldSchema = z.object({
+  id: AudienceGroupSchema,
+  /** What the gateway card says. Brief §7 fixes this wording. */
+  display: z.string().min(1),
+  subtext: z.string().min(1),
+  icon: IconNameSchema,
+  /** The world home's own headline, once the visitor is inside. */
+  headline: z.string().min(1),
+  intro: z.string().min(1),
+  /** Which catalogue audiences this world's product reveal draws from. */
+  audiences: z.array(AudienceIdSchema).min(1),
+  palette: WorldPaletteSchema,
+  experiences: z.array(WorldExperienceSchema).length(4),
+  /**
+   * The world's diagnostic — the test that produces a result, as distinct from an
+   * experience that produces a lesson. Brief §12 keeps the two separate: a visitor
+   * plays one experience and takes one diagnostic, and only the diagnostic is
+   * allowed to say something about them.
+   */
+  diagnostic: WorldExperienceSchema.optional(),
+})
+
+/**
+ * The three worlds, and the gateway that leads into them.
+ *
+ * This file is the spine of the redesign: the first interactive decision is which
+ * world you are in, and everything downstream — palette, experiences, product
+ * order — hangs off that one choice. School and organisation are deliberately not
+ * a fourth world; they are the secondary route below the three cards, because a
+ * B2B visitor is not looking for a game.
+ */
+export const WorldsSchema = z.object({
+  gateway: z.object({
+    title: z.string().min(1),
+    subtitle: z.string().min(1),
+    secondary: z.object({
+      question: z.string().min(1),
+      cta: z.string().min(1),
+      scene: z.string().min(1),
+    }),
+  }),
+  worlds: z.array(WorldSchema).length(3),
+})
+
+export type WorldsFile = z.infer<typeof WorldsSchema>
+export type World = z.infer<typeof WorldSchema>
+export type WorldExperience = z.infer<typeof WorldExperienceSchema>
+export type WorldPalette = z.infer<typeof WorldPaletteSchema>

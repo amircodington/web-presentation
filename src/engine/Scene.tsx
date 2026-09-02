@@ -10,6 +10,13 @@ interface SceneProps {
   state: SceneState
   /** In overview mode every scene is visible and selectable, whatever its state. */
   overview?: boolean
+  /**
+   * Which world's palette this scene wears, from `meta.world`. Published as a
+   * data attribute the theme selects on, so a scene carries its own colours
+   * rather than borrowing whichever world the camera happens to be in — which is
+   * what lets the overview map show all three worlds at once.
+   */
+  world?: string
   onSelect?: () => void
   children: ReactNode
 }
@@ -28,6 +35,7 @@ export const Scene = memo(function Scene({
   placement,
   state,
   overview = false,
+  world,
   onSelect,
   children,
 }: SceneProps) {
@@ -50,6 +58,7 @@ export const Scene = memo(function Scene({
       id={`scene-${id}`}
       data-scene={id}
       data-state={state}
+      data-world={world}
       aria-hidden={state !== "active" && !overview}
       inert={state !== "active" && !overview ? true : undefined}
       style={{

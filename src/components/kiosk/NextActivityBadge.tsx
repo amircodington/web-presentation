@@ -41,7 +41,7 @@ export function NextActivityBadge({ className = "" }: { className?: string }) {
       </span>
 
       <span className="flex flex-col leading-tight">
-        <span className="text-[21px] text-[var(--kiosk-muted)]">
+        <span className="text-[21px] text-[var(--kiosk-card-muted)]">
           {content.event.nextSlotLabel}
         </span>
         <span className="text-[27px] font-bold">{activity.title}</span>

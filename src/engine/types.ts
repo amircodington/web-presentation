@@ -29,7 +29,7 @@ export interface SceneNode {
   transition: TransitionName
   next?: string
   back?: string
-  meta?: { idleReturn?: boolean; hub?: boolean }
+  meta?: { idleReturn?: boolean; hub?: boolean; world?: "kids" | "teens" | "adults" }
   /** Passed verbatim to the scene component, so one component can serve many scenes. */
   props?: Readonly<Record<string, string | number | boolean>>
 }

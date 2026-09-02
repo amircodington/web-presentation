@@ -157,6 +157,7 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
               placement={scene.camera}
               state={state}
               overview={camera.isOverview}
+              world={scene.meta?.world}
               onSelect={() => camera.goTo(scene.id, "dive")}
             >
               {Component ? (

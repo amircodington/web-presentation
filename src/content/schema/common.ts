@@ -68,6 +68,18 @@ export const AudienceIdSchema = z.enum([
   "government",
 ])
 
+/**
+ * The first interactive decision a visitor makes, and the widest one in the
+ * product: which of the three worlds they enter.
+ *
+ * Deliberately not the same axis as `AudienceId`. An audience is a segment the
+ * catalogue is filtered by — it answers "which course suits this person". A group
+ * answers "which world does this person play in", and a world owns its own
+ * palette, motion density, tone and set of experiences. One group maps to several
+ * audiences; the reverse is never needed.
+ */
+export const AudienceGroupSchema = z.enum(["kids", "teens", "adults"])
+
 /** ISO Gregorian. Stored this way so sorting and "is it upcoming" stay trivial. */
 export const IsoDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "expected YYYY-MM-DD")
 
@@ -80,3 +92,4 @@ export const PriceSchema = z.number().int().nonnegative()
 export type MediaRef = z.infer<typeof MediaRefSchema>
 export type IconName = z.infer<typeof IconNameSchema>
 export type AudienceId = z.infer<typeof AudienceIdSchema>
+export type AudienceGroup = z.infer<typeof AudienceGroupSchema>

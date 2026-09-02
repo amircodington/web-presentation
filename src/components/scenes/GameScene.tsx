@@ -1,6 +1,7 @@
 "use client"
 
 import { content } from "@/content/load"
+import { useSession } from "@/store/session"
 import { AllocationGame } from "@/components/games/AllocationGame"
 import { JudgementGame } from "@/components/games/JudgementGame"
 import { MarketGame } from "@/components/games/MarketGame"
@@ -8,6 +9,9 @@ import { Mascot } from "@/components/ui/Mascot"
 import { castFor } from "@/lib/games/cast"
 import { toPersianDigits } from "@/lib/format"
 import type { SceneComponentProps } from "@/engine"
+
+/** Brief §12: the way out of a game is an invitation, never a dead end. */
+const FINISH_LABEL = "یه بازی دیگه هم بزن! ←"
 
 /**
  * Hosts one playable booth activity, chosen by `props.activityId` in `scenes.json`.
@@ -20,11 +24,22 @@ import type { SceneComponentProps } from "@/engine"
 export function GameScene({ state, camera, props }: SceneComponentProps) {
   const activityId = String(props.activityId ?? "")
   const activity = content.activities.activities.find((item) => item.id === activityId)
+  const complete = useSession((store) => store.complete)
 
   if (!activity?.game) return null
 
   const game = activity.game
-  const finish = () => camera.goTo("quiz-intro", "dive")
+
+  /**
+   * Finishing returns to the world the game belongs to, so the visitor lands back
+   * on the path they came from with this stop marked done — brief §12's "یه بازی
+   * دیگه هم بزن!". Every game's `back` edge is its world home, so the camera edge
+   * is the single source of truth rather than a scene id repeated in code.
+   */
+  const finish = () => {
+    complete(activityId)
+    camera.back()
+  }
 
   return (
     <div className="scene-surface flex h-full w-full flex-col gap-4 rounded-[48px] px-16 pt-12 pb-60">
@@ -45,11 +60,11 @@ export function GameScene({ state, camera, props }: SceneComponentProps) {
         {state !== "active" ? (
           <GamePreview learning={activity.learning} />
         ) : game.kind === "allocation" ? (
-          <AllocationGame game={game} onFinish={finish} />
+          <AllocationGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
         ) : game.kind === "market" ? (
-          <MarketGame game={game} onFinish={finish} />
+          <MarketGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
         ) : (
-          <JudgementGame game={game} onFinish={finish} />
+          <JudgementGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
         )}
       </div>
     </div>

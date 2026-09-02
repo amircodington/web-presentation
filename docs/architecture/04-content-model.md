@@ -144,17 +144,59 @@ empty result panel at the exact moment they are most engaged.
 Options carry `risk` and `growth` rather than being hardcoded by id, so adding a
 new asset to a game is a content edit.
 
+## The three worlds
+
+`content/worlds.json` is the spine of the visitor journey. The first interactive decision is
+which of three age worlds the visitor is in, and everything downstream — palette, motion,
+experiences, product reveal — hangs off that one choice.
+
+```ts
+const WorldSchema = z.object({
+  id: AudienceGroupSchema,          // "kids" | "teens" | "adults"
+  display: z.string().min(1),       // what the gateway card says
+  subtext: z.string().min(1),
+  headline: z.string().min(1),      // the world home's own headline
+  intro: z.string().min(1),
+  audiences: z.array(AudienceIdSchema).min(1),
+  palette: WorldPaletteSchema,      // every brand colour this world overrides
+  experiences: z.array(WorldExperienceSchema).length(4),
+  diagnostic: WorldExperienceSchema.optional(),
+})
+```
+
+**A group is not an audience.** `AudienceId` segments the *catalogue* — it answers "which course
+suits this person". `AudienceGroup` answers "which world does this person play in", and a world
+owns its own colours, motion density and tone. One group maps to several audiences; the reverse
+is never needed. Both live in `schema/common.ts`.
+
+**`experiences` is always four, and `active` is a switch.** An experience whose scene is not
+built yet, or which the team wants off for one event, is declared and switched off — the world
+home renders what is on and never a dead card. Only active entries are cross-checked against
+`scenes.json`; an inactive one names the scene it *will* use, which is a forward declaration
+rather than a broken link. A world with nothing active fails the build.
+
+**`diagnostic` is separate from the experiences on purpose.** An experience produces a lesson; a
+diagnostic produces a result. Only the diagnostic is allowed to say something about the visitor.
+
+**Palettes are applied by `data-world`, not by class.** `KioskTheme` emits one custom-property
+block per world; `Scene` stamps `meta.world` onto each scene wrapper and `WorldSurface` stamps
+the active scene's world onto `<html>`. Scenes therefore carry their own colours — which is what
+lets the overview map show three worlds at once — while the document attribute paints the board
+and the surround the stage sits on.
+
+Anything with a **card fill** (`mat`, `pill`, `felt`, the chrome tray) must take
+`--kiosk-card-text`, never `--kiosk-text`. In a light-board world the two are the same colour and
+the mistake is invisible; in the navy and deep-green worlds they are opposites.
+
 ## Event configuration
 
 `content/event.json` holds everything that changes when the booth moves to a different event:
-opening hours, the mini-activity running order, which audience the home screen greets first,
-and which product each audience is led with.
+opening hours, the mini-activity running order, and which product each audience is led with.
 
-Nothing in that file may be reached by editing a component. The two rules it drives:
+Nothing in that file may be reached by editing a component. The rules it drives:
 
 | Field | Effect |
 |---|---|
-| `audiencePriority` / `secondaryAudiences` | Order and visual weight of the home screen cards |
 | `defaultProductOrder` / `audienceProductOrder` | Which product leads any listing, per audience |
 | `schedule` | `[{ time, activityId }]` — validated against `activities.json` at build time |
 | `attract` | The hook, its rotating lines, and the CTA on the attract loop |

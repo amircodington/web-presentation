@@ -1,6 +1,7 @@
 import { content } from "./load"
-import type { AudienceId } from "./schema/common"
-import type { Audience, Course, Workshop } from "./schema/catalogue"
+import type { AudienceGroup, AudienceId } from "./schema/common"
+import type { Course, Workshop } from "./schema/catalogue"
+import type { World, WorldExperience } from "./schema/worlds"
 
 /** Courses that should appear anywhere in the UI. */
 export function activeCourses(): readonly Course[] {
@@ -41,17 +42,30 @@ export function orderProducts<T extends { id: string }>(
   return [...products].sort((a, b) => rank(a.id) - rank(b.id))
 }
 
-/** Every audience the home screen offers, in the order this event wants them. */
-export function prioritisedAudiences(): { primary: Audience[]; secondary: Audience[] } {
-  const { audiencePriority, secondaryAudiences } = content.event
-  const inOrder = audiencePriority
-    .map((id) => content.audiences.find((audience) => audience.id === id))
-    .filter((audience): audience is Audience => audience !== undefined)
+/** The world a visitor chose at the gateway, by id. */
+export function worldById(id: AudienceGroup): World | undefined {
+  return content.worlds.worlds.find((world) => world.id === id)
+}
 
-  return {
-    primary: inOrder.filter((audience) => !secondaryAudiences.includes(audience.id)),
-    secondary: inOrder.filter((audience) => secondaryAudiences.includes(audience.id)),
-  }
+/**
+ * The experiences a world actually offers right now.
+ *
+ * Filtered rather than greyed out: an experience that is switched off must not
+ * appear at all. A dead card on a kiosk is tapped repeatedly, and a visitor who
+ * taps three of four cards and gets nothing walks away.
+ */
+export function activeExperiences(id: AudienceGroup): readonly WorldExperience[] {
+  return worldById(id)?.experiences.filter((experience) => experience.active) ?? []
+}
+
+/** Products a world's reveal draws from, in this event's order for that world. */
+export function coursesForWorld(id: AudienceGroup): readonly Course[] {
+  const world = worldById(id)
+  if (!world) return []
+  const matching = activeCourses().filter((course) =>
+    course.audiences.some((audience) => world.audiences.includes(audience)),
+  )
+  return orderProducts(matching, world.audiences[0])
 }
 
 /**

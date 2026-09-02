@@ -13,6 +13,8 @@ import { Mascot } from "@/components/ui/Mascot"
 interface Props {
   game: AllocationGameContent
   onFinish: () => void
+  /** What the way out is called. The host owns the wording; the game owns the board. */
+  finishLabel: string
 }
 
 /** How many coins the tray shows at once before it just counts them. */
@@ -29,7 +31,7 @@ const TRAY_LIMIT = 10
  * genuine reach for a nine-year-old, and a game that only accepts the drag simply
  * stops working for the shortest visitors.
  */
-export function AllocationGame({ game, onFinish }: Props) {
+export function AllocationGame({ game, onFinish, finishLabel }: Props) {
   const [allocation, setAllocation] = useState<Record<string, number>>({})
   const [submitted, setSubmitted] = useState(false)
   const [target, setTarget] = useState<string>()
@@ -98,7 +100,7 @@ export function AllocationGame({ game, onFinish }: Props) {
         </div>
 
         <div className="flex gap-5">
-          <Button onClick={onFinish}>{"هوش مالی‌ام رو محک بزن ←"}</Button>
+          <Button onClick={onFinish}>{finishLabel}</Button>
           <Button
             variant="ghost"
             onClick={() => {
@@ -118,7 +120,7 @@ export function AllocationGame({ game, onFinish }: Props) {
       <div className="flex items-center justify-between gap-8">
         <p className="text-[30px] font-bold">{game.prompt}</p>
         <span className="pill rounded-full px-6 py-2 text-[23px] font-semibold">
-          هر سکه {game.tokenLabel} تومان
+          {game.tokenLabel}
         </span>
       </div>
 

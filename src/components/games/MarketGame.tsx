@@ -14,6 +14,8 @@ import { Icon } from "@/components/ui/Icon"
 interface Props {
   game: MarketGameContent
   onFinish: () => void
+  /** What the way out is called. The host owns the wording; the game owns the board. */
+  finishLabel: string
 }
 
 /**
@@ -25,7 +27,7 @@ interface Props {
  * wrong about it once — and the candle landing the wrong way is what makes being
  * wrong memorable rather than abstract.
  */
-export function MarketGame({ game, onFinish }: Props) {
+export function MarketGame({ game, onFinish, finishLabel }: Props) {
   const [round, setRound] = useState(0)
   const [guess, setGuess] = useState<"up" | "down">()
   const [correct, setCorrect] = useState(0)
@@ -91,7 +93,7 @@ export function MarketGame({ game, onFinish }: Props) {
             — خبر و هیجان هم قیمت را جابه‌جا می‌کنند، نه فقط عرضه و تقاضا.
           </p>
           <div className="flex shrink-0 gap-4">
-            <Button onClick={onFinish}>{"هوش مالی‌ام رو محک بزن ←"}</Button>
+            <Button onClick={onFinish}>{finishLabel}</Button>
             <Button variant="ghost" onClick={restart}>
               دوباره
             </Button>

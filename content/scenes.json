@@ -11,252 +11,217 @@
       "camera": {
         "x": 0,
         "y": 0,
-        "scale": 1,
+        "scale": 1.0,
         "rotate": 0
       },
       "transition": "drift",
-      "next": "home",
+      "next": "gateway",
       "meta": {
         "idleReturn": true
       }
     },
     {
-      "id": "home",
-      "component": "HomeScene",
+      "id": "gateway",
+      "component": "GatewayScene",
       "camera": {
         "x": -2800,
         "y": 0,
-        "scale": 1,
+        "scale": 1.0,
         "rotate": 0
       },
       "transition": "dive",
-      "next": "parent-path",
       "back": "attract",
       "meta": {
         "hub": true
       }
     },
     {
-      "id": "parent-path",
-      "component": "ParentPathScene",
+      "id": "connect",
+      "component": "ConnectScene",
       "camera": {
-        "x": -2800,
-        "y": 1750,
-        "scale": 1.15,
-        "rotate": 0
-      },
-      "transition": "dive",
-      "next": "courses",
-      "back": "home"
-    },
-    {
-      "id": "courses",
-      "component": "CoursesScene",
-      "camera": {
-        "x": -5900,
-        "y": 1750,
-        "scale": 1,
-        "rotate": -3
-      },
-      "transition": "glide",
-      "next": "course-plus18",
-      "back": "parent-path"
-    },
-    {
-      "id": "course-plus18",
-      "component": "CourseDetailScene",
-      "camera": {
-        "x": -8900,
-        "y": 1750,
+        "x": -5600,
+        "y": 0,
         "scale": 1.1,
         "rotate": 0
       },
       "transition": "dive",
-      "next": "course-business-school",
-      "back": "courses",
-      "props": {
-        "courseId": "plus18"
-      }
+      "back": "gateway"
     },
     {
-      "id": "course-business-school",
-      "component": "CourseDetailScene",
-      "camera": {
-        "x": -12000,
-        "y": 1750,
-        "scale": 1.1,
-        "rotate": 0
-      },
-      "transition": "glide",
-      "next": "course-masir-servat",
-      "back": "course-plus18",
-      "props": {
-        "courseId": "business-school"
-      }
-    },
-    {
-      "id": "course-masir-servat",
-      "component": "CourseDetailScene",
-      "camera": {
-        "x": -15100,
-        "y": 1750,
-        "scale": 1.1,
-        "rotate": 0
-      },
-      "transition": "glide",
-      "next": "offer",
-      "back": "course-business-school",
-      "props": {
-        "courseId": "masir-servat"
-      }
-    },
-    {
-      "id": "live",
-      "component": "LiveActivitiesScene",
+      "id": "world-kids",
+      "component": "WorldHomeScene",
       "camera": {
         "x": -2800,
-        "y": -1900,
+        "y": 1900,
+        "scale": 1.0,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "back": "gateway",
+      "meta": {
+        "world": "kids"
+      },
+      "props": {
+        "world": "kids"
+      }
+    },
+    {
+      "id": "kids-piggy-bank",
+      "component": "GameScene",
+      "camera": {
+        "x": -5600,
+        "y": 1900,
         "scale": 1.05,
         "rotate": 0
       },
       "transition": "dive",
-      "next": "collab-schools",
-      "back": "home"
-    },
-    {
-      "id": "collab-schools",
-      "component": "CollaborationScene",
-      "camera": {
-        "x": -6100,
-        "y": -1900,
-        "scale": 1,
-        "rotate": 3
+      "back": "world-kids",
+      "meta": {
+        "world": "kids"
       },
-      "transition": "glide",
-      "next": "collab-organizations",
-      "back": "live",
       "props": {
-        "track": "schools"
+        "activityId": "kids-piggy-bank"
       }
     },
     {
-      "id": "collab-organizations",
-      "component": "CollaborationScene",
+      "id": "world-teens",
+      "component": "WorldHomeScene",
       "camera": {
-        "x": -9400,
+        "x": -2800,
         "y": -1900,
-        "scale": 1,
-        "rotate": -3
+        "scale": 1.0,
+        "rotate": 0
       },
-      "transition": "glide",
-      "next": "connect",
-      "back": "collab-schools",
+      "transition": "dive",
+      "back": "gateway",
+      "meta": {
+        "world": "teens"
+      },
       "props": {
-        "track": "organizations"
+        "world": "teens"
       }
     },
     {
       "id": "game-challenge-100m",
       "component": "GameScene",
       "camera": {
-        "x": -2800,
-        "y": -4400,
+        "x": -5600,
+        "y": -1900,
         "scale": 1.05,
         "rotate": 0
       },
       "transition": "dive",
-      "next": "game-price-mystery",
-      "back": "live",
+      "back": "world-teens",
+      "meta": {
+        "world": "teens"
+      },
       "props": {
         "activityId": "challenge-100m"
-      }
-    },
-    {
-      "id": "game-price-mystery",
-      "component": "GameScene",
-      "camera": {
-        "x": -6100,
-        "y": -4400,
-        "scale": 1.05,
-        "rotate": 0
-      },
-      "transition": "dive",
-      "next": "game-scam-or-opportunity",
-      "back": "live",
-      "props": {
-        "activityId": "price-mystery"
       }
     },
     {
       "id": "game-scam-or-opportunity",
       "component": "GameScene",
       "camera": {
-        "x": -9400,
-        "y": -4400,
+        "x": -8400,
+        "y": -1900,
         "scale": 1.05,
         "rotate": 0
       },
       "transition": "dive",
-      "next": "game-build-a-portfolio",
-      "back": "live",
+      "back": "world-teens",
+      "meta": {
+        "world": "teens"
+      },
       "props": {
         "activityId": "scam-or-opportunity"
+      }
+    },
+    {
+      "id": "game-price-mystery",
+      "component": "GameScene",
+      "camera": {
+        "x": -11200,
+        "y": -1900,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "back": "world-teens",
+      "meta": {
+        "world": "teens"
+      },
+      "props": {
+        "activityId": "price-mystery"
+      }
+    },
+    {
+      "id": "world-adults",
+      "component": "WorldHomeScene",
+      "camera": {
+        "x": -2800,
+        "y": 3800,
+        "scale": 1.0,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "back": "gateway",
+      "meta": {
+        "world": "adults"
+      },
+      "props": {
+        "world": "adults"
       }
     },
     {
       "id": "game-build-a-portfolio",
       "component": "GameScene",
       "camera": {
-        "x": -12700,
-        "y": -4400,
+        "x": -5600,
+        "y": 3800,
         "scale": 1.05,
         "rotate": 0
       },
       "transition": "dive",
-      "next": "quiz-intro",
-      "back": "live",
+      "back": "world-adults",
+      "meta": {
+        "world": "adults"
+      },
       "props": {
         "activityId": "build-a-portfolio"
       }
     },
     {
-      "id": "offer",
-      "component": "OfferScene",
-      "camera": {
-        "x": -18000,
-        "y": 3900,
-        "scale": 1.25,
-        "rotate": 0
-      },
-      "transition": "rise",
-      "next": "quiz-intro",
-      "back": "course-masir-servat"
-    },
-    {
       "id": "quiz-intro",
       "component": "QuizIntroScene",
       "camera": {
-        "x": -2800,
-        "y": 3900,
+        "x": -8400,
+        "y": 3800,
         "scale": 1.1,
         "rotate": 0
       },
       "transition": "dive",
       "next": "quiz-q1",
-      "back": "home"
+      "back": "world-adults",
+      "meta": {
+        "world": "adults"
+      }
     },
     {
       "id": "quiz-q1",
       "component": "QuizQuestionScene",
       "camera": {
-        "x": -5200,
-        "y": 3900,
-        "scale": 1,
+        "x": -11200,
+        "y": 3800,
+        "scale": 1.0,
         "rotate": 0
       },
       "transition": "snap",
       "next": "quiz-q2",
       "back": "quiz-intro",
+      "meta": {
+        "world": "adults"
+      },
       "props": {
         "questionIndex": 0
       }
@@ -265,14 +230,17 @@
       "id": "quiz-q2",
       "component": "QuizQuestionScene",
       "camera": {
-        "x": -7400,
-        "y": 3900,
-        "scale": 1,
+        "x": -14000,
+        "y": 3800,
+        "scale": 1.0,
         "rotate": 0
       },
       "transition": "snap",
       "next": "quiz-q3",
       "back": "quiz-q1",
+      "meta": {
+        "world": "adults"
+      },
       "props": {
         "questionIndex": 1
       }
@@ -281,14 +249,17 @@
       "id": "quiz-q3",
       "component": "QuizQuestionScene",
       "camera": {
-        "x": -9600,
-        "y": 3900,
-        "scale": 1,
+        "x": -16800,
+        "y": 3800,
+        "scale": 1.0,
         "rotate": 0
       },
       "transition": "snap",
       "next": "quiz-q4",
       "back": "quiz-q2",
+      "meta": {
+        "world": "adults"
+      },
       "props": {
         "questionIndex": 2
       }
@@ -297,14 +268,17 @@
       "id": "quiz-q4",
       "component": "QuizQuestionScene",
       "camera": {
-        "x": -11800,
-        "y": 3900,
-        "scale": 1,
+        "x": -19600,
+        "y": 3800,
+        "scale": 1.0,
         "rotate": 0
       },
       "transition": "snap",
       "next": "quiz-result",
       "back": "quiz-q3",
+      "meta": {
+        "world": "adults"
+      },
       "props": {
         "questionIndex": 3
       }
@@ -313,26 +287,136 @@
       "id": "quiz-result",
       "component": "QuizResultScene",
       "camera": {
-        "x": -14000,
-        "y": 3900,
+        "x": -22400,
+        "y": 3800,
         "scale": 1.2,
         "rotate": 0
       },
       "transition": "rise",
-      "next": "connect",
-      "back": "quiz-q4"
+      "next": "courses",
+      "back": "quiz-q4",
+      "meta": {
+        "world": "adults"
+      }
     },
     {
-      "id": "connect",
-      "component": "ConnectScene",
+      "id": "courses",
+      "component": "CoursesScene",
       "camera": {
-        "x": -6100,
-        "y": 0,
+        "x": -2800,
+        "y": 5700,
+        "scale": 1.0,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "next": "course-masir-servat",
+      "back": "quiz-result"
+    },
+    {
+      "id": "course-masir-servat",
+      "component": "CourseDetailScene",
+      "camera": {
+        "x": -5600,
+        "y": 5700,
         "scale": 1.1,
         "rotate": 0
       },
       "transition": "dive",
-      "back": "home"
+      "next": "course-business-school",
+      "back": "courses",
+      "props": {
+        "courseId": "masir-servat"
+      }
+    },
+    {
+      "id": "course-business-school",
+      "component": "CourseDetailScene",
+      "camera": {
+        "x": -8400,
+        "y": 5700,
+        "scale": 1.1,
+        "rotate": 0
+      },
+      "transition": "glide",
+      "next": "course-plus18",
+      "back": "course-masir-servat",
+      "props": {
+        "courseId": "business-school"
+      }
+    },
+    {
+      "id": "course-plus18",
+      "component": "CourseDetailScene",
+      "camera": {
+        "x": -11200,
+        "y": 5700,
+        "scale": 1.1,
+        "rotate": 0
+      },
+      "transition": "glide",
+      "next": "offer",
+      "back": "course-business-school",
+      "props": {
+        "courseId": "plus18"
+      }
+    },
+    {
+      "id": "offer",
+      "component": "OfferScene",
+      "camera": {
+        "x": -14000,
+        "y": 5700,
+        "scale": 1.25,
+        "rotate": 0
+      },
+      "transition": "rise",
+      "next": "connect",
+      "back": "course-plus18"
+    },
+    {
+      "id": "live",
+      "component": "LiveActivitiesScene",
+      "camera": {
+        "x": -2800,
+        "y": -3800,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "next": "collab-schools",
+      "back": "gateway"
+    },
+    {
+      "id": "collab-schools",
+      "component": "CollaborationScene",
+      "camera": {
+        "x": -5600,
+        "y": -3800,
+        "scale": 1.0,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "next": "collab-organizations",
+      "back": "gateway",
+      "props": {
+        "track": "schools"
+      }
+    },
+    {
+      "id": "collab-organizations",
+      "component": "CollaborationScene",
+      "camera": {
+        "x": -8400,
+        "y": -3800,
+        "scale": 1.0,
+        "rotate": 0
+      },
+      "transition": "glide",
+      "next": "connect",
+      "back": "collab-schools",
+      "props": {
+        "track": "organizations"
+      }
     }
   ]
 }

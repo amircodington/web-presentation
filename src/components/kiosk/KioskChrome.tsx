@@ -126,7 +126,7 @@ function ChromeButton({
       transition={{ type: "spring", stiffness: 700, damping: 30 }}
       className="inline-flex min-h-[84px] cursor-pointer items-center gap-3.5 rounded-full px-8 text-[28px] font-semibold"
       style={{
-        color: marked ? "var(--kiosk-accent)" : "var(--kiosk-text)",
+        color: marked ? "var(--kiosk-accent)" : "var(--kiosk-card-text)",
         background: marked ? "var(--kiosk-accent-soft)" : "transparent",
       }}
     >

@@ -25,13 +25,6 @@ export const EventSchema = z.object({
   contextTag: z.string().min(1),
   startTime: ClockTimeSchema,
   endTime: ClockTimeSchema,
-  /**
-   * Audience order on the home screen, most important first. The list is the
-   * running order; `secondaryAudiences` decides which of them drop to the quiet
-   * row at the bottom.
-   */
-  audiencePriority: z.array(AudienceIdSchema).min(1),
-  secondaryAudiences: z.array(AudienceIdSchema).default([]),
   /** Copy for the attract loop — the only screen most passers-by ever see. */
   attract: z.object({
     hook: z.string().min(1),
