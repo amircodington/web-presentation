@@ -361,6 +361,7 @@ same commit sequence that merges it. A branch with no row here is an incomplete 
 | `feat/teens-world` | Teen world home, four experiences, level-up, recommendations | merged |
 | `feat/adults-world` | Adult world home, four experiences, config question bank, profile result | merged |
 | `chore/production-image` | Acceptance pass against the brief, dead-route removal, production image | merged |
+| `fix/gateway-card-fit` | The world cards were clipping their own CTA | merged |
 
 Current programme of work: [`docs/my/REDESIGN-PLAN.md`](docs/my/REDESIGN-PLAN.md).
 
