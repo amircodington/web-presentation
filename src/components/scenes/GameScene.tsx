@@ -4,6 +4,8 @@ import { useState } from "react"
 import { content } from "@/content/load"
 import { useSession } from "@/store/session"
 import { AllocationGame } from "@/components/games/AllocationGame"
+import { BudgetGame } from "@/components/games/BudgetGame"
+import { InstalmentGame } from "@/components/games/InstalmentGame"
 import { JudgementGame } from "@/components/games/JudgementGame"
 import { MarketGame } from "@/components/games/MarketGame"
 import { ProfileGame } from "@/components/games/ProfileGame"
@@ -87,6 +89,10 @@ export function GameScene({ state, camera, props }: SceneComponentProps) {
           <ShopGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
         ) : game.kind === "profile" ? (
           <ProfileGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
+        ) : game.kind === "budget" ? (
+          <BudgetGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
+        ) : game.kind === "instalment" ? (
+          <InstalmentGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
         ) : (
           <StallGame game={game} onFinish={finish} finishLabel={FINISH_LABEL} />
         )}

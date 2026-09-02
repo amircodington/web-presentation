@@ -29,6 +29,8 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
   const world = worldById(groupId)
   const completed = useSession((store) => store.completed)
   const { play } = useSound()
+  const audience = useSession((store) => store.audience)
+  const setAudience = useSession((store) => store.setAudience)
 
   // Greeted on arrival, not on every render: a world re-entered after a game
   // says hello again, but a state change inside it does not.
@@ -83,6 +85,38 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
           />
         ))}
       </div>
+
+      {/*
+       * One question that re-files the visitor into a narrower catalogue
+       * audience — brief §44. It sits on the world home rather than in a game
+       * because it decides what the *reveal* leads with, and a visitor who plays
+       * one experience and leaves should still have answered it.
+       */}
+      {world.qualifier ? (
+        <div className="flex items-center justify-center gap-5">
+          <span className="text-[27px] font-medium text-[var(--kiosk-muted)]">
+            {world.qualifier.prompt}
+          </span>
+          {world.qualifier.options.map((option) => {
+            const picked = audience === option.audience
+            return (
+              <button
+                key={option.audience}
+                type="button"
+                onClick={() => setAudience(option.audience)}
+                aria-label={`${world.qualifier!.prompt} ${option.label}`}
+                className="min-h-[88px] cursor-pointer rounded-full border-[4px] border-[var(--kiosk-border)] px-11 text-[28px] font-bold"
+                style={{
+                  background: picked ? "var(--kiosk-accent)" : "var(--kiosk-card)",
+                  color: picked ? "var(--kiosk-on-accent)" : "var(--kiosk-card-text)",
+                }}
+              >
+                {option.label}
+              </button>
+            )
+          })}
+        </div>
+      ) : null}
 
       {/*
        * Products appear only once something has been played. Brief §46 puts the

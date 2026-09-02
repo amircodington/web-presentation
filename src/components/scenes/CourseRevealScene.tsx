@@ -3,6 +3,7 @@
 import { motion } from "motion/react"
 import { content } from "@/content/load"
 import { coursesForWorld, priceFor, worldById } from "@/content/select"
+import { useSession } from "@/store/session"
 import { formatPrice } from "@/lib/format"
 import { Button } from "@/components/ui/Button"
 import { Icon } from "@/components/ui/Icon"
@@ -24,10 +25,11 @@ export function CourseRevealScene({ state, camera, props }: SceneComponentProps)
   const groupId = String(props.world ?? "") as AudienceGroup
   const world = worldById(groupId)
   const reveal = world?.reveal
+  const answered = useSession((store) => store.audience)
 
   if (!world || !reveal) return null
 
-  const courses = coursesForWorld(groupId)
+  const courses = coursesForWorld(groupId, answered)
 
   return (
     <div className="scene-surface flex h-full w-full flex-col gap-8 rounded-[48px] px-20 pt-14 pb-60">

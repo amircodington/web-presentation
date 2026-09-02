@@ -33,7 +33,7 @@ export function buildProfile(game: ProfileGame, answers: Answers): Profile {
   const earned = new Map<string, number>()
   const available = new Map<string, number>()
 
-  for (const question of game.questions) {
+  for (const question of game.questions ?? []) {
     for (const dimension of game.dimensions) {
       const best = Math.max(
         0,

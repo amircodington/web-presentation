@@ -37,6 +37,7 @@ Do not relitigate these. To change one, write an ADR in `docs/architecture/adr/`
 | Motion | Motion (`motion/react`) for UI enter/exit + layout; GSAP timelines for scene choreography |
 | Zoom engine | Custom camera layer (`src/engine/`). **Not** impress.js, **not** reveal.js |
 | Content | Typed JSON in `content/`, validated by Zod. No hardcoded copy, prices, or URLs |
+| Adult questions | `content/adult-scenarios.json` — a bank the team edits without a developer. No financial advice, no political content, no hardcoded economic figures |
 | Per-event config | `content/event.json` — hours, running order, product order |
 | Audience model | Three worlds in `content/worlds.json`. The first interactive decision is which world, not which course — see [04](docs/architecture/04-content-model.md) |
 | Icons | Named in content, drawn in `components/ui/Icon.tsx`. **No emoji in the UI** |
@@ -352,7 +353,7 @@ same commit sequence that merges it. A branch with no row here is an incomplete 
 | `feat/audio-manager` | Central audio manager, mute, subtitles | merged |
 | `feat/kids-world` | Kids world home, four experiences, celebration, course reveal | merged |
 | `feat/teens-world` | Teen world home, four experiences, level-up, recommendations | merged |
-| `feat/adults-world` | Adult world home, four experiences, config question bank, profile result | planned |
+| `feat/adults-world` | Adult world home, four experiences, config question bank, profile result | merged |
 | `chore/production-image` | Verification pass and the production image | planned |
 
 Current programme of work: [`docs/my/REDESIGN-PLAN.md`](docs/my/REDESIGN-PLAN.md).

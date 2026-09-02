@@ -1,5 +1,6 @@
 import { z } from "zod"
 import activitiesJson from "@content/activities.json"
+import adultScenariosJson from "@content/adult-scenarios.json"
 import audioJson from "@content/audio.json"
 import audiencesJson from "@content/audiences.json"
 import boothJson from "@content/booth.json"
@@ -10,11 +11,10 @@ import coursesJson from "@content/courses.json"
 import eventJson from "@content/event.json"
 import festivalJson from "@content/festival.json"
 import qrJson from "@content/qr.json"
-import quizJson from "@content/quiz.json"
-import resultsJson from "@content/results.json"
 import scenesJson from "@content/scenes.json"
 import worldsJson from "@content/worlds.json"
 import workshopsJson from "@content/workshops.json"
+import { AdultScenariosSchema } from "./schema/adult-scenarios"
 import { AudioSchema } from "./schema/audio"
 import { BoothSchema } from "./schema/booth"
 import { BrandSchema } from "./schema/brand"
@@ -23,7 +23,6 @@ import { AudiencesSchema, CoursesSchema, WorkshopsSchema } from "./schema/catalo
 import { CollaborationSchema } from "./schema/collaboration"
 import { EventSchema } from "./schema/event"
 import { ContactSchema, FestivalSchema, QrSchema } from "./schema/festival"
-import { QuizSchema, ResultsSchema } from "./schema/quiz"
 import { ScenesSchema } from "./schema/scenes"
 import { WorldsSchema } from "./schema/worlds"
 
@@ -59,25 +58,15 @@ const qr = parse("qr", QrSchema, qrJson)
 const courses = parse("courses", CoursesSchema, coursesJson)
 const workshops = parse("workshops", WorkshopsSchema, workshopsJson)
 const audiences = parse("audiences", AudiencesSchema, audiencesJson)
-const quiz = parse("quiz", QuizSchema, quizJson)
-const results = parse("results", ResultsSchema, resultsJson)
 const scenes = parse("scenes", ScenesSchema, scenesJson)
 const worlds = parse("worlds", WorldsSchema, worldsJson)
 const collaboration = parse("collaboration", CollaborationSchema, collaborationJson)
 const activities = parse("activities", ActivitiesSchema, activitiesJson)
+const adultScenarios = parse("adult-scenarios", AdultScenariosSchema, adultScenariosJson)
 
 /** Invariants that span files and so cannot live in any single schema. */
 function checkCrossReferences(): void {
   const productIds = new Set([...courses, ...workshops].map((item) => item.id))
-  for (const band of results) {
-    for (const id of band.recommendedProducts) {
-      if (!productIds.has(id)) {
-        throw new Error(
-          `content/results.json: band "${band.id}" recommends unknown product "${id}"`,
-        )
-      }
-    }
-  }
 
   const qrKeys = new Set(Object.keys(qr))
   for (const course of courses) {
@@ -120,6 +109,28 @@ function checkCrossReferences(): void {
       throw new Error(
         `content/worlds.json: world "${world.id}" greets with unknown cue "${world.greetingCue}"`,
       )
+    }
+  }
+
+  // A sourced profile's questions are checked here rather than in the schema:
+  // the bank is a different file, and the schema cannot see across files.
+  const dimensionsByGame = activities.activities.flatMap((activity) =>
+    activity.game?.kind === "profile" && activity.game.questionSource !== undefined
+      ? [{ id: activity.id, dimensions: new Set(activity.game.dimensions.map((d) => d.id)) }]
+      : [],
+  )
+  for (const { id, dimensions } of dimensionsByGame) {
+    for (const scenario of adultScenarios.scenarios) {
+      for (const option of scenario.options) {
+        for (const dimension of Object.keys(option.scores)) {
+          if (!dimensions.has(dimension)) {
+            throw new Error(
+              `content/adult-scenarios.json: "${scenario.id}" option "${option.id}" scores ` +
+                `"${dimension}", which "${id}" does not declare as a dimension`,
+            )
+          }
+        }
+      }
     }
   }
 
@@ -189,12 +200,11 @@ export const content = Object.freeze({
   courses,
   workshops,
   audiences,
-  quiz,
-  results,
   scenes,
   worlds,
   collaboration,
   activities,
+  adultScenarios,
 })
 
 export type Content = typeof content

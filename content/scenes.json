@@ -192,114 +192,6 @@
       }
     },
     {
-      "id": "quiz-intro",
-      "component": "QuizIntroScene",
-      "camera": {
-        "x": -8400,
-        "y": 3800,
-        "scale": 1.1,
-        "rotate": 0
-      },
-      "transition": "dive",
-      "next": "quiz-q1",
-      "back": "world-adults",
-      "meta": {
-        "world": "adults"
-      }
-    },
-    {
-      "id": "quiz-q1",
-      "component": "QuizQuestionScene",
-      "camera": {
-        "x": -11200,
-        "y": 3800,
-        "scale": 1.0,
-        "rotate": 0
-      },
-      "transition": "snap",
-      "next": "quiz-q2",
-      "back": "quiz-intro",
-      "meta": {
-        "world": "adults"
-      },
-      "props": {
-        "questionIndex": 0
-      }
-    },
-    {
-      "id": "quiz-q2",
-      "component": "QuizQuestionScene",
-      "camera": {
-        "x": -14000,
-        "y": 3800,
-        "scale": 1.0,
-        "rotate": 0
-      },
-      "transition": "snap",
-      "next": "quiz-q3",
-      "back": "quiz-q1",
-      "meta": {
-        "world": "adults"
-      },
-      "props": {
-        "questionIndex": 1
-      }
-    },
-    {
-      "id": "quiz-q3",
-      "component": "QuizQuestionScene",
-      "camera": {
-        "x": -16800,
-        "y": 3800,
-        "scale": 1.0,
-        "rotate": 0
-      },
-      "transition": "snap",
-      "next": "quiz-q4",
-      "back": "quiz-q2",
-      "meta": {
-        "world": "adults"
-      },
-      "props": {
-        "questionIndex": 2
-      }
-    },
-    {
-      "id": "quiz-q4",
-      "component": "QuizQuestionScene",
-      "camera": {
-        "x": -19600,
-        "y": 3800,
-        "scale": 1.0,
-        "rotate": 0
-      },
-      "transition": "snap",
-      "next": "quiz-result",
-      "back": "quiz-q3",
-      "meta": {
-        "world": "adults"
-      },
-      "props": {
-        "questionIndex": 3
-      }
-    },
-    {
-      "id": "quiz-result",
-      "component": "QuizResultScene",
-      "camera": {
-        "x": -22400,
-        "y": 3800,
-        "scale": 1.2,
-        "rotate": 0
-      },
-      "transition": "rise",
-      "next": "courses",
-      "back": "quiz-q4",
-      "meta": {
-        "world": "adults"
-      }
-    },
-    {
       "id": "courses",
       "component": "CoursesScene",
       "camera": {
@@ -310,7 +202,7 @@
       },
       "transition": "dive",
       "next": "course-masir-servat",
-      "back": "quiz-result"
+      "back": "gateway"
     },
     {
       "id": "course-masir-servat",
@@ -526,6 +418,97 @@
       },
       "props": {
         "world": "teens"
+      }
+    },
+    {
+      "id": "adults-purchasing-power",
+      "component": "GameScene",
+      "camera": {
+        "x": -8400,
+        "y": 3800,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "back": "world-adults",
+      "meta": {
+        "world": "adults"
+      },
+      "props": {
+        "activityId": "adults-purchasing-power"
+      }
+    },
+    {
+      "id": "adults-instalments",
+      "component": "GameScene",
+      "camera": {
+        "x": -11200,
+        "y": 3800,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "back": "world-adults",
+      "meta": {
+        "world": "adults"
+      },
+      "props": {
+        "activityId": "adults-instalments"
+      }
+    },
+    {
+      "id": "adults-hot-news",
+      "component": "GameScene",
+      "camera": {
+        "x": -14000,
+        "y": 3800,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "back": "world-adults",
+      "meta": {
+        "world": "adults"
+      },
+      "props": {
+        "activityId": "adults-hot-news"
+      }
+    },
+    {
+      "id": "adults-decision-profile",
+      "component": "GameScene",
+      "camera": {
+        "x": -16800,
+        "y": 3800,
+        "scale": 1.05,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "back": "world-adults",
+      "meta": {
+        "world": "adults"
+      },
+      "props": {
+        "activityId": "adults-decision-profile"
+      }
+    },
+    {
+      "id": "adults-path",
+      "component": "CourseRevealScene",
+      "camera": {
+        "x": -19600,
+        "y": 3800,
+        "scale": 1.1,
+        "rotate": 0
+      },
+      "transition": "rise",
+      "next": "connect",
+      "back": "world-adults",
+      "meta": {
+        "world": "adults"
+      },
+      "props": {
+        "world": "adults"
       }
     }
   ]

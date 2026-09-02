@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useMotionValue, useTransform, animate } from "motion/react"
 import { useEffect, useState } from "react"
 import type { ProfileGame as ProfileGameContent } from "@/content/schema/activities"
+import { resolveProfile } from "@/content/select"
 import { buildProfile } from "@/lib/games/profile"
 import { toPersianDigits } from "@/lib/format"
 import { useSound } from "@/components/kiosk/AudioProvider"
@@ -30,15 +31,17 @@ const COUNT_MS = 1_600
  * a form, and brief §73 bans form-like UX in every world for the same reason: at
  * a booth, a form is something you walk away from.
  */
-export function ProfileGame({ game, onFinish, finishLabel }: Props) {
+export function ProfileGame({ game: source, onFinish, finishLabel }: Props) {
   const { play } = useSound()
+  const game = resolveProfile(source)
+  const questions = game.questions ?? []
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [index, setIndex] = useState(0)
   const [revealed, setRevealed] = useState(false)
 
-  const question = game.questions[index]
+  const question = questions[index]
   const answered = question !== undefined && answers[question.id] !== undefined
-  const done = index >= game.questions.length
+  const done = index >= questions.length
 
   const choose = (optionId: string) => {
     if (!question || answered) return
@@ -49,7 +52,7 @@ export function ProfileGame({ game, onFinish, finishLabel }: Props) {
   const advance = () => {
     const next = index + 1
     setIndex(next)
-    if (next >= game.questions.length) {
+    if (next >= questions.length) {
       play("reveal")
       setRevealed(true)
     }
@@ -78,9 +81,9 @@ export function ProfileGame({ game, onFinish, finishLabel }: Props) {
     <div className="flex h-full flex-col justify-between gap-4">
       <div className="flex items-center justify-between gap-8">
         <p className="text-[26px] font-medium text-[var(--kiosk-muted)]">
-          سؤال {toPersianDigits(index + 1)} از {toPersianDigits(game.questions.length)}
+          سؤال {toPersianDigits(index + 1)} از {toPersianDigits(questions.length)}
         </p>
-        <Progress total={game.questions.length} done={index} />
+        <Progress total={questions.length} done={index} />
       </div>
 
       <AnimatePresence mode="wait">
@@ -143,7 +146,7 @@ export function ProfileGame({ game, onFinish, finishLabel }: Props) {
                 {question.insight}
               </p>
               <Button onClick={advance}>
-                {index + 1 >= game.questions.length ? "نتیجه‌ام رو ببین" : "بعدی"} ←
+                {index + 1 >= questions.length ? "نتیجه‌ام رو ببین" : "بعدی"} ←
               </Button>
             </motion.div>
           ) : null}
@@ -195,32 +198,63 @@ function Result({
   finishLabel: string
 }) {
   const profile = buildProfile(game, answers)
+  // The adults' profile carries seven dimensions where the teens' carries four,
+  // and the same layout cannot hold both without spilling past the frame. One
+  // flag rather than a second component: the difference is density, not design.
+  const dense = profile.dimensions.length > 5
 
   return (
-    <div className="flex h-full flex-col justify-center gap-6">
-      <div className="flex items-center justify-between gap-10">
+    <div className="flex h-full min-h-0 flex-col justify-between gap-4">
+      <div className="flex min-h-0 items-center justify-between gap-10">
         <div className="flex flex-col gap-2">
           <p className="text-[27px] font-medium text-[var(--kiosk-money)]">{game.resultTitle}</p>
-          <CountUp to={profile.total} run={revealed} />
+          <CountUp to={profile.total} run={revealed} dense={dense} />
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: COUNT_MS / 1000, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="display text-[46px] text-[var(--kiosk-accent)]"
+            className={`display text-[var(--kiosk-accent)] ${dense ? "text-[38px]" : "text-[46px]"}`}
           >
             {profile.level.label}
           </motion.p>
-          <p className="max-w-[520px] text-[25px] leading-relaxed text-[var(--kiosk-muted)]">
+          <p
+            className={`max-w-[520px] leading-relaxed text-[var(--kiosk-muted)] ${dense ? "text-[22px]" : "text-[25px]"}`}
+          >
             {profile.level.message}
           </p>
         </div>
 
-        <div className="flex flex-1 flex-col gap-3.5">
+        <div className={`flex flex-1 flex-col ${dense ? "gap-2" : "gap-3.5"}`}>
           {profile.dimensions.map((dimension, index) => (
-            <Bar key={dimension.id} dimension={dimension} index={index} run={revealed} />
+            <Bar
+              key={dimension.id}
+              dimension={dimension}
+              index={index}
+              run={revealed}
+              dense={dense}
+            />
           ))}
         </div>
       </div>
+
+      {game.conclusion ? (
+        <motion.div
+          initial={{ opacity: 0, y: 22 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-3 gap-4"
+        >
+          <Panel title="نقطه قوت" tone="var(--kiosk-positive)">
+            {fill(game.conclusion.strength, profile.strongest?.label)}
+          </Panel>
+          <Panel title="نقطه قابل بهبود" tone="var(--kiosk-accent)">
+            {fill(game.conclusion.improve, profile.weakest?.label)}
+          </Panel>
+          <Panel title="چارچوب پیشنهادی" tone="var(--kiosk-money)">
+            {game.conclusion.framework}
+          </Panel>
+        </motion.div>
+      ) : null}
 
       {game.disclaimer ? (
         <p className="text-[20px] text-[var(--kiosk-muted)]">{game.disclaimer}</p>
@@ -236,8 +270,38 @@ function Result({
   )
 }
 
+/** One third of the closing read-back. */
+function Panel({
+  title,
+  tone,
+  children,
+}: {
+  title: string
+  tone: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="mat flex flex-col gap-1.5 rounded-[24px] px-6 py-3.5">
+      <b className="text-[23px] font-bold" style={{ color: tone }}>
+        {title}
+      </b>
+      <p className="text-[21px] leading-relaxed text-[var(--kiosk-card-muted)]">{children}</p>
+    </div>
+  )
+}
+
+/**
+ * Names the dimension the copy is about.
+ *
+ * The template stays true whichever dimension came out on top, which is what
+ * lets the team rewrite the sentence without knowing the result in advance.
+ */
+function fill(template: string, dimension?: string): string {
+  return template.replace("{dimension}", dimension ?? "")
+}
+
 /** The number, climbing. */
-function CountUp({ to, run }: { to: number; run: boolean }) {
+function CountUp({ to, run, dense }: { to: number; run: boolean; dense: boolean }) {
   const value = useMotionValue(0)
   const shown = useTransform(value, (current) => toPersianDigits(Math.round(current)))
 
@@ -249,8 +313,12 @@ function CountUp({ to, run }: { to: number; run: boolean }) {
 
   return (
     <p className="display flex items-baseline gap-3 text-[var(--kiosk-money)]">
-      <motion.span className="text-[128px] leading-none tabular-nums">{shown}</motion.span>
-      <span className="text-[40px] text-[var(--kiosk-muted)]">از {toPersianDigits(100)}</span>
+      <motion.span className={`leading-none tabular-nums ${dense ? "text-[96px]" : "text-[128px]"}`}>
+        {shown}
+      </motion.span>
+      <span className={`text-[var(--kiosk-muted)] ${dense ? "text-[32px]" : "text-[40px]"}`}>
+        از {toPersianDigits(100)}
+      </span>
     </p>
   )
 }
@@ -260,15 +328,23 @@ function Bar({
   dimension,
   index,
   run,
+  dense,
 }: {
   dimension: { id: string; label: string; percent: number }
   index: number
   run: boolean
+  dense: boolean
 }) {
   return (
     <div className="flex items-center gap-5">
-      <span className="w-[220px] shrink-0 text-[26px] font-semibold">{dimension.label}</span>
-      <span className="h-[26px] flex-1 overflow-hidden rounded-full bg-[var(--kiosk-accent-soft)]">
+      <span
+        className={`w-[230px] shrink-0 leading-tight font-semibold ${dense ? "text-[22px]" : "text-[26px]"}`}
+      >
+        {dimension.label}
+      </span>
+      <span
+        className={`flex-1 overflow-hidden rounded-full bg-[var(--kiosk-accent-soft)] ${dense ? "h-[18px]" : "h-[26px]"}`}
+      >
         <motion.span
           className="block h-full rounded-full bg-[var(--kiosk-positive)]"
           initial={{ width: 0 }}
@@ -276,7 +352,9 @@ function Bar({
           transition={{ duration: 0.9, delay: 0.3 + index * 0.12, ease: [0.16, 1, 0.3, 1] }}
         />
       </span>
-      <span className="w-[90px] shrink-0 text-[28px] font-bold tabular-nums text-[var(--kiosk-money)]">
+      <span
+        className={`w-[80px] shrink-0 font-bold tabular-nums text-[var(--kiosk-money)] ${dense ? "text-[24px]" : "text-[28px]"}`}
+      >
         {toPersianDigits(dimension.percent)}
       </span>
     </div>
