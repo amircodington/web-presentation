@@ -36,6 +36,7 @@ export function AllocationGame({ game, onFinish, finishLabel }: Props) {
   const { play } = useSound()
   const [allocation, setAllocation] = useState<Record<string, number>>({})
   const [submitted, setSubmitted] = useState(false)
+  const [horizon, setHorizon] = useState<string>()
   const [target, setTarget] = useState<string>()
   const buckets = useRef(new Map<string, HTMLDivElement>())
 
@@ -74,6 +75,33 @@ export function AllocationGame({ game, onFinish, finishLabel }: Props) {
     return undefined
   }
 
+  const horizonAnswer = game.horizon?.options.find((option) => option.id === horizon)
+
+  if (submitted && game.horizon && !horizonAnswer) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center gap-9">
+        <h3 className="display text-[54px] text-balance">{game.horizon.prompt}</h3>
+        <div className="grid w-full grid-cols-3 gap-5">
+          {game.horizon.options.map((option) => (
+            <motion.button
+              key={option.id}
+              type="button"
+              onClick={() => {
+                play("reveal")
+                setHorizon(option.id)
+              }}
+              data-sound="own"
+              whileTap={{ x: 8, y: 8, boxShadow: "0px 0px 0 0 var(--kiosk-border)" }}
+              className="mat flex min-h-[170px] cursor-pointer items-center justify-center rounded-[32px] px-7 text-center text-[32px] font-bold"
+            >
+              {option.label}
+            </motion.button>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   if (submitted) {
     return (
       <div className="flex h-full flex-col justify-center gap-6">
@@ -82,6 +110,17 @@ export function AllocationGame({ game, onFinish, finishLabel }: Props) {
         </div>
 
         <div className="flex flex-col gap-3">
+          {horizonAnswer ? (
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="rounded-[28px] border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-accent)] px-8 py-5 text-[var(--kiosk-on-accent)]"
+            >
+              <h4 className="text-[30px] font-bold">{horizonAnswer.verdict.title}</h4>
+              <p className="text-[24px] leading-relaxed opacity-90">{horizonAnswer.verdict.body}</p>
+            </motion.div>
+          ) : null}
           {rules.map((rule, index) => {
             const copy = game.feedback[rule]
             if (!copy) return null
@@ -109,6 +148,7 @@ export function AllocationGame({ game, onFinish, finishLabel }: Props) {
             onClick={() => {
               setAllocation({})
               setSubmitted(false)
+              setHorizon(undefined)
             }}
           >
             دوباره

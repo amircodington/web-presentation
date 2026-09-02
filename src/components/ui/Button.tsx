@@ -29,9 +29,13 @@ interface ButtonProps {
 export function Button({ children, onClick, variant = "accent", className = "" }: ButtonProps) {
   const base =
     "inline-flex min-h-[88px] cursor-pointer items-center justify-center gap-4 rounded-full border-[4px] border-[var(--kiosk-border)] px-11 text-[32px] font-bold"
+  // Every fill here is a *card* fill, so every one takes the card's text colour.
+  // In a light-board world `--kiosk-text` and `--kiosk-card-text` are the same
+  // and the mistake is invisible; in the navy and deep-green worlds they are
+  // opposites, and a ghost button becomes cream type on a cream pill.
   const skin = {
     accent: "bg-[var(--kiosk-accent)] text-[var(--kiosk-on-accent)]",
-    ghost: "bg-[var(--kiosk-card)] text-[var(--kiosk-text)]",
+    ghost: "bg-[var(--kiosk-card)] text-[var(--kiosk-card-text)]",
     paper: "bg-[var(--kiosk-money)] text-[var(--kiosk-card-text)]",
   }[variant]
 

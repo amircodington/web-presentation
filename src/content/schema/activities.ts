@@ -32,6 +32,30 @@ const AllocationGameSchema = z.object({
     z.string().min(1),
     z.object({ title: z.string().min(1), body: z.string().min(1) }),
   ),
+  /**
+   * Asked after the split, before the result — brief §27's "این پول رو تا کی
+   * لازم نداری؟".
+   *
+   * It is what turns the game from "was my split correct" into "was my split
+   * consistent with my own horizon", which is the only question the kiosk is
+   * allowed to answer: §73 bans investment advice in every world, and a game
+   * that grades an allocation is giving exactly that.
+   */
+  horizon: z
+    .object({
+      prompt: z.string().min(1),
+      options: z
+        .array(
+          z.object({
+            id: z.string().min(1),
+            label: z.string().min(1),
+            /** How the split is read back against this horizon. */
+            verdict: z.object({ title: z.string().min(1), body: z.string().min(1) }),
+          }),
+        )
+        .min(2),
+    })
+    .optional(),
 })
 
 /** Predict how news moves a price — "راز نوسان قیمت". */
@@ -163,6 +187,83 @@ const StallGameSchema = z.object({
   ),
 })
 
+/**
+ * A short run of scenario questions that builds a profile — the mechanic behind
+ * both "چالش هوش مالی" and the adults' decision profile.
+ *
+ * Every option scores across several `dimensions` rather than being right or
+ * wrong, which is the difference between a quiz and a profile. Brief §30 wants a
+ * teenager to see *which kind* of decision-maker they are, and brief §42 wants an
+ * adult to see six bars rather than one number — the same shape serves both,
+ * because "how many did you get right" is the wrong question for either.
+ */
+const ProfileGameSchema = z
+  .object({
+    kind: z.literal("profile"),
+    prompt: z.string().min(1),
+    dimensions: z
+      .array(z.object({ id: z.string().min(1), label: z.string().min(1), icon: IconNameSchema }))
+      .min(2),
+    questions: z
+      .array(
+        z.object({
+          id: z.string().min(1),
+          prompt: z.string().min(1),
+          /** The situation the question is asked inside, when it needs one. */
+          scenario: z.string().optional(),
+          options: z
+            .array(
+              z.object({
+                id: z.string().min(1),
+                label: z.string().min(1),
+                icon: IconNameSchema,
+                detail: z.string().optional(),
+                /** Points per dimension id. An absent dimension scores nothing. */
+                scores: z.record(z.string().min(1), z.number().int().min(0)),
+              }),
+            )
+            .min(2),
+          /** Shown after the answer. The teaching, not a verdict. */
+          insight: z.string().min(1),
+        }),
+      )
+      .min(4),
+    /** Bands over the total percentage, cheapest first. */
+    levels: z
+      .array(
+        z.object({
+          minScore: z.number().int().min(0).max(100),
+          label: z.string().min(1),
+          message: z.string().min(1),
+        }),
+      )
+      .min(2),
+    /** Named per world: a teenager gets a score, an adult gets a profile. */
+    resultTitle: z.string().min(1),
+    /** Brief §43: an educational result is not investment advice, and says so. */
+    disclaimer: z.string().optional(),
+  })
+  .superRefine((game, ctx) => {
+    const dimensionIds = new Set(game.dimensions.map((dimension) => dimension.id))
+    for (const question of game.questions) {
+      for (const option of question.options) {
+        for (const id of Object.keys(option.scores)) {
+          if (!dimensionIds.has(id)) {
+            ctx.addIssue({
+              code: "custom",
+              message: `question "${question.id}" option "${option.id}" scores unknown dimension "${id}"`,
+            })
+          }
+        }
+      }
+    }
+    // A profile with no band starting at zero leaves the lowest scorer with no
+    // result at all, which is the visitor who most needs one.
+    if (!game.levels.some((level) => level.minScore === 0)) {
+      ctx.addIssue({ code: "custom", message: "levels must include a band starting at 0" })
+    }
+  })
+
 const GameSchema = z.discriminatedUnion("kind", [
   AllocationGameSchema,
   MarketGameSchema,
@@ -170,6 +271,7 @@ const GameSchema = z.discriminatedUnion("kind", [
   SortGameSchema,
   ShopGameSchema,
   StallGameSchema,
+  ProfileGameSchema,
 ])
 
 const ActivitySchema = z.object({
@@ -215,3 +317,4 @@ export type JudgementGame = z.infer<typeof JudgementGameSchema>
 export type SortGame = z.infer<typeof SortGameSchema>
 export type ShopGame = z.infer<typeof ShopGameSchema>
 export type StallGame = z.infer<typeof StallGameSchema>
+export type ProfileGame = z.infer<typeof ProfileGameSchema>
