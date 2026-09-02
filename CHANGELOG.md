@@ -8,6 +8,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.7.0] — 2026-09-02
+
+### Added
+- **audio:** give the kiosk a voice, a mute button, and captions (4191fb6)
+
 ## [0.6.0] — 2026-09-02
 
 ### Added
