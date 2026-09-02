@@ -338,7 +338,7 @@ same commit sequence that merges it. A branch with no row here is an incomplete 
 | `feat/booth-capture` | The `/booth` staff capture tablet | merged |
 | `docs/redesign-branch-registry` | The master-brief execution plan and this registry | merged |
 | `feat/audience-worlds` | Three-world model, Audience Gateway, B2B secondary route | merged |
-| `feat/attract-worlds` | Animated three-portal attract loop | planned |
+| `feat/attract-worlds` | Animated three-portal attract loop | merged |
 | `feat/audio-manager` | Central audio manager, mute, subtitles | planned |
 | `feat/kids-world` | Kids world home, four experiences, celebration, course reveal | planned |
 | `feat/teens-world` | Teen world home, four experiences, level-up, recommendations | planned |

@@ -199,7 +199,7 @@ Nothing in that file may be reached by editing a component. The rules it drives:
 |---|---|
 | `defaultProductOrder` / `audienceProductOrder` | Which product leads any listing, per audience |
 | `schedule` | `[{ time, activityId }]` — validated against `activities.json` at build time |
-| `attract` | The hook, its rotating lines, and the CTA on the attract loop |
+| `attract` | The hook and the CTA on the attract loop. The teaser under each portal lives on the world, in `worlds.json` |
 
 `activities.json` stays the reusable catalogue of what the booth *can* run; `event.json` decides
 when each one is actually on. Taking the same activities to a different event is a schedule edit.
