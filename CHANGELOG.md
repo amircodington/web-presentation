@@ -8,6 +8,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.8.0] — 2026-09-02
+
+### Added
+- **kids:** build the kids world — four experiences, a celebration, and a class (bebad64)
+
 ## [0.7.0] — 2026-09-02
 
 ### Added
