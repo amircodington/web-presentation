@@ -73,25 +73,17 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
       </div>
 
       {/*
-        Two doors, not one primary and one afterthought. Both are full-size cards
-        because at a booth the child and the parent want different things from the
-        same screen, and neither should have to hunt for theirs.
+        One door, not two. The screen no longer asks what a visitor wants to do —
+        it asks who they are, because every answer downstream depends on that and
+        nothing upstream of it can be personalised. Brief §3.
       */}
       <div className="relative z-10 flex w-full items-stretch justify-center gap-8">
         <DoorCard
-          onClick={() => camera.goTo("live", "dive")}
+          onClick={() => camera.goTo("gateway", "dive")}
           tone="accent"
           icon="play"
-          title="بازی کنیم!"
-          note={`${toPersianDigits(gameCount)} بازی، همین‌جا روی صفحه`}
-          animate={isActive}
-        />
-        <DoorCard
-          onClick={() => camera.goTo("quiz-intro", "dive")}
-          tone="paper"
-          icon="gauge"
           title={attract.cta}
-          note="۶۰ ثانیه، نتیجه فوری"
+          note={`${toPersianDigits(gameCount)} بازی و تجربه، همین‌جا روی صفحه`}
           animate={isActive}
         />
       </div>

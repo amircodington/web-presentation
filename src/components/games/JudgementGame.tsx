@@ -12,6 +12,8 @@ import { Icon } from "@/components/ui/Icon"
 interface Props {
   game: JudgementGameContent
   onFinish: () => void
+  /** What the way out is called. The host owns the wording; the game owns the board. */
+  finishLabel: string
 }
 
 /**
@@ -21,7 +23,7 @@ interface Props {
  * wrong: the red flags (guaranteed returns, time pressure, certainty) are the
  * lesson, and they only land while the visitor still remembers what they chose.
  */
-export function JudgementGame({ game, onFinish }: Props) {
+export function JudgementGame({ game, onFinish, finishLabel }: Props) {
   const [index, setIndex] = useState(0)
   const [answer, setAnswer] = useState<"safe" | "risky">()
   const [correct, setCorrect] = useState(0)
@@ -41,7 +43,7 @@ export function JudgementGame({ game, onFinish }: Props) {
           یک قدم عقب بگذار و منبع را بررسی کن.
         </p>
         <div className="flex justify-center gap-5">
-          <Button onClick={onFinish}>{"هوش مالی‌ام رو محک بزن ←"}</Button>
+          <Button onClick={onFinish}>{finishLabel}</Button>
           <Button
             variant="ghost"
             onClick={() => {

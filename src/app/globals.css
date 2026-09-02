@@ -69,6 +69,15 @@ body {
   overflow: hidden;
   background: var(--kiosk-bg);
   color: var(--kiosk-text);
+  /*
+   * Entering a world swaps every custom property at once. Custom properties do
+   * not interpolate, so the morph is carried by the two properties that actually
+   * paint the ground — anything else would cut, and a cut reads as a page load
+   * rather than as walking into a room.
+   */
+  transition:
+    background-color var(--duration-slow) var(--ease-arrive),
+    color var(--duration-base) var(--ease-arrive);
   /* Persian ascenders and diacritics collide at Latin line heights. */
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
@@ -122,6 +131,7 @@ button:disabled,
  * Every scene is itself a card on the canvas, so it carries the ink outline too.
  */
 @utility scene-surface {
+  transition: background var(--duration-slow) var(--ease-arrive);
   background:
     radial-gradient(72% 52% at 84% -6%, color-mix(in oklab, var(--kiosk-money) 34%, transparent), transparent 66%),
     radial-gradient(58% 50% at 2% 106%, color-mix(in oklab, var(--kiosk-positive) 16%, transparent), transparent 60%),
@@ -161,17 +171,24 @@ button:disabled,
   box-shadow: 0 0 0 0 var(--kiosk-border);
 }
 
-/* Raised panel that stays part of the board rather than becoming a card. */
+/*
+ * Raised panel that stays part of the board rather than becoming a card.
+ *
+ * Its fill is still card-derived, so it takes the card's text polarity. In a
+ * dark-board world the two are opposites, and inheriting the board's colour puts
+ * cream type on a cream chip.
+ */
 @utility felt {
   background: color-mix(in oklab, var(--kiosk-money) 22%, var(--kiosk-card));
   border: var(--ink) solid var(--kiosk-border);
+  color: var(--kiosk-card-text);
 }
 
 /* Small neutral label: ages, durations, delivery modes. */
 @utility pill {
   background: var(--kiosk-card);
   border: 3px solid var(--kiosk-border);
-  color: var(--kiosk-text);
+  color: var(--kiosk-card-text);
 }
 
 /* The same label once it sits on a card, where a white fill would disappear. */

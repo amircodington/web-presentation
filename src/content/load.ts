@@ -12,6 +12,7 @@ import qrJson from "@content/qr.json"
 import quizJson from "@content/quiz.json"
 import resultsJson from "@content/results.json"
 import scenesJson from "@content/scenes.json"
+import worldsJson from "@content/worlds.json"
 import workshopsJson from "@content/workshops.json"
 import { BoothSchema } from "./schema/booth"
 import { BrandSchema } from "./schema/brand"
@@ -22,6 +23,7 @@ import { EventSchema } from "./schema/event"
 import { ContactSchema, FestivalSchema, QrSchema } from "./schema/festival"
 import { QuizSchema, ResultsSchema } from "./schema/quiz"
 import { ScenesSchema } from "./schema/scenes"
+import { WorldsSchema } from "./schema/worlds"
 
 /**
  * Parses and freezes every content file.
@@ -57,6 +59,7 @@ const audiences = parse("audiences", AudiencesSchema, audiencesJson)
 const quiz = parse("quiz", QuizSchema, quizJson)
 const results = parse("results", ResultsSchema, resultsJson)
 const scenes = parse("scenes", ScenesSchema, scenesJson)
+const worlds = parse("worlds", WorldsSchema, worldsJson)
 const collaboration = parse("collaboration", CollaborationSchema, collaborationJson)
 const activities = parse("activities", ActivitiesSchema, activitiesJson)
 
@@ -105,9 +108,43 @@ function checkCrossReferences(): void {
   }
 
   const audienceIds = new Set(audiences.map((audience) => audience.id))
-  for (const id of [...event.audiencePriority, ...event.secondaryAudiences]) {
-    if (!audienceIds.has(id)) {
-      throw new Error(`content/event.json: unknown audience "${id}"`)
+
+  const sceneIds = new Set(scenes.scenes.map((scene) => scene.id))
+  const sceneWorlds = new Map(scenes.scenes.map((scene) => [scene.id, scene.meta?.world]))
+
+  if (!sceneIds.has(worlds.gateway.secondary.scene)) {
+    throw new Error(
+      `content/worlds.json: the secondary route points at unknown scene "${worlds.gateway.secondary.scene}"`,
+    )
+  }
+
+  for (const world of worlds.worlds) {
+    for (const audience of world.audiences) {
+      if (!audienceIds.has(audience)) {
+        throw new Error(`content/worlds.json: world "${world.id}" targets unknown audience "${audience}"`)
+      }
+    }
+    // Only what is switched on is checked. An inactive entry names the scene it
+    // will use once it is built, which is a forward declaration rather than a
+    // broken link — and switching it on is what makes the check bite.
+    for (const entry of [...world.experiences, ...(world.diagnostic ? [world.diagnostic] : [])]) {
+      if (!entry.active) continue
+      if (!sceneIds.has(entry.scene)) {
+        throw new Error(
+          `content/worlds.json: "${entry.id}" is active but points at unknown scene "${entry.scene}"`,
+        )
+      }
+      // An active experience dressed in another world's palette is a visitor
+      // walking through a door and finding a different room behind it.
+      if (sceneWorlds.get(entry.scene) !== world.id) {
+        throw new Error(
+          `content/worlds.json: "${entry.id}" is active in world "${world.id}" but scene ` +
+            `"${entry.scene}" is marked meta.world "${sceneWorlds.get(entry.scene) ?? "none"}"`,
+        )
+      }
+    }
+    if (!world.experiences.some((experience) => experience.active) && !world.diagnostic?.active) {
+      throw new Error(`content/worlds.json: world "${world.id}" has nothing active to offer`)
     }
   }
 
@@ -135,6 +172,7 @@ export const content = Object.freeze({
   quiz,
   results,
   scenes,
+  worlds,
   collaboration,
   activities,
 })

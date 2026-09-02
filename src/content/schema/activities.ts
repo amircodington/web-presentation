@@ -13,6 +13,7 @@ const AllocationGameSchema = z.object({
   prompt: z.string().min(1),
   scenario: z.string().optional(),
   tokens: z.number().int().positive(),
+  /** The whole chip, not a fragment: a kids pot and a 100M pot say it differently. */
   tokenLabel: z.string().min(1),
   options: z
     .array(

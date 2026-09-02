@@ -1,0 +1,205 @@
+{
+  "gateway": {
+    "title": "تو توی کدوم گروهی؟",
+    "subtitle": "گروهت رو انتخاب کن تا بازی‌ها، تست‌ها و مسیر مناسب خودت رو ببینی.",
+    "secondary": {
+      "question": "برای مدرسه یا سازمان اومدید؟",
+      "cta": "همکاری با مدارس و سازمان‌ها",
+      "scene": "collab-schools"
+    }
+  },
+  "worlds": [
+    {
+      "id": "kids",
+      "display": "کودک و دبستان",
+      "subtext": "پول رو با بازی یاد بگیر!",
+      "icon": "coins",
+      "headline": "بزن بریم بازی کنیم!",
+      "intro": "با سکه‌ها بازی کن، پس‌انداز کن و ببین چقدر پول‌بلد شدی.",
+      "audiences": [
+        "student"
+      ],
+      "palette": {
+        "background": "#FFF3C4",
+        "surface": "#FFFFFF",
+        "card": "#FFFFFF",
+        "border": "#1B2A4A",
+        "accent": "#FF6B00",
+        "accentSoft": "#FFE3C2",
+        "onAccent": "#FFFFFF",
+        "text": "#1B2A4A",
+        "textMuted": "#5C6B8A",
+        "cardText": "#1B2A4A",
+        "cardMuted": "#5C6B8A",
+        "money": "#FFB020",
+        "positive": "#22C55E",
+        "joy": "#A855F7"
+      },
+      "experiences": [
+        {
+          "id": "kids-needs-wants",
+          "title": "نیاز یا خواسته؟",
+          "hook": "هر چیزی رو بکش توی جای درستش.",
+          "icon": "basket",
+          "scene": "kids-needs-wants",
+          "active": false
+        },
+        {
+          "id": "kids-piggy-bank",
+          "title": "قلک من",
+          "hook": "ده سکه داری. کجا می‌ذاری‌شون؟",
+          "icon": "save",
+          "scene": "kids-piggy-bank",
+          "active": true
+        },
+        {
+          "id": "kids-little-shop",
+          "title": "فروشگاه کوچک",
+          "hook": "صد سکه داری. حواست به خریدت باشه!",
+          "icon": "spend",
+          "scene": "kids-little-shop",
+          "active": false
+        },
+        {
+          "id": "kids-my-business",
+          "title": "کسب‌وکار کوچولوی من",
+          "hook": "یه غرفه بزن و ببین چند تا مشتری می‌گیری.",
+          "icon": "business",
+          "scene": "kids-my-business",
+          "active": false
+        }
+      ]
+    },
+    {
+      "id": "teens",
+      "display": "نوجوان و دبیرستان",
+      "subtext": "تصمیم‌های مالی واقعی‌تر از اینجا شروع می‌شن.",
+      "icon": "chart",
+      "headline": "ببینیم چقدر خوب تصمیم می‌گیری",
+      "intro": "سه چالش واقعی از پول، بازار و تشخیص کلاهبرداری. هر کدوم رو خواستی بزن.",
+      "audiences": [
+        "student"
+      ],
+      "palette": {
+        "background": "#16233F",
+        "surface": "#1E2F52",
+        "card": "#FFF6E5",
+        "border": "#0B1428",
+        "accent": "#FF7A29",
+        "accentSoft": "#FFDCC2",
+        "onAccent": "#FFFFFF",
+        "text": "#F4F1E6",
+        "textMuted": "#A9B6D0",
+        "cardText": "#16233F",
+        "cardMuted": "#56658A",
+        "money": "#FFC233",
+        "positive": "#3DDC97",
+        "joy": "#A78BFA"
+      },
+      "experiences": [
+        {
+          "id": "teens-challenge-100m",
+          "title": "چالش ۱۰۰ میلیون",
+          "hook": "اگر ۱۰۰ میلیون داشتی، چی کار می‌کردی؟",
+          "icon": "coins",
+          "scene": "game-challenge-100m",
+          "active": true
+        },
+        {
+          "id": "teens-scam-or-opportunity",
+          "title": "فرصته یا کلاهبرداری؟",
+          "hook": "سود تضمینی؟ مطمئنی؟",
+          "icon": "flag",
+          "scene": "game-scam-or-opportunity",
+          "active": true
+        },
+        {
+          "id": "teens-price-mystery",
+          "title": "راز نوسان قیمت",
+          "hook": "خبر می‌آد؛ قیمت بالا می‌ره یا پایین؟",
+          "icon": "market",
+          "scene": "game-price-mystery",
+          "active": true
+        },
+        {
+          "id": "teens-financial-iq",
+          "title": "چالش هوش مالی",
+          "hook": "چند سؤال تصویری، یک امتیاز از ۱۰۰.",
+          "icon": "gauge",
+          "scene": "teens-financial-iq",
+          "active": false
+        }
+      ]
+    },
+    {
+      "id": "adults",
+      "display": "بزرگسال",
+      "subtext": "پول، سرمایه‌گذاری و تصمیم‌های مالی جدی",
+      "icon": "gauge",
+      "headline": "با یک مسئله مالی واقعی روبه‌رو شو",
+      "intro": "تجربه‌هایی درباره قدرت خرید، نقدشوندگی، بدهی و تصمیم در شرایط عدم قطعیت.",
+      "audiences": [
+        "young-adult",
+        "recent-konkur"
+      ],
+      "palette": {
+        "background": "#0F1F1A",
+        "surface": "#16302A",
+        "card": "#F7F3E8",
+        "border": "#0A1512",
+        "accent": "#C9A227",
+        "accentSoft": "#F0E3B8",
+        "onAccent": "#14231E",
+        "text": "#EDE7D9",
+        "textMuted": "#9BAFA6",
+        "cardText": "#14231E",
+        "cardMuted": "#55665F",
+        "money": "#C9A227",
+        "positive": "#3F9D72",
+        "joy": "#6B8F84"
+      },
+      "experiences": [
+        {
+          "id": "adults-purchasing-power",
+          "title": "قدرت خریدت چقدر مقاومه؟",
+          "hook": "هزینه‌های ضروری بالا رفته‌اند. بودجه را بازنگری کن.",
+          "icon": "gauge",
+          "scene": "adults-purchasing-power",
+          "active": false
+        },
+        {
+          "id": "adults-all-in-one-place",
+          "title": "همه پولت یک جاست؟",
+          "hook": "دارایی را بین سه افق زمانی تقسیم کن.",
+          "icon": "chart",
+          "scene": "game-build-a-portfolio",
+          "active": true
+        },
+        {
+          "id": "adults-instalments",
+          "title": "قسط واقعاً ارزون‌تره؟",
+          "hook": "هزینه کل قرارداد را حدس بزن.",
+          "icon": "cash",
+          "scene": "adults-instalments",
+          "active": false
+        },
+        {
+          "id": "adults-hot-news",
+          "title": "خبر داغ، تصمیم سرد",
+          "hook": "بازار داغ است. تصمیم تو چیست؟",
+          "icon": "flag",
+          "scene": "adults-hot-news",
+          "active": false
+        }
+      ],
+      "diagnostic": {
+        "id": "adults-decision-profile",
+        "title": "پروفایل تصمیم‌گیری مالی",
+        "hook": "چند سؤال جدی، و یک پروفایل چندبعدی از تصمیم‌های مالی‌ات.",
+        "icon": "gauge",
+        "scene": "quiz-intro",
+        "active": true
+      }
+    }
+  ]
+}

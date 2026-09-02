@@ -20,6 +20,8 @@ export const MASCOT_BY_ICON: Partial<Record<IconName, MascotName>> = {
   basket: "bag",
   chart: "rocket",
   coins: "coin",
+  flag: "sprout",
+  gauge: "rocket",
 }
 
 export function castFor(icon: IconName): MascotName {

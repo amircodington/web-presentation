@@ -6,6 +6,7 @@ import { SceneGraph, type SceneNode } from "@/engine"
 import { IdleReset } from "./IdleReset"
 import { KioskChrome } from "./KioskChrome"
 import { KioskTheme } from "./KioskTheme"
+import { WorldSurface } from "./WorldSurface"
 
 const scenes = content.scenes.scenes as readonly SceneNode[]
 
@@ -21,6 +22,7 @@ export function KioskCanvas() {
         overlay={
           <>
             <IdleReset />
+            <WorldSurface />
             <KioskChrome />
           </>
         }

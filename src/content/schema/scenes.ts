@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { AudienceGroupSchema } from "./common"
 
 const TransitionNameSchema = z.enum(["drift", "glide", "dive", "snap", "rise", "home"])
 
@@ -22,6 +23,12 @@ const SceneNodeSchema = z.object({
       idleReturn: z.boolean().optional(),
       /** Where the "home" control goes — the hub a visitor navigates from. */
       hub: z.boolean().optional(),
+      /**
+       * Which world's palette this scene is dressed in. Absent means the shared
+       * brand palette, which is what the attract loop, the gateway and the B2B
+       * route wear — they belong to no group.
+       */
+      world: AudienceGroupSchema.optional(),
     })
     .optional(),
   /** Passed verbatim to the scene component, so one component can serve many scenes. */
