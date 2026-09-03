@@ -36,3 +36,6 @@ docker-tar
 # The lead archive, when running outside a container. In production it is a
 # named Docker volume; see docs/operations/07-lead-archive.md.
 .data/
+
+# Screenshot baselines from scripts/shoot-scenes.mjs
+.screenshots/

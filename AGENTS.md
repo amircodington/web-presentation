@@ -212,6 +212,10 @@ These come from the physical reality of an unattended screen in a loud hall:
   opposites, and the control disappears.
 - **Anything read at length sits on a light mat.** The ground is the dark board; body copy is
   never reversed out of it. See [05 — Colour](docs/architecture/05-motion-and-visual-design.md).
+- **QA at the design size is scripted.** `node scripts/shoot-scenes.mjs [outDir] [baseUrl]`
+  walks the kiosk through every scene at 1920×1080 and screenshots each one, failing if a
+  route lands on the wrong scene or the console errors. Shoot a baseline before a visual
+  change and again after, and diff. Output is git-ignored.
 - **One design size, scaled.** Scenes are authored at `ENGINE_DESIGN_WIDTH` ×
   `ENGINE_DESIGN_HEIGHT` and the stage scales uniformly to the screen, so a laptop and
   the TV show identical frames. Never add breakpoints or percentage layouts to a scene.
@@ -362,8 +366,10 @@ same commit sequence that merges it. A branch with no row here is an incomplete 
 | `feat/adults-world` | Adult world home, four experiences, config question bank, profile result | merged |
 | `chore/production-image` | Acceptance pass against the brief, dead-route removal, production image | merged |
 | `fix/gateway-card-fit` | The world cards were clipping their own CTA | merged |
+| `docs/current-site-stabilization-plan` | The voice-feedback stabilization plan and its task list | merged |
+| `chore/qa-baseline` | Scripted per-scene screenshot harness at the design size | open |
 
-Current programme of work: [`docs/my/REDESIGN-PLAN.md`](docs/my/REDESIGN-PLAN.md).
+Current programme of work: [`tasks/plan-stabilization.md`](tasks/plan-stabilization.md).
 
 <!-- BEGIN:nextjs-agent-rules -->
 
