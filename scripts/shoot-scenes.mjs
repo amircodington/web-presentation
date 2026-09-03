@@ -33,30 +33,44 @@ const VIEWPORT = { width: 1920, height: 1080 }
  * one kids game to completion, which is what unlocks a world's product reveal.
  */
 const ROUTES = {
-  attract: [],
-  gateway: [{ press: "" }],
+  gateway: [],
 
-  "world-kids": [{ press: "" }, { press: "کودک" }],
-  "kids-needs-wants": [{ press: "" }, { press: "کودک" }, { press: "نیاز یا خواسته" }],
-  "kids-piggy-bank": [{ press: "" }, { press: "کودک" }, { press: "قلک من" }],
-  "kids-little-shop": [{ press: "" }, { press: "کودک" }, { press: "فروشگاه کوچک" }],
-  "kids-my-business": [{ press: "" }, { press: "کودک" }, { press: "کسب‌وکار کوچولوی من" }],
+  "world-kids": [{ press: "کودک" }],
+  "kids-needs-wants": [{ press: "کودک" }, { press: "نیاز یا خواسته" }],
+  "kids-piggy-bank": [{ press: "کودک" }, { press: "قلک من" }],
+  "kids-little-shop": [{ press: "کودک" }, { press: "فروشگاه کوچک" }],
+  "kids-my-business": [{ press: "کودک" }, { press: "کسب‌وکار کوچولوی من" }],
 
-  "world-teens": [{ press: "" }, { press: "نوجوان" }],
-  "game-challenge-100m": [{ press: "" }, { press: "نوجوان" }, { press: "چالش ۱۰۰ میلیون" }],
-  "game-scam-or-opportunity": [{ press: "" }, { press: "نوجوان" }, { press: "فرصته یا کلاهبرداری" }],
-  "game-price-mystery": [{ press: "" }, { press: "نوجوان" }, { press: "راز نوسان قیمت" }],
-  "teens-financial-iq": [{ press: "" }, { press: "نوجوان" }, { press: "چالش هوش مالی" }],
+  "world-teens": [{ press: "نوجوان" }],
+  "game-challenge-100m": [{ press: "نوجوان" }, { press: "چالش ۱۰۰ میلیون" }],
+  "game-scam-or-opportunity": [{ press: "نوجوان" }, { press: "فرصته یا کلاهبرداری" }],
+  "game-price-mystery": [{ press: "نوجوان" }, { press: "راز نوسان قیمت" }],
+  "teens-financial-iq": [{ press: "نوجوان" }, { press: "چالش هوش مالی" }],
 
-  "world-adults": [{ press: "" }, { press: "بزرگسال" }],
-  "adults-purchasing-power": [{ press: "" }, { press: "بزرگسال" }, { press: "قدرت خریدت" }],
-  "adults-instalments": [{ press: "" }, { press: "بزرگسال" }, { press: "قسط واقعاً" }],
-  "adults-hot-news": [{ press: "" }, { press: "بزرگسال" }, { press: "خبر داغ" }],
-  "adults-decision-profile": [{ press: "" }, { press: "بزرگسال" }, { press: "پروفایل تصمیم‌گیری" }],
+  "world-adults": [{ press: "بزرگسال" }],
+  "adults-purchasing-power": [{ press: "بزرگسال" }, { press: "قدرت خریدت" }],
+  "adults-instalments": [{ press: "بزرگسال" }, { press: "قسط واقعاً" }],
+  "adults-hot-news": [{ press: "بزرگسال" }, { press: "خبر داغ" }],
+  "adults-decision-profile": [{ press: "بزرگسال" }, { press: "پروفایل تصمیم‌گیری" }],
+  "game-build-a-portfolio": [{ press: "بزرگسال" }, { press: "همه پولت یک جاست" }],
+  "course-masir-servat": [
+    { press: "نوجوان" },
+    { finishMarketGame: true },
+    { press: "قدم بعدیت" },
+    { press: "جزئیات" },
+  ],
 
-  "kids-course": [{ press: "" }, { press: "کودک" }, { finishKidsGame: true }, { press: "کلاس" }],
-  connect: [{ press: "" }, { press: "کودک" }, { finishKidsGame: true }, { press: "کلاس" }, { press: "اطلاعات کلاس" }],
-  "collab-schools": [{ press: "" }, { press: "همکاری با مدارس" }],
+  "kids-course": [{ press: "کودک" }, { finishKidsGame: true }, { press: "کلاس" }],
+  "course-kids-financial-literacy": [
+    { press: "کودک" },
+    { finishKidsGame: true },
+    { press: "کلاس" },
+    { press: "جزئیات" },
+  ],
+  "teens-path": [{ press: "نوجوان" }, { finishMarketGame: true }, { press: "قدم بعدیت" }],
+  "adults-path": [{ press: "بزرگسال" }, { finishInstalmentGame: true }, { press: "قدم بعدی" }],
+  connect: [{ press: "کودک" }, { finishKidsGame: true }, { press: "کلاس" }, { press: "اطلاعات کلاس" }],
+  "collab-schools": [{ press: "همکاری با مدارس" }],
 }
 
 const b = await chromium.launch()
@@ -93,7 +107,7 @@ async function finishKidsGame() {
 }
 
 /**
- * Scene content the chrome is lying on top of.
+ * Every way a frame can be wrong that a screenshot alone would not tell you.
  *
  * The tray and the caption are drawn outside the scaled stage while scenes
  * reserve their clearance inside it, so the two are one stage-scale apart and a
@@ -102,33 +116,121 @@ async function finishKidsGame() {
  */
 async function chromeOverlaps() {
   return page.evaluate(() => {
+    const scene = document.querySelector('section[data-state="active"]')
+    if (!scene) return ["no active scene"]
+
+    const hits = new Set()
+    const label = (node) => {
+      const text = (node.textContent || "").trim()
+      if (text) return text.slice(0, 28)
+      return `<${node.tagName.toLowerCase()} class="${(node.className || "").toString().slice(0, 48)}">`
+    }
+    const hit = (a, b) =>
+      a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top
+
+    /** Text and marks, not the boxes that contain them. */
+    const leaves = [...scene.querySelectorAll("*")].filter((node) => {
+      if (node.children.length > 0 && node.tagName !== "svg") return false
+      if (!node.textContent?.trim() && node.tagName !== "svg") return false
+      const box = node.getBoundingClientRect()
+      return box.width > 0 && box.height > 0
+    })
+
+    // 1. The chrome, drawn outside the stage, lying over scene content.
     const bars = [
       ["tray", document.querySelector("[data-kiosk-chrome] > div > div")],
       ["caption", document.querySelector('[role="status"]')],
     ].filter(([, node]) => node)
-
-    const scene = document.querySelector('section[data-state="active"]')
-    if (!scene || bars.length === 0) return []
-
-    const hits = new Set()
-    for (const node of scene.querySelectorAll("*")) {
-      // Leaves only: a container's box spans its children and would report every
-      // ancestor of a single overlap.
-      if (node.children.length > 0 && node.tagName !== "svg") continue
-      if (!node.textContent?.trim() && node.tagName !== "svg") continue
-
-      const box = node.getBoundingClientRect()
-      if (!box.width || !box.height) continue
-
+    for (const node of leaves) {
       for (const [name, bar] of bars) {
-        const it = bar.getBoundingClientRect()
-        if (box.left < it.right && box.right > it.left && box.top < it.bottom && box.bottom > it.top) {
-          hits.add(`${name} → "${(node.textContent || node.tagName).trim().slice(0, 28)}"`)
+        if (hit(node.getBoundingClientRect(), bar.getBoundingClientRect())) {
+          hits.add(`${name} covers "${label(node)}"`)
         }
       }
     }
+
+    // 2. Content pushed out through the side of the card that holds it.
+    for (const card of scene.querySelectorAll(".mat, .pill, .felt, [data-card]")) {
+      const outer = card.getBoundingClientRect()
+      if (outer.height < 40) continue
+      for (const node of card.querySelectorAll("*")) {
+        if (node.children.length > 0) continue
+        if (!node.textContent?.trim()) continue
+        const box = node.getBoundingClientRect()
+        if (!box.height) continue
+        if (box.bottom > outer.bottom + 1 || box.top < outer.top - 1) {
+          hits.add(`overflows its card: "${label(node)}"`)
+        }
+      }
+    }
+
+    // 3. Two blocks of the same scene sitting on top of each other, which is what
+    //    a grid that centres rows it cannot fit does to its neighbours.
+    const blocks = [...scene.querySelectorAll("div, button, section")].filter((node) => {
+      // Decorative washes are *meant* to sit behind content — a photograph held
+      // back under a headline is not two blocks colliding.
+      if (node.getAttribute("aria-hidden") === "true") return false
+      const style = getComputedStyle(node)
+      if (style.pointerEvents === "none") return false
+      // A negative margin is how a design says "these are meant to overlap" — the
+      // fanned coin stack, for one. Anything else colliding is an accident.
+      if (parseFloat(style.marginInlineEnd) < 0 || parseFloat(style.marginInlineStart) < 0) {
+        return false
+      }
+      const box = node.getBoundingClientRect()
+      return box.height > 60 && box.width > 60
+    })
+    for (let i = 0; i < blocks.length; i += 1) {
+      for (let j = i + 1; j < blocks.length; j += 1) {
+        const a = blocks[i]
+        const b = blocks[j]
+        if (a.contains(b) || b.contains(a)) continue
+        if (hit(a.getBoundingClientRect(), b.getBoundingClientRect())) {
+          hits.add(`blocks overlap: "${label(a)}" / "${label(b)}"`)
+        }
+      }
+    }
+
+    // 4. Anything drawn past the edge of the stage.
+    const stage = document.querySelector("[data-stage]")?.getBoundingClientRect()
+    if (stage) {
+      for (const node of leaves) {
+        const box = node.getBoundingClientRect()
+        if (box.bottom > stage.bottom + 2 || box.top < stage.top - 2) {
+          hits.add(`outside the stage: "${label(node)}"`)
+        }
+      }
+    }
+
     return [...hits]
   })
+}
+
+/** Plays «راز نوسان قیمت» to its result and leaves, unlocking the teens reveal. */
+async function finishMarketGame() {
+  await press("راز نوسان قیمت")
+  for (let round = 0; round < 8; round += 1) {
+    const choice = active().locator("button").filter({ hasText: "بالا می‌رود" }).first()
+    if ((await choice.count()) === 0) break
+    await choice.click()
+    await page.waitForTimeout(500)
+    await active().locator("button").filter({ hasText: /خبر بعدی|نتیجه/ }).first().click()
+    await page.waitForTimeout(500)
+  }
+  await press("یه بازی دیگه هم بزن")
+  await settle(1400)
+}
+
+/** Plays «قسط واقعاً ارزون‌تره؟» to its close, unlocking the adults reveal. */
+async function finishInstalmentGame() {
+  await press("قسط واقعاً")
+  await active().locator("button").nth(0).click()
+  await settle(2400)
+  await active().locator("button").nth(0).click()
+  await settle(1200)
+  await press("پس چه کار کنم")
+  await press("یه بازی دیگه هم بزن")
+  await settle(1400)
 }
 
 await mkdir(OUT, { recursive: true })
@@ -141,6 +243,8 @@ for (const [scene, steps] of Object.entries(ROUTES)) {
   try {
     for (const step of steps) {
       if (step.finishKidsGame) await finishKidsGame()
+      else if (step.finishMarketGame) await finishMarketGame()
+      else if (step.finishInstalmentGame) await finishInstalmentGame()
       else await press(step.press)
     }
   } catch (error) {
@@ -150,8 +254,8 @@ for (const [scene, steps] of Object.entries(ROUTES)) {
 
   await settle(900)
 
-  for (const covered of await chromeOverlaps()) {
-    problems.push(`${scene}: chrome covers ${covered}`)
+  for (const fault of await chromeOverlaps()) {
+    problems.push(`${scene}: ${fault}`)
   }
 
   const landed = await page.evaluate(

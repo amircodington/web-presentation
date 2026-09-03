@@ -44,9 +44,11 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
 
   const experiences = activeExperiences(groupId)
   const diagnostic = world.diagnostic?.active ? world.diagnostic : undefined
-  const done = experiences.filter((experience) => completed.includes(experience.id)).length
-  // The diagnostic is the last stop on the path, so it is counted as a column.
-  const stops = Math.max(1, experiences.length + (diagnostic ? 1 : 0))
+  const stopsList = [...experiences, ...(diagnostic ? [diagnostic] : [])]
+  const done = stopsList.filter((stop) => completed.includes(stop.scene)).length
+  // The diagnostic is the last stop on the path, so it is counted as a column —
+  // and counted by the progress pill too, which read "۰ از ۴" over five cards.
+  const stops = Math.max(1, stopsList.length)
 
   return (
     <div className="scene-surface flex h-full w-full flex-col gap-5 rounded-[48px] px-20 pt-12 pb-[var(--kiosk-chrome-clearance,240px)]">
@@ -89,7 +91,7 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
             })}
           </div>
         ) : null}
-        <Progress done={done} total={experiences.length} />
+        <Progress done={done} total={stops} />
       </header>
 
       {/*
@@ -101,7 +103,7 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
         {world.surface.hero ? (
           <div
             aria-hidden
-            className="pointer-events-none absolute -inset-x-20 -inset-y-6 overflow-hidden rounded-[36px]"
+            className="pointer-events-none absolute -inset-x-20 top-0 bottom-0 overflow-hidden rounded-[36px]"
             style={{
               maskImage:
                 "linear-gradient(to bottom, transparent, black 38%, transparent), " +
@@ -137,7 +139,7 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
             key={experience.id}
             experience={experience}
             step={index + 1}
-            isDone={completed.includes(experience.id)}
+            isDone={completed.includes(experience.scene)}
             isActive={isActive}
             surface={world.surface}
             total={stops}
@@ -155,7 +157,7 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
               active: true,
             }}
             step={experiences.length + 1}
-            isDone={false}
+            isDone={completed.includes(diagnostic.scene)}
             isActive={isActive}
             surface={world.surface}
             total={stops}
@@ -177,7 +179,8 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="flex min-h-[96px] shrink-0 cursor-pointer items-center gap-6 rounded-[32px] border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-accent)] px-10 text-start text-[var(--kiosk-on-accent)]"
+          /* Set apart from the path above it: it is an offer, not a fifth stop. */
+          className="mt-3 flex min-h-[96px] shrink-0 cursor-pointer items-center gap-6 rounded-[32px] border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-accent)] px-10 text-start text-[var(--kiosk-on-accent)]"
           style={{ boxShadow: "8px 8px 0 0 var(--kiosk-border)" }}
         >
           <Icon name="gift" size={42} />

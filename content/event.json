@@ -4,10 +4,6 @@
   "contextTag": "باشگاه ثروت در باغ مدرسه",
   "startTime": "15:00",
   "endTime": "22:00",
-  "attract": {
-    "hook": "پول با تو بزرگ می‌شود",
-    "cta": "برای شروع، صفحه را لمس کن"
-  },
   "defaultProductOrder": [
     "masir-servat",
     "business-school",

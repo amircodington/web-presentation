@@ -42,10 +42,10 @@ export function GatewayScene({ state, camera }: SceneComponentProps) {
   }
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col gap-8 rounded-[48px] px-20 pt-12 pb-[var(--kiosk-chrome-clearance,240px)]">
+    <div className="scene-surface flex h-full w-full flex-col gap-5 rounded-[48px] px-20 pt-8 pb-[var(--kiosk-chrome-clearance,240px)]">
       <header className="flex items-center justify-between gap-8">
         <div className="flex items-center gap-6">
-          <Logo height={82} />
+          <Logo height={66} />
           <span className="felt rounded-full px-7 py-3 text-[23px] font-medium text-[var(--kiosk-card-muted)]">
             {content.event.contextTag}
           </span>
@@ -54,11 +54,11 @@ export function GatewayScene({ state, camera }: SceneComponentProps) {
       </header>
 
       <div className="flex flex-col gap-2">
-        <h2 className="display text-[76px]">{gateway.title}</h2>
-        <p className="text-[28px] text-[var(--kiosk-muted)]">{gateway.subtitle}</p>
+        <h2 className="display text-[68px]">{gateway.title}</h2>
+        <p className="text-[27px] text-[var(--kiosk-muted)]">{gateway.subtitle}</p>
       </div>
 
-      <div className="grid min-h-0 flex-1 grid-cols-3 gap-8">
+      <div className="grid min-h-0 flex-1 grid-cols-3 gap-7">
         {worlds.map((world, index) => (
           <WorldCard
             key={world.id}
@@ -118,7 +118,7 @@ function WorldCard({
         borderColor: world.palette.border,
         boxShadow: "9px 9px 0 0 var(--kiosk-border)",
       }}
-      className="relative flex cursor-pointer flex-col items-center justify-center gap-5 overflow-hidden rounded-[40px] border-[4px] px-9 text-center"
+      className="relative flex min-h-0 cursor-pointer flex-col items-center justify-between gap-3 overflow-hidden rounded-[40px] border-[4px] px-9 py-6 text-center"
     >
       <span
         aria-hidden
@@ -128,8 +128,15 @@ function WorldCard({
         }}
       />
 
+      {/*
+        The greeter is the one part of the card that can give way. The card used to
+        centre a fixed 132px character, a title, a subtitle and a call to action
+        inside whatever height was left over, and clipped whichever of them did not
+        fit — which was the character at the top and the call to action at the
+        foot, the only thing on the card anybody has to press.
+      */}
       <motion.span
-        className="relative"
+        className="relative flex min-h-0 flex-1 items-center"
         animate={isActive ? { y: [0, -16, 0] } : { y: 0 }}
         transition={{
           duration: 2.6 + index * 0.4,
@@ -137,18 +144,25 @@ function WorldCard({
           ease: "easeInOut",
         }}
       >
-        <Mascot name={GREETER[world.id]} mood="happy" size={132} />
+        <Mascot
+          name={GREETER[world.id]}
+          mood="happy"
+          className="h-full max-h-[132px] min-h-[68px] w-auto"
+        />
       </motion.span>
 
-      <span className="relative flex flex-col gap-2">
-        <b className="display text-[46px] leading-tight">{world.display}</b>
-        <span className="text-[25px] leading-snug" style={{ color: world.palette.textMuted }}>
+      <span className="relative flex shrink-0 flex-col gap-1.5">
+        <b className="display text-[42px] leading-tight">{world.display}</b>
+        <span
+          className="flex min-h-[2.6em] items-start justify-center text-[24px] leading-snug"
+          style={{ color: world.palette.textMuted }}
+        >
           {world.subtext}
         </span>
       </span>
 
       <span
-        className="relative inline-flex min-h-[72px] items-center gap-3 rounded-full px-8 text-[26px] font-bold"
+        className="relative inline-flex min-h-[76px] shrink-0 items-center gap-3 rounded-full px-8 text-[26px] font-bold"
         style={{ background: world.palette.accent, color: world.palette.onAccent }}
       >
         بزن بریم

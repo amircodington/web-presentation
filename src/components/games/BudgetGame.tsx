@@ -1,6 +1,6 @@
 "use client"
 
-import { AnimatePresence, motion } from "motion/react"
+import { motion } from "motion/react"
 import { useState } from "react"
 import type { BudgetGame as BudgetGameContent } from "@/content/schema/activities"
 import { analyseBudget, applyBudget, rangeFor } from "@/lib/games/budget"
@@ -37,6 +37,44 @@ export function BudgetGame({ game, onFinish, finishLabel }: Props) {
   const state = applyBudget(game, cuts)
   const chosen = game.options.find((option) => option.id === answer)
 
+  if (asking && !chosen) {
+    return (
+      <div className="flex h-full flex-col justify-center gap-8">
+        <Figures game={game} state={state} analysis={analyseBudget(game, cuts)} />
+
+        <div className="flex flex-col gap-5">
+          <h3 className="text-[38px] leading-tight font-bold text-balance">{game.question}</h3>
+          <div className="grid grid-cols-2 gap-4">
+            {game.options.map((option) => (
+              <motion.button
+                key={option.id}
+                type="button"
+                onClick={() => {
+                  play("reveal")
+                  setAnswer(option.id)
+                }}
+                data-sound="own"
+                whileTap={{ x: 8, y: 8, boxShadow: "0px 0px 0 0 var(--kiosk-border)" }}
+                className="mat flex min-h-[104px] cursor-pointer items-center gap-5 rounded-[26px] px-7 text-start text-[25px] font-semibold"
+              >
+                <span className="shrink-0 text-[var(--kiosk-accent)]">
+                  <Icon name={option.icon} size={34} />
+                </span>
+                {option.label}
+              </motion.button>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex justify-center">
+          <Button variant="ghost" onClick={() => setAsking(false)}>
+            برگرد به بودجه
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   if (chosen) {
     const analysis = analyseBudget(game, cuts)
 
@@ -47,25 +85,7 @@ export function BudgetGame({ game, onFinish, finishLabel }: Props) {
           only the verdict on the multiple choice, so two people who had done
           opposite things to the same budget read the same paragraph.
         */}
-        <div className="flex items-center gap-5">
-          <Figure
-            label="خرج ماه"
-            value={`${toPersianDigits(analysis.state.spend)} ${game.unit}`}
-            tone="var(--kiosk-card-text)"
-          />
-          <Figure
-            label={game.bufferLabel}
-            value={`${toPersianDigits(Math.abs(state.buffer))} ${game.unit}${
-              state.buffer >= 0 ? "" : " کسری"
-            }`}
-            tone={state.buffer >= 0 ? "var(--kiosk-positive)" : "var(--kiosk-accent)"}
-          />
-          <Figure
-            label="آنچه کم کردید"
-            value={`${toPersianDigits(analysis.cut)} ${game.unit}`}
-            tone="var(--kiosk-card-text)"
-          />
-        </div>
+        <Figures game={game} state={state} analysis={analysis} />
 
         <div className="grid min-h-0 grid-cols-3 gap-4">
           {analysis.rules.map((rule, index) => {
@@ -116,22 +136,28 @@ export function BudgetGame({ game, onFinish, finishLabel }: Props) {
   }
 
   return (
-    <div className="flex h-full flex-col justify-between gap-4">
-      <div className="flex items-center justify-between gap-8">
-        <p className="text-[29px] font-bold">{game.prompt}</p>
+    <div className="flex h-full flex-col gap-3.5">
+      <div className="flex shrink-0 items-center justify-between gap-8">
+        <p className="text-[27px] font-bold">{game.prompt}</p>
         <Balance state={state} game={game} />
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-[28px] border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-accent)] px-8 py-4 text-[var(--kiosk-on-accent)]"
+        className="shrink-0 rounded-[28px] border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-accent)] px-8 py-3.5 text-[var(--kiosk-on-accent)]"
       >
-        <b className="text-[28px]">{game.shock.title}</b>
-        <p className="text-[23px] opacity-90">{game.shock.body}</p>
+        <b className="text-[26px]">{game.shock.title}</b>
+        <p className="text-[22px] opacity-90">{game.shock.body}</p>
       </motion.div>
 
-      <div className="grid min-h-0 flex-1 grid-cols-2 content-center gap-x-10 gap-y-2.5">
+      {/*
+        `content-start`, never `content-center`. A centred grid whose rows do not
+        fit overflows *both* ways, so the budget lines spilled up under the shock
+        banner and down over the question — reading as three layers of the screen
+        lying on top of each other.
+      */}
+      <div className="grid min-h-0 flex-1 grid-cols-3 content-start gap-x-8 gap-y-3 overflow-hidden">
         {state.lines.map((line) => {
           const source = game.lines.find((candidate) => candidate.id === line.id)!
           const range = rangeFor(game, line.id)
@@ -151,41 +177,42 @@ export function BudgetGame({ game, onFinish, finishLabel }: Props) {
         })}
       </div>
 
-      <div className="flex min-h-[120px] items-center justify-center">
-        <AnimatePresence mode="wait">
-          {asking ? (
-            <motion.div
-              key="options"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex w-full flex-col gap-3"
-            >
-              <p className="text-[28px] font-bold">{game.question}</p>
-              <div className="grid grid-cols-2 gap-3">
-                {game.options.map((option) => (
-                  <button
-                    key={option.id}
-                    type="button"
-                    onClick={() => {
-                      play("reveal")
-                      setAnswer(option.id)
-                    }}
-                    data-sound="own"
-                    className="mat flex min-h-[92px] cursor-pointer items-center gap-4 rounded-[24px] px-6 text-start text-[24px] font-semibold"
-                  >
-                    <Icon name={option.icon} size={32} />
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div key="cta" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <Button onClick={() => setAsking(true)}>{game.question}</Button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      <div className="flex shrink-0 items-center justify-center pt-1">
+        <Button onClick={() => setAsking(true)}>{game.question} ←</Button>
       </div>
+    </div>
+  )
+}
+
+/** The budget the visitor built, in three numbers. Shown before the question and again with the verdict. */
+function Figures({
+  game,
+  state,
+  analysis,
+}: {
+  game: BudgetGameContent
+  state: ReturnType<typeof applyBudget>
+  analysis: ReturnType<typeof analyseBudget>
+}) {
+  return (
+    <div className="flex shrink-0 items-center gap-5">
+      <Figure
+        label="خرج ماه"
+        value={`${toPersianDigits(analysis.state.spend)} ${game.unit}`}
+        tone="var(--kiosk-card-text)"
+      />
+      <Figure
+        label={game.bufferLabel}
+        value={`${toPersianDigits(Math.abs(state.buffer))} ${game.unit}${
+          state.buffer >= 0 ? "" : " کسری"
+        }`}
+        tone={state.buffer >= 0 ? "var(--kiosk-positive)" : "var(--kiosk-accent)"}
+      />
+      <Figure
+        label="آنچه کم کردید"
+        value={`${toPersianDigits(analysis.cut)} ${game.unit}`}
+        tone="var(--kiosk-card-text)"
+      />
     </div>
   )
 }
@@ -233,11 +260,11 @@ function Line({
   const share = range.max > range.min ? (amount - range.min) / (range.max - range.min) : 1
 
   return (
-    <div className="flex items-center gap-4">
-      <span className="w-[46px] shrink-0 text-[var(--kiosk-muted)]">
+    <div className="flex items-center gap-3">
+      <span className="w-[34px] shrink-0 text-[var(--kiosk-muted)]">
         <Icon name={icon} size={32} />
       </span>
-      <span className="w-[168px] shrink-0 text-[24px] font-semibold">{label}</span>
+      <span className="w-[132px] shrink-0 text-[22px] leading-tight font-semibold">{label}</span>
 
       <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-[color-mix(in_oklab,var(--kiosk-accent-soft)_40%,transparent)]">
         <motion.span
@@ -247,7 +274,7 @@ function Line({
         />
       </span>
 
-      <span className="w-[74px] shrink-0 text-end text-[26px] font-bold tabular-nums text-[var(--kiosk-money)]">
+      <span className="w-[58px] shrink-0 text-end text-[24px] font-bold tabular-nums text-[var(--kiosk-money)]">
         {toPersianDigits(amount)}
       </span>
 

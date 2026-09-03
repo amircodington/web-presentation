@@ -1,5 +1,4 @@
 import type { SceneRegistry } from "@/engine"
-import { AttractScene } from "./AttractScene"
 import { CollaborationScene } from "./CollaborationScene"
 import { ConnectScene } from "./ConnectScene"
 import { CourseDetailScene } from "./CourseDetailScene"
@@ -14,7 +13,6 @@ import { WorldHomeScene } from "./WorldHomeScene"
  * names something missing renders a visible error rather than a blank panel.
  */
 export const sceneRegistry: SceneRegistry = {
-  AttractScene,
   GatewayScene,
   WorldHomeScene,
   CourseDetailScene,

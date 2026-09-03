@@ -115,44 +115,54 @@ export function AllocationGame({ game, onFinish, finishLabel }: Props) {
 
   if (submitted) {
     return (
-      <div className="flex h-full flex-col justify-center gap-6">
-        <div className="flex items-center justify-center">
-          <ChipStackChart game={game} allocation={allocation} />
-        </div>
+      /*
+        Chart beside the read-back, not above it. Stacked, a ten-coin column and
+        four feedback cards came to more than the frame holds, and a centred column
+        that does not fit spills at both ends — the stack ran up through the header
+        and the buttons came down onto the navigation tray.
+      */
+      <div className="flex h-full min-h-0 flex-col gap-5">
+        <div className="flex min-h-0 flex-1 items-center gap-8">
+          {/* A steady share of the frame, so one tall column and six short ones
+              both read as the same panel rather than as a different layout. */}
+          <div className="flex w-[34%] shrink-0 items-center justify-center overflow-hidden">
+            <ChipStackChart game={game} allocation={allocation} />
+          </div>
 
-        <div className="flex flex-col gap-3">
-          {horizonAnswer ? (
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-[28px] border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-accent)] px-8 py-5 text-[var(--kiosk-on-accent)]"
-            >
-              <h4 className="text-[30px] font-bold">{horizonAnswer.verdict.title}</h4>
-              <p className="text-[24px] leading-relaxed opacity-90">{horizonAnswer.verdict.body}</p>
-            </motion.div>
-          ) : null}
-          {rules.map((rule, index) => {
-            const copy = game.feedback[rule]
-            if (!copy) return null
-            return (
+          <div className="flex min-h-0 flex-1 flex-col justify-center gap-3">
+            {horizonAnswer ? (
               <motion.div
-                key={rule}
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: 0.4 + index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                className="mat rounded-[28px] px-8 py-5"
+                transition={{ duration: 0.45, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                className="rounded-[26px] border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-accent)] px-7 py-4 text-[var(--kiosk-on-accent)]"
               >
-                <h4 className="text-[30px] font-bold text-[var(--kiosk-accent)]">{copy.title}</h4>
-                <p className="text-[24px] leading-relaxed text-[var(--kiosk-card-muted)]">
-                  {copy.body}
-                </p>
+                <h4 className="text-[27px] font-bold">{horizonAnswer.verdict.title}</h4>
+                <p className="text-[22px] leading-snug opacity-90">{horizonAnswer.verdict.body}</p>
               </motion.div>
-            )
-          })}
+            ) : null}
+            {rules.map((rule, index) => {
+              const copy = game.feedback[rule]
+              if (!copy) return null
+              return (
+                <motion.div
+                  key={rule}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, delay: 0.4 + index * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                  className="mat rounded-[26px] px-7 py-4"
+                >
+                  <h4 className="text-[27px] font-bold text-[var(--kiosk-accent)]">{copy.title}</h4>
+                  <p className="text-[22px] leading-snug text-[var(--kiosk-card-muted)]">
+                    {copy.body}
+                  </p>
+                </motion.div>
+              )
+            })}
+          </div>
         </div>
 
-        <div className="flex gap-5">
+        <div className="flex shrink-0 gap-5">
           <Button onClick={onFinish}>{finishLabel}</Button>
           <Button
             variant="ghost"

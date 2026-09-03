@@ -39,12 +39,6 @@ export const kioskConfig = Object.freeze({
   gestureRecenterMs: readNumber("KIOSK_GESTURE_RECENTER_MS", env.KIOSK_GESTURE_RECENTER_MS, 6_000),
   /** How often the schedule countdown re-reads the clock. */
   scheduleTickMs: readNumber("KIOSK_SCHEDULE_TICK_MS", env.KIOSK_SCHEDULE_TICK_MS, 20_000),
-  /**
-   * One full pass of the attract loop, through all three worlds. Brief §5 puts
-   * it at 15–20s: long enough for a passer-by to see the whole journey, short
-   * enough that the next one does not walk up mid-sentence.
-   */
-  attractLoopMs: readNumber("KIOSK_ATTRACT_LOOP_MS", env.KIOSK_ATTRACT_LOOP_MS, 18_000),
   festivalOfferEnabled: readBoolean(
     "KIOSK_FESTIVAL_OFFER_ENABLED",
     env.KIOSK_FESTIVAL_OFFER_ENABLED,
