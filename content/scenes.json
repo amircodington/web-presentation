@@ -3,11 +3,11 @@
     "width": 1920,
     "height": 1080
   },
-  "initialScene": "attract",
+  "initialScene": "gateway",
   "scenes": [
     {
-      "id": "attract",
-      "component": "AttractScene",
+      "id": "gateway",
+      "component": "GatewayScene",
       "camera": {
         "x": 0,
         "y": 0,
@@ -15,24 +15,9 @@
         "rotate": 0
       },
       "transition": "drift",
-      "next": "gateway",
       "meta": {
+        "hub": true,
         "idleReturn": true
-      }
-    },
-    {
-      "id": "gateway",
-      "component": "GatewayScene",
-      "camera": {
-        "x": -2800,
-        "y": 0,
-        "scale": 1.0,
-        "rotate": 0
-      },
-      "transition": "dive",
-      "back": "attract",
-      "meta": {
-        "hub": true
       }
     },
     {

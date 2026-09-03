@@ -28,37 +28,54 @@ export function ConnectScene({ state, camera }: SceneComponentProps) {
   const [selected, setSelected] = useState<string>("test-result")
 
   return (
-    <div className="scene-surface flex h-full w-full items-center gap-14 rounded-[48px] px-20 pt-12 pb-[var(--kiosk-chrome-clearance,240px)]">
-      <div className="flex flex-1 flex-col gap-6">
-        <div className="flex flex-col gap-3">
-          <p className="text-[26px] font-medium text-[var(--kiosk-money)]">قدم بعدی</p>
-          <h2 className="display text-[56px]">با موبایلت کد را اسکن کن</h2>
-          <p className="text-[25px] text-[var(--kiosk-muted)]">
+    /*
+      `items-stretch`, not `items-center`. A centred row whose content is taller
+      than its box overflows at *both* ends, and this one did — the eyebrow was
+      sliced off the top edge of the stage.
+    */
+    <div className="scene-surface flex h-full w-full items-stretch gap-14 rounded-[48px] px-20 pt-10 pb-[var(--kiosk-chrome-clearance,240px)]">
+      <div className="flex min-h-0 flex-1 flex-col justify-center gap-4">
+        <div className="flex shrink-0 flex-col gap-2">
+          <p className="text-[25px] font-medium text-[var(--kiosk-money)]">قدم بعدی</p>
+          <h2 className="display text-[50px]">با موبایلت کد را اسکن کن</h2>
+          <p className="text-[24px] text-[var(--kiosk-muted)]">
             {content.contact.website} · {content.contact.phone}
           </p>
         </div>
 
-        <div className="flex flex-col gap-3">
+        {/*
+          Two columns. Six channels stacked, each at the 88px touch floor AGENTS.md
+          §8 sets, is taller than the frame leaves room for — the last of them ended
+          up under the button below it.
+        */}
+        <div className="grid min-h-0 grid-cols-2 gap-2.5">
           {CHANNELS.map((channel) => (
             <button
               key={channel.key}
               type="button"
               onClick={() => setSelected(channel.key)}
-              className={`flex min-h-[88px] cursor-pointer items-center gap-5 rounded-2xl border-2 px-7 text-start text-[28px] font-semibold transition-colors duration-[var(--duration-instant)] ${
+              /*
+                An unselected channel is a card, so it takes the card's ink —
+                AGENTS.md §8. It used to mix its own grey fill and keep the board's
+                text colour, which is invisible in the dark worlds.
+              */
+              className={`flex min-h-[88px] shrink-0 cursor-pointer items-center gap-5 rounded-2xl border-[3px] border-[var(--kiosk-border)] px-7 text-start text-[26px] font-semibold transition-colors duration-[var(--duration-instant)] ${
                 selected === channel.key
-                  ? "border-transparent bg-[var(--kiosk-accent)] text-[var(--kiosk-on-accent)]"
-                  : "border-[var(--kiosk-border)] bg-[color-mix(in_oklab,var(--kiosk-surface)_75%,black)] text-[var(--kiosk-text)]"
+                  ? "bg-[var(--kiosk-accent)] text-[var(--kiosk-on-accent)]"
+                  : "bg-[var(--kiosk-card)] text-[var(--kiosk-card-text)]"
               }`}
             >
-              <Icon name={channel.icon} size={36} />
+              <Icon name={channel.icon} size={32} />
               {channel.label}
             </button>
           ))}
         </div>
 
-        <Button variant="ghost" onClick={() => camera.home()}>
-          بازگشت به ابتدا
-        </Button>
+        <div className="flex shrink-0">
+          <Button variant="ghost" onClick={() => camera.home()}>
+            بازگشت به ابتدا
+          </Button>
+        </div>
       </div>
 
       <motion.div
@@ -66,7 +83,7 @@ export function ConnectScene({ state, camera }: SceneComponentProps) {
         initial={{ opacity: 0, scale: 0.92 }}
         animate={isActive ? { opacity: 1, scale: 1 } : { opacity: 0.7, scale: 1 }}
         transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        className="mat rounded-[40px] p-10"
+        className="mat flex shrink-0 items-center self-center rounded-[40px] p-8"
       >
         <QrCode value={content.qr[selected] ?? content.qr.general!} />
       </motion.div>

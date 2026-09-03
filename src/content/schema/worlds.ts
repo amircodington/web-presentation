@@ -73,8 +73,6 @@ const WorldSchema = z.object({
   display: z.string().min(1),
   subtext: z.string().min(1),
   icon: IconNameSchema,
-  /** What this world's portal says while the attract loop is passing through it. */
-  attractLine: z.string().min(1),
   /** The world home's own headline, once the visitor is inside. */
   headline: z.string().min(1),
   intro: z.string().min(1),
@@ -125,6 +123,13 @@ const WorldSchema = z.object({
       body: z.string().min(1),
       topics: z.array(z.string().min(1)).min(1),
       cta: z.string().min(1),
+      /**
+       * A photograph behind the reveal's headline, held well back.
+       *
+       * Texture, never a claim — and never the same picture as a card on the same
+       * screen, which is the repetition brief §11.1 asks to be rid of.
+       */
+      hero: MediaRefSchema.optional(),
     })
     .optional(),
 })

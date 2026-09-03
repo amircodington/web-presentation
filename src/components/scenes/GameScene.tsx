@@ -57,7 +57,14 @@ export function GameScene({ state, camera, props }: SceneComponentProps) {
    * is the single source of truth rather than a scene id repeated in code.
    */
   const finish = () => {
-    complete(activityId)
+    // Keyed by scene, not by activity id. A world names its experiences with ids
+    // of its own — `teens-challenge-100m` for the scene whose activity is
+    // `challenge-100m` — so recording the activity meant the world home looked up
+    // a key nothing had written. Only the experiences whose two ids happened to
+    // be spelled the same ever showed as done, which was one of four in the teens
+    // world and four of five in the adults'. The scene id is the one name both
+    // sides already agree on.
+    complete(camera.current.id)
     if (activity.badge) {
       setCelebrating(true)
       return

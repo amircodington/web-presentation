@@ -90,11 +90,11 @@
     "active": true,
     "media": {
       "kind": "image",
-      "src": "/media/workshop-hands.jpg",
-      "alt": "دست‌های یک نوجوان روی تخته بازی و اسکناس‌های بازی",
+      "src": "/media/workshop-steps.jpg",
+      "alt": "نوجوان‌ها روی پله‌های باغ علم نوجوان",
       "focalPoint": [
-        0.55,
-        0.5
+        0.5,
+        0.45
       ]
     },
     "campaignPoster": {
@@ -208,11 +208,11 @@
     "active": true,
     "media": {
       "kind": "image",
-      "src": "/media/workshop-board.jpg",
-      "alt": "نوجوان‌ها در حال بازی مالی در ورکشاپ مسیر ثروت",
+      "src": "/media/workshop-hands.jpg",
+      "alt": "دست‌های یک نوجوان روی تخته بازی و اسکناس‌های بازی",
       "focalPoint": [
-        0.5,
-        0.45
+        0.55,
+        0.5
       ]
     }
   },
@@ -262,11 +262,11 @@
     "duration": "دوره کوتاه، جلسه‌ای",
     "media": {
       "kind": "image",
-      "src": "/media/venue-welcome.jpg",
-      "alt": "ورودی باغ علم نوجوان در باغ کتاب تهران",
+      "src": "/media/workshop-board.jpg",
+      "alt": "بچه‌ها دور یک میز، مشغول بازی مالی رومیزی",
       "focalPoint": [
         0.5,
-        0.5
+        0.55
       ]
     },
     "logistics": {

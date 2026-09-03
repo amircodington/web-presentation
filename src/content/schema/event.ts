@@ -25,14 +25,6 @@ export const EventSchema = z.object({
   contextTag: z.string().min(1),
   startTime: ClockTimeSchema,
   endTime: ClockTimeSchema,
-  /**
-   * Copy for the attract loop — the only screen most passers-by ever see. The
-   * teaser under each world's portal lives on the world itself, in `worlds.json`.
-   */
-  attract: z.object({
-    hook: z.string().min(1),
-    cta: z.string().min(1),
-  }),
   /** Product order in any public listing, and the override for one audience. */
   defaultProductOrder: z.array(z.string().min(1)).min(1),
   audienceProductOrder: z

@@ -7,7 +7,9 @@ import type { AllocationGame } from "@/content/schema/activities"
 import type { Allocation } from "@/lib/games/allocation"
 
 /** Tallest a column may draw, so the result always fits beside its feedback. */
-const MAX_COLUMN = 300
+const MAX_COLUMN = 260
+/** Widest the whole chart may draw, for the same reason. */
+const MAX_WIDTH = 500
 const OVERLAP = 0.4
 
 interface ChipStackChartProps {
@@ -31,17 +33,30 @@ export function ChipStackChart({ game, allocation }: ChipStackChartProps) {
   const placed = game.options.filter((option) => (allocation[option.id] ?? 0) > 0)
   const tallest = Math.max(1, ...placed.map((option) => allocation[option.id] ?? 0))
 
-  // The tallest column is what decides the coin size, so ten coins in one place
-  // and two coins each in five places both fit the same band. Without this a
-  // concentrated split — the split the game most wants to show — overflows the
-  // scene, and the visitor never sees the result of the mistake they just made.
-  const chipSize = Math.min(78, Math.floor(MAX_COLUMN / (1 + OVERLAP * (tallest - 1))))
+  // Two budgets, and the coin takes the smaller.
+  //
+  // Height: the tallest column decides it, so ten coins in one place and two coins
+  // each in five places fit the same band. Without it a concentrated split — the
+  // split the game most wants to show — ran off the top of the scene.
+  //
+  // Width: the number of columns decides it. Without it the opposite split, money
+  // spread across every option, ran sideways over the feedback beside it.
+  const columns = Math.max(1, placed.length)
+  const gap = columns <= 2 ? 40 : columns <= 4 ? 24 : 14
+  const chipSize = Math.max(
+    22,
+    Math.min(
+      78,
+      Math.floor(MAX_COLUMN / (1 + OVERLAP * (tallest - 1))),
+      Math.floor((MAX_WIDTH - (columns - 1) * gap) / columns),
+    ),
+  )
   const overlap = Math.round(chipSize * OVERLAP)
 
   return (
     <div
-      className="flex items-end justify-center gap-10"
-      style={{ height: chipSize + (tallest - 1) * overlap + 104 }}
+      className="flex items-end justify-center"
+      style={{ gap, height: chipSize + (tallest - 1) * overlap + 104 }}
     >
       {placed.map((option, columnIndex) => {
         const count = allocation[option.id] ?? 0

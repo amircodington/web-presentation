@@ -214,8 +214,12 @@ These come from the physical reality of an unattended screen in a loud hall:
 - **Anything read at length sits on a light mat.** The ground is the dark board; body copy is
   never reversed out of it. See [05 — Colour](docs/architecture/05-motion-and-visual-design.md).
 - **QA at the design size is scripted.** `node scripts/shoot-scenes.mjs [outDir] [baseUrl]`
-  walks the kiosk through every scene at 1920×1080 and screenshots each one, failing if a
-  route lands on the wrong scene or the console errors. Shoot a baseline before a visual
+  walks the kiosk through every scene at 1920×1080, screenshots each one, and audits the
+  frame: chrome over content, text escaping its card, blocks colliding, anything past the
+  stage edge. It fails on any of those, on a route landing elsewhere, or on a console error.
+  **A centred flex or grid row that does not fit overflows at *both* ends** — `items-center`
+  and `content-center` are how content ends up on top of its neighbours, and every fault of
+  that kind found so far has been one of them. Shoot a baseline before a visual
   change and again after, and diff. Output is git-ignored.
 - **One design size, scaled.** Scenes are authored at `ENGINE_DESIGN_WIDTH` ×
   `ENGINE_DESIGN_HEIGHT` and the stage scales uniformly to the screen, so a laptop and
