@@ -90,3 +90,30 @@ Inherits AGENTS.md §9, plus:
 2. **«چالش ۱۰۰ میلیون» age band** — feedback says the age fit is wrong. Reading it
    as *the teen version must stop being the kids' toy*, not as a change to which
    world it belongs to. Flagging rather than blocking.
+
+---
+
+## QA record — v0.14.0
+
+Run at 1920×1080 against the dev build, on the branch `chore/qa-full`.
+
+| Check | Result |
+|---|---|
+| All 29 scenes reachable, each landing on the scene the route aimed at | pass — `scripts/shoot-scenes.mjs`, 20 routes |
+| Chrome (tray + caption) covering scene content | none, on any scene |
+| Text overflowing its card | none, on any scene |
+| Controls drawn outside the stage | none |
+| Console errors / page errors across the sweep | none |
+| Every game played to a rendering result | pass — piggy bank, needs/wants, little shop, my business, market, judgement, allocation, budget, instalment, both profiles |
+| Idle reset returns to the attract loop | pass, at `KIOSK_IDLE_TIMEOUT_MS` |
+| Session cleared between visitors | pass — a second visitor sees «۰ از ۴» after the first completed a game |
+| `lint`, `typecheck`, `test`, `validate:content` | pass — 176 tests |
+
+### Left for the team, not defects
+
+- **No adult photography exists.** All seven images in `public/media` show school-age
+  participants or the venue. The adults world uses the venue shot as texture; more
+  than that needs new photography.
+- **Prices for the kids class are unknown**, so its card reads «قیمت را در غرفه بپرسید».
+- The kiosk has been verified at the design size in a browser, not on the 75-inch
+  touch panel. Brief §15.1 requires the final pass on the real hardware.
