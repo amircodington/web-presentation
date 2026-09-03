@@ -367,7 +367,8 @@ same commit sequence that merges it. A branch with no row here is an incomplete 
 | `chore/production-image` | Acceptance pass against the brief, dead-route removal, production image | merged |
 | `fix/gateway-card-fit` | The world cards were clipping their own CTA | merged |
 | `docs/current-site-stabilization-plan` | The voice-feedback stabilization plan and its task list | merged |
-| `chore/qa-baseline` | Scripted per-scene screenshot harness at the design size | open |
+| `chore/qa-baseline` | Scripted per-scene screenshot harness at the design size | merged |
+| `fix/phase1-correctness` | Derived game scores, total allocation feedback, kids course scene, world card fit | merged |
 
 Current programme of work: [`tasks/plan-stabilization.md`](tasks/plan-stabilization.md).
 
