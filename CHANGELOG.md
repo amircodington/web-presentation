@@ -8,6 +8,12 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.12.0] — 2026-09-03
+
+### Fixed
+- **chrome:** derive the clearance scenes reserve, and restyle the tray (3d2b07c)
+- **attract:** stop the first screen asking the gateway's question (60b4056)
+
 ## [0.11.0] — 2026-09-03
 
 ### Fixed
