@@ -8,6 +8,14 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.11.0] — 2026-09-03
+
+### Fixed
+- **worlds:** stop world cards spilling their own text (2a9225a)
+- **content:** give the kids course the detail scene it routes to (552b46c)
+- **games:** always say something about a finished allocation (6115fc0)
+- **games:** derive scores from recorded answers instead of counting taps (e3ee692)
+
 ## [0.10.2] — 2026-09-02
 
 ### Fixed
