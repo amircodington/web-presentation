@@ -92,6 +92,45 @@ async function finishKidsGame() {
   await settle(1600)
 }
 
+/**
+ * Scene content the chrome is lying on top of.
+ *
+ * The tray and the caption are drawn outside the scaled stage while scenes
+ * reserve their clearance inside it, so the two are one stage-scale apart and a
+ * mistake in `src/engine/clearance.ts` is invisible until something important is
+ * underneath a button. Checked on every scene rather than trusted.
+ */
+async function chromeOverlaps() {
+  return page.evaluate(() => {
+    const bars = [
+      ["tray", document.querySelector("[data-kiosk-chrome] > div > div")],
+      ["caption", document.querySelector('[role="status"]')],
+    ].filter(([, node]) => node)
+
+    const scene = document.querySelector('section[data-state="active"]')
+    if (!scene || bars.length === 0) return []
+
+    const hits = new Set()
+    for (const node of scene.querySelectorAll("*")) {
+      // Leaves only: a container's box spans its children and would report every
+      // ancestor of a single overlap.
+      if (node.children.length > 0 && node.tagName !== "svg") continue
+      if (!node.textContent?.trim() && node.tagName !== "svg") continue
+
+      const box = node.getBoundingClientRect()
+      if (!box.width || !box.height) continue
+
+      for (const [name, bar] of bars) {
+        const it = bar.getBoundingClientRect()
+        if (box.left < it.right && box.right > it.left && box.top < it.bottom && box.bottom > it.top) {
+          hits.add(`${name} → "${(node.textContent || node.tagName).trim().slice(0, 28)}"`)
+        }
+      }
+    }
+    return [...hits]
+  })
+}
+
 await mkdir(OUT, { recursive: true })
 
 let shot = 0
@@ -110,6 +149,11 @@ for (const [scene, steps] of Object.entries(ROUTES)) {
   }
 
   await settle(900)
+
+  for (const covered of await chromeOverlaps()) {
+    problems.push(`${scene}: chrome covers ${covered}`)
+  }
+
   const landed = await page.evaluate(
     () => document.querySelector('section[data-scene][data-state="active"]')?.dataset.scene,
   )

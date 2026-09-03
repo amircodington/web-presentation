@@ -77,7 +77,7 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
 
       <BoardTrack animate={isActive} />
 
-      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col px-20 pt-12 pb-60">
+      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col px-20 pt-12 pb-[var(--kiosk-chrome-clearance,240px)]">
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Logo height={110} />

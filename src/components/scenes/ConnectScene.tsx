@@ -28,7 +28,7 @@ export function ConnectScene({ state, camera }: SceneComponentProps) {
   const [selected, setSelected] = useState<string>("test-result")
 
   return (
-    <div className="scene-surface flex h-full w-full items-center gap-14 rounded-[48px] px-20 pt-12 pb-60">
+    <div className="scene-surface flex h-full w-full items-center gap-14 rounded-[48px] px-20 pt-12 pb-[var(--kiosk-chrome-clearance,240px)]">
       <div className="flex flex-1 flex-col gap-6">
         <div className="flex flex-col gap-3">
           <p className="text-[26px] font-medium text-[var(--kiosk-money)]">قدم بعدی</p>

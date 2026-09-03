@@ -14,6 +14,7 @@ import { Camera } from "./Camera"
 import { CameraProvider } from "./CameraContext"
 import { Scene } from "./Scene"
 import { sceneStates } from "./lifecycle"
+import { chromeClearancePx } from "./clearance"
 import { fitScale } from "./projection"
 import { useCamera, type CameraApi } from "./use-camera"
 import { useGestures } from "./use-gestures"
@@ -66,6 +67,10 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
   // Published so the chrome, which lives outside the scaled stage, can sit a fixed
   // distance from the stage's edge rather than from the screen's.
   const stageMargin = Math.max(0, (screen.height - design.height * scale) / 2)
+  // What scenes must keep clear at their foot so the chrome never lies on top of
+  // content. Derived rather than chosen, and in the stage's own units — see
+  // `clearance.ts` for why a fixed number of design pixels cannot be right.
+  const chromeClearance = chromeClearancePx(scale)
   useGestures(viewportRef, camera, scale)
 
   useEffect(() => {
@@ -123,6 +128,9 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
           height: design.height,
           transform: `translate(-50%, -50%) scale(${scale})`,
           transformOrigin: "center center",
+          // Published on the stage so every scene can reserve the band without
+          // knowing anything about the chrome that sits above it.
+          ["--kiosk-chrome-clearance" as string]: `${chromeClearance}px`,
           /*
            * `clip` rather than `hidden`, and the difference is not cosmetic.
            *
