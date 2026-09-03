@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react"
 import { useState } from "react"
 import type { JudgementGame as JudgementGameContent } from "@/content/schema/activities"
+import { answerRound, countCorrect, emptyAnswers } from "@/lib/games/score"
 import { toPersianDigits } from "@/lib/format"
 import { useSound } from "@/components/kiosk/AudioProvider"
 import { Button } from "@/components/ui/Button"
@@ -27,17 +28,28 @@ interface Props {
 export function JudgementGame({ game, onFinish, finishLabel }: Props) {
   const { play } = useSound()
   const [index, setIndex] = useState(0)
-  const [answer, setAnswer] = useState<"safe" | "risky">()
-  const [correct, setCorrect] = useState(0)
-
-  /** Scores the answer and says so, because a verdict read is a verdict forgotten. */
-  const judge = (right: boolean) => {
-    if (right) setCorrect((c) => c + 1)
-    play(right ? "good" : "warn")
-  }
+  const [answers, setAnswers] = useState(() =>
+    emptyAnswers<"safe" | "risky">(game.scenarios.length),
+  )
 
   const scenario = game.scenarios[index]
   const finished = index >= game.scenarios.length
+  const answer = answers[index]
+  const correct = countCorrect(
+    answers,
+    game.scenarios.map((entry) => entry.verdict),
+  )
+
+  /**
+   * Records the answer and says whether it was right, because a verdict read is a
+   * verdict forgotten. The record is what the score is counted from, so a second
+   * touch on an already-judged offer changes nothing and makes no sound.
+   */
+  const judge = (choice: "safe" | "risky") => {
+    if (answer !== undefined) return
+    setAnswers((current) => answerRound(current, index, choice))
+    play(choice === scenario?.verdict ? "good" : "warn")
+  }
 
   if (finished) {
     return (
@@ -56,8 +68,7 @@ export function JudgementGame({ game, onFinish, finishLabel }: Props) {
             variant="ghost"
             onClick={() => {
               setIndex(0)
-              setAnswer(undefined)
-              setCorrect(0)
+              setAnswers(emptyAnswers<"safe" | "risky">(game.scenarios.length))
             }}
           >
             دوباره
@@ -121,12 +132,7 @@ export function JudgementGame({ game, onFinish, finishLabel }: Props) {
               {scenario.explain}
             </p>
             <div>
-              <Button
-                onClick={() => {
-                  setIndex((i) => i + 1)
-                  setAnswer(undefined)
-                }}
-              >
+              <Button onClick={() => setIndex((i) => i + 1)}>
                 {index + 1 < game.scenarios.length ? "پیشنهاد بعدی ←" : "نتیجه ←"}
               </Button>
             </div>
@@ -134,22 +140,8 @@ export function JudgementGame({ game, onFinish, finishLabel }: Props) {
           </motion.div>
         ) : (
           <motion.div key="choices" exit={{ opacity: 0 }} className="grid grid-cols-2 gap-6">
-            <VerdictButton
-              tone="risky"
-              label={game.riskyLabel}
-              onClick={() => {
-                setAnswer("risky")
-                judge(scenario.verdict === "risky")
-              }}
-            />
-            <VerdictButton
-              tone="safe"
-              label={game.safeLabel}
-              onClick={() => {
-                setAnswer("safe")
-                judge(scenario.verdict === "safe")
-              }}
-            />
+            <VerdictButton tone="risky" label={game.riskyLabel} onClick={() => judge("risky")} />
+            <VerdictButton tone="safe" label={game.safeLabel} onClick={() => judge("safe")} />
           </motion.div>
         )}
       </AnimatePresence>
