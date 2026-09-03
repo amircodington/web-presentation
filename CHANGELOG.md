@@ -8,6 +8,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.13.0] — 2026-09-03
+
+### Added
+- **worlds:** give each world its own language, not just its own colour (7d7304f)
+
 ## [0.12.0] — 2026-09-03
 
 ### Fixed
