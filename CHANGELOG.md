@@ -8,6 +8,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.14.0] — 2026-09-03
+
+### Added
+- **games:** answer the questions the games were leaving hanging (50f2d6c)
+
 ## [0.13.0] — 2026-09-03
 
 ### Added
