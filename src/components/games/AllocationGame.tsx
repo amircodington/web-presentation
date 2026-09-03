@@ -5,11 +5,15 @@ import { useRef, useState } from "react"
 import type { AllocationGame as AllocationGameContent } from "@/content/schema/activities"
 import { evaluateAllocation, tokensLeft } from "@/lib/games/allocation"
 import { castFor, moodFor } from "@/lib/games/cast"
+import { surfaceFor } from "@/content/select"
+import { useCameraApi } from "@/engine"
+import { Icon } from "@/components/ui/Icon"
 import { toPersianDigits } from "@/lib/format"
 import { ChipStackChart } from "@/components/charts/ChipStackChart"
 import { useSound } from "@/components/kiosk/AudioProvider"
 import { Button } from "@/components/ui/Button"
 import { Mascot } from "@/components/ui/Mascot"
+import type { AudienceGroup } from "@/content/schema/common"
 
 interface Props {
   game: AllocationGameContent
@@ -31,9 +35,16 @@ const TRAY_LIMIT = 10
  * Tapping a character does the same thing. On a 55" screen the far corner is a
  * genuine reach for a nine-year-old, and a game that only accepts the drag simply
  * stops working for the shortest visitors.
+ *
+ * The mechanic is shared by «قلک من» and «چالش ۱۰۰ میلیون», and for a while so was
+ * the artwork — a sixteen-year-old dividing a hundred million toman was handed the
+ * seven-year-old's smiling coins. The board is drawn in the language of the world
+ * it is standing in: characters and coins under `toy`, marks and chips elsewhere.
  */
 export function AllocationGame({ game, onFinish, finishLabel }: Props) {
   const { play } = useSound()
+  const surface = surfaceFor(useCameraApi().current.meta?.world as AudienceGroup | undefined)
+  const toy = surface.style === "toy"
   const [allocation, setAllocation] = useState<Record<string, number>>({})
   const [submitted, setSubmitted] = useState(false)
   const [horizon, setHorizon] = useState<string>()
@@ -169,6 +180,7 @@ export function AllocationGame({ game, onFinish, finishLabel }: Props) {
 
       <CoinTray
         left={left}
+        toy={toy}
         onDrag={(point) => setTarget(bucketAt(point))}
         onDrop={(point) => {
           const id = bucketAt(point)
@@ -213,13 +225,18 @@ export function AllocationGame({ game, onFinish, finishLabel }: Props) {
                 <motion.span
                   animate={isTarget ? { rotate: [-4, 4, -4] } : { rotate: 0 }}
                   transition={{ duration: 0.5, repeat: isTarget ? Infinity : 0 }}
+                  style={{ color: "var(--kiosk-accent)" }}
                 >
-                  <Mascot name={castFor(option.icon)} mood={moodFor(count, isTarget)} size={84} />
+                  {toy ? (
+                    <Mascot name={castFor(option.icon)} mood={moodFor(count, isTarget)} size={84} />
+                  ) : (
+                    <Icon name={option.icon} size={62} />
+                  )}
                 </motion.span>
                 <span className="text-[25px] font-bold text-[var(--kiosk-card-text)]">
                   {option.label}
                 </span>
-                <CoinRow count={count} />
+                <CoinRow count={count} toy={toy} />
               </motion.button>
 
               {count > 0 ? (
@@ -275,10 +292,13 @@ export function AllocationGame({ game, onFinish, finishLabel }: Props) {
  */
 function CoinTray({
   left,
+  toy,
   onDrag,
   onDrop,
 }: {
   left: number
+  /** Whether the pot is drawn as characters or as plain chips. */
+  toy: boolean
   onDrag: (point: { x: number; y: number }) => void
   onDrop: (point: { x: number; y: number }) => void
 }) {
@@ -307,7 +327,7 @@ function CoinTray({
               transition={{ type: "spring", stiffness: 600, damping: 30 }}
               className="-me-6 cursor-grab touch-none active:cursor-grabbing"
             >
-              <Mascot name="coin" mood="happy" size={66} />
+              {toy ? <Mascot name="coin" mood="happy" size={66} /> : <Chip size={58} />}
             </motion.div>
           ))}
         </AnimatePresence>
@@ -316,8 +336,8 @@ function CoinTray({
   )
 }
 
-/** What a character is holding, counted in coins rather than in a number. */
-function CoinRow({ count }: { count: number }) {
+/** What a bucket is holding, counted in pieces rather than in a number. */
+function CoinRow({ count, toy }: { count: number; toy: boolean }) {
   if (count === 0) {
     return <span className="text-[22px] font-medium text-[var(--kiosk-card-muted)]">خالی</span>
   }
@@ -329,11 +349,36 @@ function CoinRow({ count }: { count: number }) {
           initial={{ scale: 0, y: -20 }}
           animate={{ scale: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 700, damping: 24 }}
-          className="-me-2.5"
+          className={toy ? "-me-2.5" : "-me-1"}
         >
-          <Mascot name="coin" mood="idle" size={30} />
+          {toy ? <Mascot name="coin" mood="idle" size={30} /> : <Chip size={22} />}
         </motion.span>
       ))}
     </span>
+  )
+}
+
+/**
+ * One unit of the pot, without a face.
+ *
+ * A stack of counters rather than a character: the same physical "this is a thing
+ * you move" reading, in a register that does not tell a teenager the screen thinks
+ * they are seven.
+ */
+function Chip({ size }: { size: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      aria-hidden
+      focusable="false"
+      fill="var(--kiosk-money)"
+      stroke="var(--kiosk-border)"
+      strokeWidth="6"
+    >
+      <circle cx="50" cy="50" r="40" />
+      <circle cx="50" cy="50" r="24" fill="none" strokeDasharray="10 9" />
+    </svg>
   )
 }

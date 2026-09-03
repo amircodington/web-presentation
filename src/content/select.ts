@@ -118,3 +118,15 @@ export function resolveProfile(game: ProfileGame): ProfileGame {
   if (game.questions) return game
   return { ...game, questions: content.adultScenarios.scenarios }
 }
+
+/**
+ * The visual language of the world the camera is currently in.
+ *
+ * Games are drawn inside a world and must speak its language: «چالش ۱۰۰ میلیون»
+ * and «قلک من» are the same mechanic, and for a while they were also the same
+ * screen — a sixteen-year-old was handed the seven-year-old's smiling coins. The
+ * world home resolves `surface` for its cards; a game resolves it for its board.
+ */
+export function surfaceFor(id: AudienceGroup | undefined): World["surface"] {
+  return worldById(id as AudienceGroup)?.surface ?? { style: "toy" }
+}
