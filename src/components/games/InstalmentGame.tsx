@@ -15,6 +15,90 @@ interface Props {
 }
 
 /**
+ * The answer to the question the game raises: is this a good idea, and if not,
+ * what instead?
+ *
+ * Two columns rather than one verdict, because the honest answer has two halves
+ * and a visitor needs to see which half they are in. The conditions come first —
+ * they are what makes the alternatives make sense.
+ */
+function Closing({
+  closing,
+  onFinish,
+  onRetry,
+  finishLabel,
+}: {
+  closing: InstalmentGameContent["closing"]
+  onFinish: () => void
+  onRetry: () => void
+  finishLabel: string
+}) {
+  return (
+    <div className="flex h-full flex-col justify-center gap-6">
+      <div className="flex flex-col gap-2">
+        <h3 className="display text-[46px] text-balance">{closing.question}</h3>
+        <p className="max-w-[85%] text-[26px] leading-relaxed text-[var(--kiosk-muted)]">
+          {closing.answer}
+        </p>
+      </div>
+
+      <div className="grid min-h-0 grid-cols-2 gap-5">
+        <List
+          title="وقتی جواب می‌دهد"
+          tone="var(--kiosk-positive)"
+          icon="check"
+          items={closing.goodWhen}
+        />
+        <List
+          title={closing.insteadTitle}
+          tone="var(--kiosk-accent)"
+          icon="next"
+          items={closing.instead}
+        />
+      </div>
+
+      <div className="flex gap-5">
+        <Button onClick={onFinish}>{finishLabel}</Button>
+        <Button variant="ghost" onClick={onRetry}>
+          دوباره
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+/** One side of the closing answer. */
+function List({
+  title,
+  tone,
+  icon,
+  items,
+}: {
+  title: string
+  tone: string
+  icon: "check" | "next"
+  items: readonly string[]
+}) {
+  return (
+    <div className="mat flex flex-col gap-3 rounded-[30px] px-8 py-6">
+      <b className="text-[28px] font-bold" style={{ color: tone }}>
+        {title}
+      </b>
+      <ul className="flex flex-col gap-2.5">
+        {items.map((item) => (
+          <li key={item} className="flex items-start gap-3.5 text-[22px] leading-snug">
+            <span className="mt-1 shrink-0" style={{ color: tone }}>
+              <Icon name={icon} size={24} />
+            </span>
+            <span className="text-[var(--kiosk-card-muted)]">{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+/**
  * Guess what the instalment plan really costs, then watch it assemble.
  *
  * The guess comes first and that ordering is the entire experience. Shown the
@@ -22,11 +106,19 @@ interface Props {
  * payments stacking up past their guess, they feel the gap — which is the thing
  * brief §39 is trying to teach, because the instalment is sold on the size of the
  * monthly figure and never on the size of the sum.
+ *
+ * It used to stop there, having raised the obvious question and answered none of
+ * it: a visitor learned the total was bigger than they guessed and walked away
+ * without knowing what to do about it. The closing screen answers it in the only
+ * form this kiosk is allowed to — the conditions under which the arithmetic works,
+ * and the moves available when it does not. Never "do not buy this", which is
+ * advice and is banned in every world.
  */
 export function InstalmentGame({ game, onFinish, finishLabel }: Props) {
   const { play } = useSound()
   const [guess, setGuess] = useState<number>()
   const [burden, setBurden] = useState<string>()
+  const [closing, setClosing] = useState(false)
 
   const total = game.deposit + game.instalments * game.monthly
   const chosen = game.burden.options.find((option) => option.id === burden)
@@ -77,6 +169,21 @@ export function InstalmentGame({ game, onFinish, finishLabel }: Props) {
     )
   }
 
+  if (closing) {
+    return (
+      <Closing
+        closing={game.closing}
+        onFinish={onFinish}
+        finishLabel={finishLabel}
+        onRetry={() => {
+          setGuess(undefined)
+          setBurden(undefined)
+          setClosing(false)
+        }}
+      />
+    )
+  }
+
   return (
     <div className="flex h-full flex-col justify-center gap-6">
       <PaymentStack game={game} total={total} guess={guess} />
@@ -105,16 +212,7 @@ export function InstalmentGame({ game, onFinish, finishLabel }: Props) {
               <h4 className="text-[30px] font-bold">{chosen.verdict.title}</h4>
               <p className="text-[25px] leading-relaxed opacity-90">{chosen.verdict.body}</p>
             </div>
-            <Button onClick={onFinish}>{finishLabel}</Button>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setGuess(undefined)
-                setBurden(undefined)
-              }}
-            >
-              دوباره
-            </Button>
+            <Button onClick={() => setClosing(true)}>پس چه کار کنم؟ ←</Button>
           </motion.div>
         ) : (
           <motion.div

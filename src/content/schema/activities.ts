@@ -341,6 +341,18 @@ const BudgetGameSchema = z
       .min(3),
     /** Named so the closing copy can talk about the gap the player left. */
     bufferLabel: z.string().min(1),
+    /**
+     * What to say about the budget the player actually built, keyed by the rule
+     * ids `lib/games/budget.ts` returns.
+     *
+     * The game used to score only the multiple-choice question that follows, so
+     * two people who had done opposite things to the same budget were told the
+     * same thing. Brief §9.3 wants the result to be about this visitor.
+     */
+    findings: z.record(
+      z.string().min(1),
+      z.object({ title: z.string().min(1), body: z.string().min(1) }),
+    ),
   })
   .superRefine((game, ctx) => {
     for (const line of game.lines) {
@@ -375,6 +387,25 @@ const InstalmentGameSchema = z.object({
         }),
       )
       .min(2),
+  }),
+  /**
+   * The answer to the question the game raises and used to leave hanging: is
+   * paying by instalment a good idea here, and if not, what does one do instead?
+   *
+   * Deliberately conditions and alternatives rather than a verdict on the plan
+   * itself. §2 bans financial advice in every world, and "do not buy this" is
+   * advice — "these are the conditions under which the arithmetic works, and
+   * these are the other moves available" is the structure a visitor can apply to
+   * a purchase this kiosk knows nothing about.
+   */
+  closing: z.object({
+    question: z.string().min(1),
+    answer: z.string().min(1),
+    /** When the plan is defensible. Read as a checklist, not as permission. */
+    goodWhen: z.array(z.string().min(1)).min(2),
+    insteadTitle: z.string().min(1),
+    /** Moves available when the checklist does not hold. */
+    instead: z.array(z.string().min(1)).min(2),
   }),
 })
 

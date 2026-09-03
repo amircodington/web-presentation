@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
-import { applyBudget, rangeFor } from "./budget"
+import { analyseBudget, applyBudget, rangeFor } from "./budget"
+import { content } from "@/content/load"
 import type { BudgetGame } from "@/content/schema/activities"
 
 const game = {
@@ -57,5 +58,58 @@ describe("rangeFor", () => {
   it("reports the shocked amount as the ceiling and the shocked floor as the floor", () => {
     expect(rangeFor(game, "food")).toEqual({ min: 15, max: 25 })
     expect(rangeFor(game, "fun")).toEqual({ min: 0, max: 20 })
+  })
+})
+
+describe("analyseBudget", () => {
+  const power = (() => {
+    const activity = content.activities.activities.find((a) => a.id === "adults-purchasing-power")
+    if (activity?.game?.kind !== "budget") throw new Error("not a budget game")
+    return activity.game
+  })()
+
+  /** Every line taken to the floor it is allowed to reach. */
+  function floorEverything() {
+    const shocked = applyBudget(power, {})
+    return Object.fromEntries(shocked.lines.map((line) => [line.id, line.floor]))
+  }
+
+  it("always says something about a finished budget", () => {
+    for (const cuts of [{}, floorEverything(), { leisure: 0 }, { education: 0 }]) {
+      expect(analyseBudget(power, cuts).rules.length, JSON.stringify(cuts)).toBeGreaterThan(0)
+    }
+  })
+
+  it("notices a budget left exactly as the shock made it", () => {
+    expect(analyseBudget(power, {}).rules).toContain("untouched")
+  })
+
+  it("notices a budget that still does not close", () => {
+    expect(analyseBudget(power, {}).rules).toContain("unbalanced")
+  })
+
+  it("notices education taken to nothing", () => {
+    expect(analyseBudget(power, { education: 0 }).rules).toContain("cutEducation")
+  })
+
+  it("notices every discretionary line stripped", () => {
+    const analysis = analyseBudget(power, { education: 0, leisure: 0 })
+    expect(analysis.rules).toContain("strippedDiscretionary")
+    expect(analysis.emptied.length).toBeGreaterThan(0)
+  })
+
+  it("separates a budget that closes with room from one that closes on the line", () => {
+    const tight = analyseBudget(power, floorEverything())
+    expect(tight.state.balanced).toBe(true)
+    expect(tight.rules.some((rule) => rule === "keptBuffer" || rule === "noBuffer")).toBe(true)
+  })
+
+  it("counts what the player actually removed", () => {
+    expect(analyseBudget(power, {}).cut).toBe(0)
+    expect(analyseBudget(power, floorEverything()).cut).toBeGreaterThan(0)
+  })
+
+  it("reports what the shock added", () => {
+    expect(analyseBudget(power, {}).shockCost).toBeGreaterThan(0)
   })
 })

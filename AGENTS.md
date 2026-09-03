@@ -376,7 +376,8 @@ same commit sequence that merges it. A branch with no row here is an incomplete 
 | `fix/phase1-correctness` | Derived game scores, total allocation feedback, kids course scene, world card fit | merged |
 | `fix/attract-duplication` | Attract stopped repeating the gateway's question; doorways, not cards | merged |
 | `fix/chrome-and-clearance` | Restyled control tray, derived chrome clearance, world home re-laid out | merged |
-| `feat/world-surfaces` | Three visual languages — toy, level, ledger — and the adults palette on the logo green | open |
+| `feat/world-surfaces` | Three visual languages — toy, level, ledger — and the adults palette on the logo green | merged |
+| `feat/game-content` | Games speak their world's language; instalment verdict; budget analysed, not discarded | open |
 
 Current programme of work: [`tasks/plan-stabilization.md`](tasks/plan-stabilization.md).
 

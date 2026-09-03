@@ -13,10 +13,13 @@ import { ShopGame } from "@/components/games/ShopGame"
 import { SortGame } from "@/components/games/SortGame"
 import { StallGame } from "@/components/games/StallGame"
 import { Celebration } from "@/components/kiosk/Celebration"
+import { Icon } from "@/components/ui/Icon"
 import { Mascot } from "@/components/ui/Mascot"
+import { surfaceFor } from "@/content/select"
 import { castFor } from "@/lib/games/cast"
 import { toPersianDigits } from "@/lib/format"
 import type { Activity } from "@/content/schema/activities"
+import type { AudienceGroup } from "@/content/schema/common"
 import type { SceneComponentProps } from "@/engine"
 
 /** Brief §12: the way out of a game is an invitation, never a dead end. */
@@ -36,6 +39,9 @@ const FINISH_LABEL = "یه بازی دیگه هم بزن! ←"
  */
 export function GameScene({ state, camera, props }: SceneComponentProps) {
   const activityId = String(props.activityId ?? "")
+  // The header wears the world's language for the same reason the board does: a
+  // grinning piggy bank over an adult scenario undoes the scene beneath it.
+  const surface = surfaceFor(camera.current.meta?.world as AudienceGroup | undefined)
   const activity = content.activities.activities.find((item) => item.id === activityId)
   const complete = useSession((store) => store.complete)
   const [celebrating, setCelebrating] = useState(false)
@@ -63,7 +69,13 @@ export function GameScene({ state, camera, props }: SceneComponentProps) {
     <div className="scene-surface relative flex h-full w-full flex-col gap-4 rounded-[48px] px-16 pt-12 pb-[var(--kiosk-chrome-clearance,240px)]">
       <header className="flex items-start justify-between gap-8">
         <div className="flex items-center gap-6">
-          <Mascot name={castFor(activity.icon)} mood="happy" size={72} />
+          {surface.style === "toy" ? (
+            <Mascot name={castFor(activity.icon)} mood="happy" size={72} />
+          ) : (
+            <span className="text-[var(--kiosk-accent)]">
+              <Icon name={activity.icon} size={54} />
+            </span>
+          )}
           <div className="flex flex-col">
             <h2 className="display text-[40px]">{activity.title}</h2>
             <p className="text-[25px] text-[var(--kiosk-muted)]">{activity.hook}</p>
