@@ -239,9 +239,13 @@ These come from the physical reality of an unattended screen in a loud hall:
 - **Navigation is back, home and mute.** Brief §63 names a sitemap as something this kiosk must
   not have. A visitor in a hall has one question — how do I get back — and every extra control on
   the tray is a second question.
-- **Reserve chrome clearance.** Scenes carry `pb-60` so the persistent controls never
-  cover content. The number is derived from the tray's measured height, not chosen —
-  re-derive it whenever the chrome's size changes, as it did when the tray took the ink
+- **Reserve chrome clearance.** Scenes reserve `var(--kiosk-chrome-clearance)`, published
+  by the stage and derived in `src/engine/clearance.ts` from the measured geometry in
+  `CHROME`. Never write the band as a literal: the chrome is drawn in screen pixels and
+  scenes are authored in design pixels, so a fixed `pb-60` is only correct at one stage
+  scale — and it silently ignored the caption bar above the tray. Change a `CHROME`
+  number only with the component it measures, and prove it with `scripts/shoot-scenes.mjs`,
+  which fails when the chrome covers scene content. It once did, as the tray took the ink
   outline. Scenes must also not overlap on the canvas — both are enforced by
   `npm run validate:content` and a browser measurement pass.
 - **Clip, never hide.** The stage and every scene use `overflow: clip`. `overflow: hidden`
@@ -369,6 +373,8 @@ same commit sequence that merges it. A branch with no row here is an incomplete 
 | `docs/current-site-stabilization-plan` | The voice-feedback stabilization plan and its task list | merged |
 | `chore/qa-baseline` | Scripted per-scene screenshot harness at the design size | merged |
 | `fix/phase1-correctness` | Derived game scores, total allocation feedback, kids course scene, world card fit | merged |
+| `fix/attract-duplication` | Attract stopped repeating the gateway's question; doorways, not cards | merged |
+| `fix/chrome-and-clearance` | Restyled control tray, derived chrome clearance, world home re-laid out | open |
 
 Current programme of work: [`tasks/plan-stabilization.md`](tasks/plan-stabilization.md).
 

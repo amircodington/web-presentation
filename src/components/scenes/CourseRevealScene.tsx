@@ -32,7 +32,7 @@ export function CourseRevealScene({ state, camera, props }: SceneComponentProps)
   const courses = coursesForWorld(groupId, answered)
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col gap-8 rounded-[48px] px-20 pt-14 pb-60">
+    <div className="scene-surface flex h-full w-full flex-col gap-8 rounded-[48px] px-20 pt-14 pb-[var(--kiosk-chrome-clearance,240px)]">
       <div className="flex flex-col gap-3">
         <p className="text-[27px] font-medium text-[var(--kiosk-money)]">{world.display}</p>
         <h2 className="display text-[68px] text-balance">{reveal.title}</h2>

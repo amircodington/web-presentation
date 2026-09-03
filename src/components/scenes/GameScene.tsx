@@ -60,7 +60,7 @@ export function GameScene({ state, camera, props }: SceneComponentProps) {
   }
 
   return (
-    <div className="scene-surface relative flex h-full w-full flex-col gap-4 rounded-[48px] px-16 pt-12 pb-60">
+    <div className="scene-surface relative flex h-full w-full flex-col gap-4 rounded-[48px] px-16 pt-12 pb-[var(--kiosk-chrome-clearance,240px)]">
       <header className="flex items-start justify-between gap-8">
         <div className="flex items-center gap-6">
           <Mascot name={castFor(activity.icon)} mood="happy" size={72} />

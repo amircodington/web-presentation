@@ -44,9 +44,11 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
   const experiences = activeExperiences(groupId)
   const diagnostic = world.diagnostic?.active ? world.diagnostic : undefined
   const done = experiences.filter((experience) => completed.includes(experience.id)).length
+  // The diagnostic is the last stop on the path, so it is counted as a column.
+  const stops = Math.max(1, experiences.length + (diagnostic ? 1 : 0))
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col gap-5 rounded-[48px] px-20 pt-12 pb-60">
+    <div className="scene-surface flex h-full w-full flex-col gap-5 rounded-[48px] px-20 pt-12 pb-[var(--kiosk-chrome-clearance,240px)]">
       <header className="flex items-center justify-between gap-8">
         <div className="flex items-center gap-6">
           <Logo height={72} />
@@ -54,6 +56,38 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
             {world.display}
           </span>
         </div>
+        {/*
+          The filing question rides in the header rather than on a row of its own.
+          It is not a step on the path — it decides what the reveal leads with —
+          and a full-width row for it competed with the four cards for the height
+          they need. Brief §12: one screen, one main action.
+        */}
+        {world.qualifier ? (
+          <div className="flex items-center gap-3">
+            <span className="text-[23px] font-medium text-[var(--kiosk-muted)]">
+              {world.qualifier.prompt}
+            </span>
+            {world.qualifier.options.map((option) => {
+              const picked = audience === option.audience
+              return (
+                <button
+                  key={option.audience}
+                  type="button"
+                  onClick={() => setAudience(option.audience)}
+                  aria-label={`${world.qualifier!.prompt} ${option.label}`}
+                  aria-pressed={picked}
+                  className="min-h-[88px] cursor-pointer rounded-full border-[4px] border-[var(--kiosk-border)] px-9 text-[25px] font-bold"
+                  style={{
+                    background: picked ? "var(--kiosk-accent)" : "var(--kiosk-card)",
+                    color: picked ? "var(--kiosk-on-accent)" : "var(--kiosk-card-text)",
+                  }}
+                >
+                  {option.label}
+                </button>
+              )
+            })}
+          </div>
+        ) : null}
         <Progress done={done} total={experiences.length} />
       </header>
 
@@ -70,8 +104,8 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
       <div
         className="mx-auto grid min-h-0 w-full flex-1 items-stretch gap-6"
         style={{
-          gridTemplateColumns: `repeat(${Math.max(1, experiences.length)}, minmax(0, 1fr))`,
-          maxWidth: experiences.length === 1 ? "620px" : experiences.length === 2 ? "1120px" : "100%",
+          gridTemplateColumns: `repeat(${stops}, minmax(0, 1fr))`,
+          maxWidth: stops === 1 ? "620px" : stops === 2 ? "1120px" : "100%",
         }}
       >
         {experiences.map((experience, index) => (
@@ -84,39 +118,24 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
             onSelect={() => camera.goTo(experience.scene, "dive")}
           />
         ))}
+        {diagnostic ? (
+          <ExperienceCard
+            experience={{
+              id: "diagnostic",
+              title: diagnostic.title,
+              hook: diagnostic.hook,
+              icon: diagnostic.icon,
+              scene: diagnostic.scene,
+              active: true,
+            }}
+            step={experiences.length + 1}
+            isDone={false}
+            isActive={isActive}
+            emphasis
+            onSelect={() => camera.goTo(diagnostic.scene, "dive")}
+          />
+        ) : null}
       </div>
-
-      {/*
-       * One question that re-files the visitor into a narrower catalogue
-       * audience — brief §44. It sits on the world home rather than in a game
-       * because it decides what the *reveal* leads with, and a visitor who plays
-       * one experience and leaves should still have answered it.
-       */}
-      {world.qualifier ? (
-        <div className="flex items-center justify-center gap-4">
-          <span className="text-[25px] font-medium text-[var(--kiosk-muted)]">
-            {world.qualifier.prompt}
-          </span>
-          {world.qualifier.options.map((option) => {
-            const picked = audience === option.audience
-            return (
-              <button
-                key={option.audience}
-                type="button"
-                onClick={() => setAudience(option.audience)}
-                aria-label={`${world.qualifier!.prompt} ${option.label}`}
-                className="min-h-[88px] cursor-pointer rounded-full border-[4px] border-[var(--kiosk-border)] px-10 text-[26px] font-bold"
-                style={{
-                  background: picked ? "var(--kiosk-accent)" : "var(--kiosk-card)",
-                  color: picked ? "var(--kiosk-on-accent)" : "var(--kiosk-card-text)",
-                }}
-              >
-                {option.label}
-              </button>
-            )
-          })}
-        </div>
-      ) : null}
 
       {/*
        * Products appear only once something has been played. Brief §46 puts the
@@ -139,20 +158,6 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
         </motion.button>
       ) : null}
 
-      {diagnostic ? (
-        <button
-          type="button"
-          onClick={() => camera.goTo(diagnostic.scene, "dive")}
-          className="mat flex min-h-[100px] shrink-0 cursor-pointer items-center gap-7 rounded-[32px] px-10 text-start"
-        >
-          <Icon name={diagnostic.icon} size={44} />
-          <span className="flex flex-col">
-            <b className="text-[36px] leading-tight font-bold">{diagnostic.title}</b>
-            <span className="text-[24px] text-[var(--kiosk-card-muted)]">{diagnostic.hook}</span>
-          </span>
-          <span className="ms-auto text-[30px] font-bold text-[var(--kiosk-accent)]">شروع ←</span>
-        </button>
-      ) : null}
     </div>
   )
 }
@@ -176,18 +181,28 @@ function Progress({ done, total }: { done: number; total: number }) {
   )
 }
 
-/** One stop on the path, fronted by the character that hosts it. */
+/**
+ * One stop on the path, fronted by the character that hosts it.
+ *
+ * The world's diagnostic is a stop like any other rather than a bar beneath the
+ * row. It used to have a full-width row of its own, and together with the filing
+ * question that left the adults world four cards squeezed into whatever height
+ * three extra rows had not already taken — which was not enough to draw a card in.
+ */
 function ExperienceCard({
   experience,
   step,
   isDone,
   isActive,
+  emphasis = false,
   onSelect,
 }: {
   experience: WorldExperience
   step: number
   isDone: boolean
   isActive: boolean
+  /** Marks the diagnostic, which is the one stop that is not a game. */
+  emphasis?: boolean
   onSelect: () => void
 }) {
   return (
@@ -199,6 +214,11 @@ function ExperienceCard({
       transition={{ duration: 0.5, delay: step * 0.08, ease: [0.22, 1, 0.36, 1] }}
       whileTap={{ x: 9, y: 9, boxShadow: "0px 0px 0 0 var(--kiosk-border)" }}
       className="mat relative flex min-h-0 cursor-pointer flex-col items-center justify-center gap-4 overflow-hidden rounded-[36px] px-8 py-7 text-center"
+      style={
+        emphasis
+          ? { background: "var(--kiosk-accent-soft)", borderColor: "var(--kiosk-accent)" }
+          : undefined
+      }
     >
       <span className="absolute start-6 top-5 text-[26px] font-black text-[var(--kiosk-card-muted)]">
         {toPersianDigits(step)}
@@ -227,7 +247,7 @@ function ExperienceCard({
         <Mascot
           name={castFor(experience.icon)}
           mood={isDone ? "wow" : "happy"}
-          className="h-full max-h-[130px] w-auto"
+          className="h-full max-h-[130px] min-h-[58px] w-auto"
         />
       </motion.span>
 

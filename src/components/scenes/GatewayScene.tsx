@@ -42,7 +42,7 @@ export function GatewayScene({ state, camera }: SceneComponentProps) {
   }
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col gap-8 rounded-[48px] px-20 pt-12 pb-60">
+    <div className="scene-surface flex h-full w-full flex-col gap-8 rounded-[48px] px-20 pt-12 pb-[var(--kiosk-chrome-clearance,240px)]">
       <header className="flex items-center justify-between gap-8">
         <div className="flex items-center gap-6">
           <Logo height={82} />

@@ -48,17 +48,22 @@ export function KioskChrome() {
               خانه
             </ChromeButton>
           ) : null}
+          {!atAttract && (camera.current.back || !atHub) ? <Divider /> : null}
           <ChromeButton
             onClick={sound.toggleMuted}
             icon={sound.muted ? "mute" : "sound"}
             label={sound.muted ? "روشن کردن صدا" : "قطع صدا"}
+            muted={sound.muted}
           >
             {sound.muted ? "صدا خاموش" : "صدا"}
           </ChromeButton>
           {!atAttract && camera.current.next ? (
-            <ChromeButton onClick={() => camera.next()} icon="next">
-              ادامه
-            </ChromeButton>
+            <>
+              <Divider />
+              <ChromeButton onClick={() => camera.next()} icon="next">
+                ادامه
+              </ChromeButton>
+            </>
           ) : null}
         </Tray>
       </motion.div>
@@ -74,15 +79,38 @@ export function KioskChrome() {
   )
 }
 
-/** The single surface the controls sit on, so they read as one component. */
+/**
+ * The single surface the controls sit on, so they read as one component.
+ *
+ * It wears the active world's card colours, because the tray is the one thing on
+ * screen in every world and a tray that stayed cream while the board went deep
+ * green read as a piece of another application left on top of this one.
+ */
 function Tray({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="flex items-center gap-1.5 rounded-full border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-card)] p-2"
-      style={{ boxShadow: "6px 6px 0 0 var(--kiosk-border)" }}
+      className="flex items-center gap-1 rounded-full border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-card)] p-2.5"
+      style={{ boxShadow: "0 10px 30px -8px color-mix(in oklab, var(--kiosk-border) 55%, transparent)" }}
     >
       {children}
     </div>
+  )
+}
+
+/**
+ * Separates "where am I going" from "how does it behave".
+ *
+ * Back and home move the camera; mute does not. Four identical pills in a row
+ * asked the visitor to read all four to find the one that goes back, which is the
+ * only question anybody has.
+ */
+function Divider() {
+  return (
+    <span
+      aria-hidden
+      className="mx-1.5 h-11 w-px shrink-0 rounded-full"
+      style={{ background: "color-mix(in oklab, var(--kiosk-card-text) 22%, transparent)" }}
+    />
   )
 }
 
@@ -91,30 +119,34 @@ function ChromeButton({
   onClick,
   icon,
   label,
-  variant = "quiet",
+  muted = false,
 }: {
   children: string
   onClick: () => void
   icon: IconName
   /** Overrides the accessible name when the visible label is a state, not an action. */
   label?: string
-  variant?: "quiet" | "marked"
+  /** Draws the control as switched off, for a toggle whose label is its state. */
+  muted?: boolean
 }) {
   // The chrome never takes the solid accent. Exactly one thing on screen should
   // read as "touch this", and that belongs to the scene, not the navigation.
-  const marked = variant === "marked"
-
   return (
     <motion.button
       type="button"
       onClick={onClick}
       aria-label={label}
-      whileTap={{ scale: 0.95 }}
+      aria-pressed={label ? muted : undefined}
+      whileTap={{ scale: 0.94 }}
       transition={{ type: "spring", stiffness: 700, damping: 30 }}
-      className="inline-flex min-h-[84px] cursor-pointer items-center gap-3.5 rounded-full px-8 text-[28px] font-semibold"
+      // 88px is the floor for a finger on glass at standing height — AGENTS.md §8.
+      className="inline-flex min-h-[88px] cursor-pointer items-center gap-3.5 rounded-full px-8 text-[27px] font-semibold"
       style={{
-        color: marked ? "var(--kiosk-accent)" : "var(--kiosk-card-text)",
-        background: marked ? "var(--kiosk-accent-soft)" : "transparent",
+        color: "var(--kiosk-card-text)",
+        opacity: muted ? 0.55 : 1,
+        background: muted
+          ? "color-mix(in oklab, var(--kiosk-card-text) 10%, transparent)"
+          : "transparent",
       }}
     >
       <Icon name={icon} size={28} />

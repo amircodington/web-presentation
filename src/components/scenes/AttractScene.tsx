@@ -19,10 +19,10 @@ import type { SceneComponentProps } from "@/engine"
  * so these are the real positions on every screen.
  */
 const PORTAL_X = [1440, 960, 480] as const
-const PORTAL_WIDTH = 400
-const PORTAL_HEIGHT = 370
+const PORTAL_WIDTH = 340
+const PORTAL_HEIGHT = 300
 /** The doorways' vertical centre, and so the height the money travels at. */
-const TRAVELLER_Y = 410
+const TRAVELLER_Y = 340
 const TRAVELLER_SIZE = 170
 
 /**
@@ -41,10 +41,19 @@ const FORM: Record<World["id"], MascotName> = {
  *
  * It is a loop, not a poster. A coin enters the kids' world and becomes a piggy
  * bank, carries into the teens' world and becomes a launch, and lands in the
- * adults' world as a bar of gold — while each portal, in turn, lights up in its
+ * adults' world as a bar of gold — while each doorway, in turn, lights up in its
  * own colours. In fifteen seconds someone walking past has been told the three
  * worlds exist, that they are different, and that one of them is theirs, without
  * reading a word.
+ *
+ * It shows the worlds; it does not ask you to pick one. That distinction is the
+ * whole reason this screen and the gateway are two screens rather than one: for a
+ * while they both asked the same question under the same three cards, and a
+ * visitor who chose on the first screen was asked to choose again on the second,
+ * which reads as the kiosk having failed to hear them. The doorways here are
+ * scenery the money travels through — arches, unlabelled with sales copy, with no
+ * card silhouette and nothing that looks pressable. The single pressable thing is
+ * the invitation.
  *
  * The whole frame is one tap target underneath the art. Every visual layer above
  * it is `pointer-events-none`, because people aim at the middle of the screen and
@@ -68,7 +77,7 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
 
       <BoardTrack animate={isActive} />
 
-      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col px-20 pt-12 pb-60">
+      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col px-20 pt-12 pb-[var(--kiosk-chrome-clearance,240px)]">
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Logo height={110} />
@@ -84,7 +93,7 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
             initial={{ opacity: 0, y: 30 }}
             animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.85, y: 0 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="display text-[88px] text-balance"
+            className="display text-[72px] text-balance"
           >
             {attract.hook}
           </motion.h1>
@@ -97,8 +106,8 @@ export function AttractScene({ state, camera }: SceneComponentProps) {
           <motion.span
             animate={isActive ? { scale: [1, 1.06, 1] } : { scale: 1 }}
             transition={{ duration: 2.4, repeat: isActive ? Infinity : 0, ease: "easeInOut" }}
-            className="inline-flex min-h-[88px] items-center rounded-full border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-accent)] px-14 text-[40px] font-bold text-[var(--kiosk-on-accent)]"
-            style={{ boxShadow: "9px 9px 0 0 var(--kiosk-border)" }}
+            className="inline-flex min-h-[112px] items-center rounded-full border-[5px] border-[var(--kiosk-border)] bg-[var(--kiosk-accent)] px-20 text-[50px] font-bold text-[var(--kiosk-on-accent)]"
+            style={{ boxShadow: "11px 11px 0 0 var(--kiosk-border)" }}
           >
             {attract.cta}
           </motion.span>
@@ -143,7 +152,14 @@ function useLoopStage(count: number, animate: boolean): number {
   return stage % count
 }
 
-/** One world, as a doorway standing on the board in its own colours. */
+/**
+ * One world, as a doorway standing on the board in its own colours.
+ *
+ * An arch, deliberately: open at the foot, rounded at the head, with its name set
+ * beneath it as a place is labelled rather than inside it as a button is. The
+ * gateway's cards are square, bordered, and carry a «بزن بریم» — everything here
+ * avoids all three, so the two screens cannot be mistaken for each other.
+ */
 function Portal({
   world,
   x,
@@ -157,44 +173,51 @@ function Portal({
 }) {
   return (
     <motion.div
-      data-world={world.id}
-      className="absolute flex flex-col items-center justify-end gap-2 rounded-[52px] border-[5px] px-6 pb-7"
+      className="absolute flex flex-col items-center"
       style={{
         left: x,
         top: TRAVELLER_Y - PORTAL_HEIGHT / 2,
         width: PORTAL_WIDTH,
-        height: PORTAL_HEIGHT,
         marginLeft: -PORTAL_WIDTH / 2,
-        // Light falls in from the top of a doorway. Keeping the world's own
-        // ground at the bottom is also what keeps its own text colour legible:
-        // reversing it puts cream type on pale gold in the adults' world.
-        background: `linear-gradient(to bottom, ${world.palette.accentSoft}, ${world.palette.background})`,
-        borderColor: world.palette.border,
       }}
-      animate={
-        animate && lit
-          ? { scale: 1.07, y: -14, boxShadow: `0 0 0 14px ${world.palette.accentSoft}` }
-          : { scale: 1, y: 0, boxShadow: "0 0 0 0 rgba(0,0,0,0)" }
-      }
+      animate={animate && lit ? { scale: 1.06, y: -12 } : { scale: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
     >
-      <b className="display text-[38px]" style={{ color: world.palette.text }}>
+      {/*
+        The world attribute goes on the arch, not on this wrapper. It rescopes the
+        palette — including `--kiosk-text` — and the name below the arch is painted
+        on the board, not inside the doorway. Scoping it too gave the adults' cream
+        ink to a caption sitting on a cream board, and the label vanished.
+      */}
+      <motion.div
+        data-world={world.id}
+        className="w-full"
+        style={{
+          height: PORTAL_HEIGHT,
+          // Light falls in from the head of a doorway. Keeping the world's own
+          // ground at the foot is also what keeps its name legible beneath it.
+          background:
+            `linear-gradient(to bottom, ` +
+            `color-mix(in oklab, ${world.palette.accent} 28%, ${world.palette.background}), ` +
+            `${world.palette.background})`,
+          borderTopLeftRadius: PORTAL_WIDTH / 2,
+          borderTopRightRadius: PORTAL_WIDTH / 2,
+          border: `5px solid ${world.palette.border}`,
+          borderBottom: "none",
+        }}
+        animate={
+          animate && lit
+            ? { boxShadow: `0 0 0 16px ${world.palette.accentSoft}` }
+            : { boxShadow: "0 0 0 0 rgba(0,0,0,0)" }
+        }
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      />
+      <b
+        className="display mt-5 text-[34px]"
+        style={{ color: "var(--kiosk-text)", opacity: lit ? 1 : 0.62 }}
+      >
         {world.display}
       </b>
-      <AnimatePresence>
-        {lit ? (
-          <motion.span
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -14 }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-[86%] text-center text-[24px] leading-snug font-medium"
-            style={{ color: world.palette.textMuted }}
-          >
-            {world.attractLine}
-          </motion.span>
-        ) : null}
-      </AnimatePresence>
     </motion.div>
   )
 }
@@ -206,14 +229,23 @@ function Portal({
  * long and eased, the transformation is a single pop on arrival. Morphing in
  * mid-air reads as a glitch; arriving and *then* becoming something reads as the
  * world doing it to the coin, which is the point.
+ *
+ * Which is why the form is held back until the flight lands rather than swapped
+ * when the target changes. Both were driven off the same value, and because only
+ * the position was animated the character changed first and then flew — a rocket
+ * standing in the kids' doorway for a second and a half, which says the opposite
+ * of what the loop is for.
  */
 function Traveller({ world, x, animate }: { world: World; x: number; animate: boolean }) {
+  const [arrived, setArrived] = useState(world)
+
   return (
     <motion.div
       className="absolute"
       style={{ left: 0, top: TRAVELLER_Y }}
       animate={{ x: animate ? x : PORTAL_X[0] }}
       transition={{ duration: 1.6, ease: [0.65, 0, 0.35, 1] }}
+      onAnimationComplete={() => setArrived(world)}
     >
       <motion.div
         animate={animate ? { y: [0, -26, 0] } : { y: 0 }}
@@ -229,13 +261,13 @@ function Traveller({ world, x, animate }: { world: World; x: number; animate: bo
         <div style={{ transform: "translate(-50%, -50%)" }}>
         <AnimatePresence mode="popLayout">
           <motion.div
-            key={world.id}
+            key={arrived.id}
             initial={{ scale: 0.2, rotate: -30, opacity: 0 }}
             animate={{ scale: 1, rotate: 0, opacity: 1 }}
             exit={{ scale: 0.2, rotate: 30, opacity: 0 }}
             transition={{ type: "spring", stiffness: 320, damping: 22 }}
           >
-            <Mascot name={FORM[world.id]} mood="wow" size={TRAVELLER_SIZE} />
+            <Mascot name={FORM[arrived.id]} mood="wow" size={TRAVELLER_SIZE} />
           </motion.div>
         </AnimatePresence>
         </div>

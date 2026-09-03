@@ -23,7 +23,7 @@ export function CourseDetailScene({ state, props }: SceneComponentProps) {
   const artwork = course.campaignPoster ?? course.media
 
   return (
-    <div className="scene-surface flex h-full w-full gap-12 rounded-[48px] px-16 pt-14 pb-60">
+    <div className="scene-surface flex h-full w-full gap-12 rounded-[48px] px-16 pt-14 pb-[var(--kiosk-chrome-clearance,240px)]">
       {artwork ? <Photo media={artwork} className="w-[23%] shrink-0 rounded-[32px]" /> : null}
 
       <div className="flex w-[34%] shrink-0 flex-col justify-center gap-6">
