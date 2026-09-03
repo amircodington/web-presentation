@@ -192,6 +192,24 @@
       }
     },
     {
+      "id": "course-kids-financial-literacy",
+      "component": "CourseDetailScene",
+      "camera": {
+        "x": -2800,
+        "y": 5700,
+        "scale": 1.1,
+        "rotate": 0
+      },
+      "transition": "dive",
+      "back": "kids-course",
+      "meta": {
+        "world": "kids"
+      },
+      "props": {
+        "courseId": "kids-financial-literacy"
+      }
+    },
+    {
       "id": "course-masir-servat",
       "component": "CourseDetailScene",
       "camera": {
