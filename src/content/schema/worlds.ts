@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { AudienceGroupSchema, AudienceIdSchema, IconNameSchema } from "./common"
+import { AudienceGroupSchema, AudienceIdSchema, IconNameSchema, MediaRefSchema } from "./common"
 
 const HexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/, "expected a #rrggbb hex colour")
 
@@ -43,6 +43,30 @@ const WorldExperienceSchema = z.object({
   active: z.boolean(),
 })
 
+/**
+ * How a world is drawn, as distinct from what colour it is.
+ *
+ * Palette alone did not separate the three: all of them rendered the same cards
+ * fronted by the same smiling characters, so the adults' world greeted a
+ * thirty-year-old with a grinning piggy bank and the teens' world was the kids'
+ * world in navy. Brief §4.1 is explicit that a colour change is not enough.
+ *
+ * `style` names the language, and the world home resolves it. One component,
+ * three languages — three forked copies of the scene would drift apart by the
+ * second edit.
+ *
+ * - `toy`    characters, thick ink, hard offset shadows. Things you pick up.
+ * - `level`  a level select. Numbered stages, a progress rail, geometric marks.
+ * - `ledger` ruled document tiles, hairline rules, no characters anywhere.
+ */
+const WorldSurfaceSchema = z.object({
+  style: z.enum(["toy", "level", "ledger"]),
+  /** What a stop on the path is called here, if it is called anything. */
+  stepLabel: z.string().min(1).optional(),
+  /** A photograph behind the world's headline. Texture, never a claim. */
+  hero: MediaRefSchema.optional(),
+})
+
 const WorldSchema = z.object({
   id: AudienceGroupSchema,
   /** What the gateway card says. Brief §7 fixes this wording. */
@@ -64,6 +88,7 @@ const WorldSchema = z.object({
    */
   greetingCue: z.string().min(1).optional(),
   palette: WorldPaletteSchema,
+  surface: WorldSurfaceSchema,
   experiences: z.array(WorldExperienceSchema).length(4),
   /**
    * The world's diagnostic — the test that produces a result, as distinct from an
