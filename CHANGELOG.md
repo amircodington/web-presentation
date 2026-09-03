@@ -8,6 +8,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.15.0] — 2026-09-03
+
+### Fixed
+- **ui:** remove the attract screen and clear the overlaps behind it (7bc173c)
+
 ## [0.14.1] — 2026-09-03
 
 ## [0.14.0] — 2026-09-03
