@@ -35,6 +35,9 @@
         "positive": "#22C55E",
         "joy": "#A855F7"
       },
+      "surface": {
+        "style": "toy"
+      },
       "experiences": [
         {
           "id": "kids-needs-wants",
@@ -113,6 +116,10 @@
         "positive": "#3DDC97",
         "joy": "#A78BFA"
       },
+      "surface": {
+        "style": "level",
+        "stepLabel": "مرحله"
+      },
       "experiences": [
         {
           "id": "teens-challenge-100m",
@@ -179,9 +186,9 @@
         "surface": "#16302A",
         "card": "#F7F3E8",
         "border": "#0A1512",
-        "accent": "#C9A227",
-        "accentSoft": "#F0E3B8",
-        "onAccent": "#14231E",
+        "accent": "#2F8F5B",
+        "accentSoft": "#D7E9DE",
+        "onAccent": "#FFFFFF",
         "text": "#EDE7D9",
         "textMuted": "#9BAFA6",
         "cardText": "#14231E",
@@ -189,6 +196,18 @@
         "money": "#C9A227",
         "positive": "#3F9D72",
         "joy": "#6B8F84"
+      },
+      "surface": {
+        "style": "ledger",
+        "hero": {
+          "kind": "image",
+          "src": "/media/venue-hall.jpg",
+          "alt": "سالن باغ کتاب تهران در روز برگزاری",
+          "focalPoint": [
+            0.5,
+            0.42
+          ]
+        }
       },
       "experiences": [
         {

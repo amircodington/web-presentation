@@ -10,8 +10,9 @@ import { useSound } from "@/components/kiosk/AudioProvider"
 import { Icon } from "@/components/ui/Icon"
 import { Logo } from "@/components/ui/Logo"
 import { Mascot } from "@/components/ui/Mascot"
+import { Photo } from "@/components/ui/Photo"
 import type { AudienceGroup } from "@/content/schema/common"
-import type { WorldExperience } from "@/content/schema/worlds"
+import type { World, WorldExperience } from "@/content/schema/worlds"
 import type { SceneComponentProps } from "@/engine"
 
 /**
@@ -91,9 +92,32 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
         <Progress done={done} total={experiences.length} />
       </header>
 
-      <div className="flex flex-col gap-2">
-        <h2 className="display text-[76px]">{world.headline}</h2>
-        <p className="text-[29px] text-[var(--kiosk-muted)]">{world.intro}</p>
+      {/*
+        A world may set a photograph behind its headline. It is texture and never a
+        claim about who the world is for — held well back from the type, and the
+        board's own colour is still what the eye reads.
+      */}
+      <div className="relative flex flex-col gap-2">
+        {world.surface.hero ? (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -inset-x-20 -inset-y-6 overflow-hidden rounded-[36px]"
+            style={{
+              maskImage:
+                "linear-gradient(to bottom, transparent, black 38%, transparent), " +
+                "linear-gradient(to left, transparent, black 22%, black 78%, transparent)",
+              maskComposite: "intersect",
+              WebkitMaskImage:
+                "linear-gradient(to bottom, transparent, black 38%, transparent), " +
+                "linear-gradient(to left, transparent, black 22%, black 78%, transparent)",
+              WebkitMaskComposite: "source-in",
+            }}
+          >
+            <Photo media={world.surface.hero} className="h-full w-full opacity-[0.17]" />
+          </div>
+        ) : null}
+        <h2 className="display relative text-[76px]">{world.headline}</h2>
+        <p className="relative text-[29px] text-[var(--kiosk-muted)]">{world.intro}</p>
       </div>
 
       {/*
@@ -102,7 +126,7 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
        * banner nobody presses; the same card at card width reads as a piece.
        */}
       <div
-        className="mx-auto grid min-h-0 w-full flex-1 items-stretch gap-6"
+        className="mx-auto grid min-h-0 w-full flex-1 content-center items-stretch gap-6"
         style={{
           gridTemplateColumns: `repeat(${stops}, minmax(0, 1fr))`,
           maxWidth: stops === 1 ? "620px" : stops === 2 ? "1120px" : "100%",
@@ -115,6 +139,8 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
             step={index + 1}
             isDone={completed.includes(experience.id)}
             isActive={isActive}
+            surface={world.surface}
+            total={stops}
             onSelect={() => camera.goTo(experience.scene, "dive")}
           />
         ))}
@@ -131,6 +157,8 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
             step={experiences.length + 1}
             isDone={false}
             isActive={isActive}
+            surface={world.surface}
+            total={stops}
             emphasis
             onSelect={() => camera.goTo(diagnostic.scene, "dive")}
           />
@@ -182,29 +210,38 @@ function Progress({ done, total }: { done: number; total: number }) {
 }
 
 /**
- * One stop on the path, fronted by the character that hosts it.
+ * One stop on the path, drawn in its world's own language.
  *
- * The world's diagnostic is a stop like any other rather than a bar beneath the
- * row. It used to have a full-width row of its own, and together with the filing
- * question that left the adults world four cards squeezed into whatever height
- * three extra rows had not already taken — which was not enough to draw a card in.
+ * The three worlds used to render the same card fronted by the same smiling
+ * character, so a thirty-year-old was greeted by a grinning piggy bank and the
+ * teens' world was the kids' world in navy. What changes here is not the colour:
+ * it is what fronts the card, what the step is called, and what the card is made
+ * of. See `WorldSurfaceSchema` for the three languages.
  */
 function ExperienceCard({
   experience,
   step,
+  total,
   isDone,
   isActive,
+  surface,
   emphasis = false,
   onSelect,
 }: {
   experience: WorldExperience
   step: number
+  /** How many stops there are, for a world that indexes them. */
+  total: number
   isDone: boolean
   isActive: boolean
+  surface: World["surface"]
   /** Marks the diagnostic, which is the one stop that is not a game. */
   emphasis?: boolean
   onSelect: () => void
 }) {
+  const level = surface.style === "level"
+  const ledger = surface.style === "ledger"
+
   return (
     <motion.button
       type="button"
@@ -212,57 +249,180 @@ function ExperienceCard({
       initial={{ opacity: 0, y: 60 }}
       animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
       transition={{ duration: 0.5, delay: step * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      whileTap={{ x: 9, y: 9, boxShadow: "0px 0px 0 0 var(--kiosk-border)" }}
-      className="mat relative flex min-h-0 cursor-pointer flex-col items-center justify-center gap-4 overflow-hidden rounded-[36px] px-8 py-7 text-center"
+      whileTap={
+        level ? { scale: 0.97 } : { x: 9, y: 9, boxShadow: "0px 0px 0 0 var(--kiosk-border)" }
+      }
+      /*
+        A toy card fills its row — the character is the content and it wants the
+        height. A level tile and a ledger tile are read top-down and are done when
+        the copy is done; stretching them to the row left half a card of nothing
+        under every hook. They size to their content and sit at the top of the row.
+      */
+      className={
+        level
+          ? "relative flex cursor-pointer flex-col items-stretch gap-4 self-start overflow-hidden rounded-[28px] border-[3px] px-7 py-6 text-start"
+          : ledger
+            ? "mat relative flex cursor-pointer flex-col items-stretch gap-4 self-start overflow-hidden rounded-[36px] px-8 py-7 text-start"
+            : "mat relative flex min-h-0 cursor-pointer flex-col items-center justify-center gap-4 overflow-hidden rounded-[36px] px-8 py-7 text-center"
+      }
       style={
-        emphasis
-          ? { background: "var(--kiosk-accent-soft)", borderColor: "var(--kiosk-accent)" }
-          : undefined
+        level
+          ? {
+              background: emphasis ? "var(--kiosk-accent-soft)" : "var(--kiosk-surface)",
+              borderColor: emphasis ? "var(--kiosk-accent)" : "color-mix(in oklab, var(--kiosk-text) 22%, transparent)",
+              color: emphasis ? "var(--kiosk-card-text)" : "var(--kiosk-text)",
+            }
+          : emphasis
+            ? { background: "var(--kiosk-accent-soft)", borderColor: "var(--kiosk-accent)" }
+            : undefined
       }
     >
+      <Step
+        surface={surface}
+        step={step}
+        total={total}
+        isDone={isDone}
+        icon={experience.icon}
+      />
+
+      <Art surface={surface} experience={experience} step={step} isDone={isDone} isActive={isActive} />
+
+      <b
+        className={
+          "flex items-center text-[34px] leading-tight font-bold text-balance " +
+          (ledger || level ? "min-h-[2.3em]" : "min-h-[2.3em] justify-center")
+        }
+      >
+        {experience.title}
+      </b>
+      <span
+        className={
+          "flex min-h-[2.9em] items-start text-[23px] leading-snug " +
+          (level ? "text-[var(--kiosk-muted)]" : "text-[var(--kiosk-card-muted)]")
+        }
+      >
+        {experience.hook}
+      </span>
+
+    </motion.button>
+  )
+}
+
+/**
+ * How a world indexes its stops.
+ *
+ * The kids' world numbers them in a corner and says nothing else — a seven-year-old
+ * is not tracking progress, they are choosing the one with the pig on it. The teens'
+ * world names them, because a named level is the thing you want the next one of. The
+ * adults' world rules an index across the top, the way a document is paginated.
+ */
+function Step({
+  surface,
+  step,
+  total,
+  isDone,
+  icon,
+}: {
+  surface: World["surface"]
+  step: number
+  total: number
+  isDone: boolean
+  icon: WorldExperience["icon"]
+}) {
+  const done = isDone ? (
+    <span className="text-[var(--kiosk-positive)]">
+      <Icon name="check" size={32} />
+    </span>
+  ) : null
+
+  if (surface.style === "level") {
+    return (
+      <span className="flex items-center justify-between gap-3">
+        <span className="text-[22px] font-black tracking-[0.14em] text-[var(--kiosk-accent)] tabular-nums">
+          {surface.stepLabel ? `${surface.stepLabel} ` : ""}
+          {toPersianDigits(step)}
+        </span>
+        {done}
+      </span>
+    )
+  }
+
+  if (surface.style === "ledger") {
+    return (
+      <span className="flex flex-col gap-3">
+        <span className="flex items-center justify-between gap-3">
+          <span className="flex items-center gap-3 text-[var(--kiosk-accent)]">
+            <Icon name={icon} size={30} />
+          </span>
+          <span className="text-[21px] font-semibold text-[var(--kiosk-card-muted)] tabular-nums">
+            {toPersianDigits(step)} / {toPersianDigits(total)}
+          </span>
+        </span>
+        <span
+          aria-hidden
+          className="h-px w-full"
+          style={{ background: "color-mix(in oklab, var(--kiosk-card-text) 20%, transparent)" }}
+        />
+      </span>
+    )
+  }
+
+  return (
+    <>
       <span className="absolute start-6 top-5 text-[26px] font-black text-[var(--kiosk-card-muted)]">
         {toPersianDigits(step)}
       </span>
-      {isDone ? (
-        <span className="absolute end-5 top-5 text-[var(--kiosk-positive)]">
-          <Icon name="check" size={40} />
-        </span>
-      ) : null}
+      {isDone ? <span className="absolute end-5 top-5">{done}</span> : null}
+    </>
+  )
+}
 
-      {/*
-        The art is the one part of a card that can give up space, so it is sized by
-        the row rather than by a constant. A world carrying more rows below the grid
-        — adults carries three — leaves the grid shorter, and a fixed-height
-        character pushed the hook straight out through the bottom of the card.
-      */}
-      <motion.span
-        animate={isActive ? { y: [0, -12, 0] } : { y: 0 }}
-        transition={{
-          duration: 2.2 + step * 0.3,
-          repeat: isActive ? Infinity : 0,
-          ease: "easeInOut",
-        }}
-        className="flex min-h-0 flex-1 items-center justify-center"
-      >
-        <Mascot
-          name={castFor(experience.icon)}
-          mood={isDone ? "wow" : "happy"}
-          className="h-full max-h-[130px] min-h-[58px] w-auto"
-        />
-      </motion.span>
+/**
+ * What fronts a card.
+ *
+ * A character in the kids' world, because the character *is* the game there. A
+ * geometric mark in the teens' world. Nothing at all in the adults' world: brief
+ * §4.1 asks for data and scenario, and a cartoon is the single loudest way to tell
+ * an adult a screen was not built for them.
+ */
+function Art({
+  surface,
+  experience,
+  step,
+  isDone,
+  isActive,
+}: {
+  surface: World["surface"]
+  experience: WorldExperience
+  step: number
+  isDone: boolean
+  isActive: boolean
+}) {
+  if (surface.style === "ledger") return null
 
-      {/*
-        Titles run to one line or two, and a title box that grows takes its height
-        out of the art above it — which left one card in a row with a character half
-        the size of its neighbours'. Reserving two lines everywhere keeps the row's
-        art on one baseline whatever the copy does.
-      */}
-      <b className="flex min-h-[2.3em] items-center text-[34px] leading-tight font-bold text-balance">
-        {experience.title}
-      </b>
-      <span className="flex min-h-[2.9em] items-start text-[23px] leading-snug text-[var(--kiosk-card-muted)]">
-        {experience.hook}
+  if (surface.style === "level") {
+    return (
+      <span className="flex items-center justify-start pt-1 text-[var(--kiosk-accent)]">
+        <Icon name={experience.icon} size={64} />
       </span>
-    </motion.button>
+    )
+  }
+
+  return (
+    <motion.span
+      animate={isActive ? { y: [0, -12, 0] } : { y: 0 }}
+      transition={{
+        duration: 2.2 + step * 0.3,
+        repeat: isActive ? Infinity : 0,
+        ease: "easeInOut",
+      }}
+      className="flex min-h-0 flex-1 items-center justify-center"
+    >
+      <Mascot
+        name={castFor(experience.icon)}
+        mood={isDone ? "wow" : "happy"}
+        className="h-full max-h-[130px] min-h-[58px] w-auto"
+      />
+    </motion.span>
   )
 }
