@@ -9,6 +9,7 @@ export type AllocationRule =
   | "highRisk"
   | "noGrowth"
   | "noEducation"
+  | "narrow"
   | "balanced"
 
 const CONCENTRATION_LIMIT = 0.6
@@ -25,6 +26,12 @@ const BALANCED_MIN_BUCKETS = 3
  *
  * At most three rules are returned. A visitor at a booth reads one screen, and a
  * wall of six criticisms teaches less than two pointed ones.
+ *
+ * A completed allocation always returns at least one rule. The thresholds used to
+ * leave a gap between them — half the pot on one option, spread over two of them,
+ * was neither concentrated enough to warn about nor spread enough to praise — and
+ * a split that landed in it rendered a result screen with a chart and no words on
+ * it, which reads as the game having broken rather than as an opinion withheld.
  */
 export function evaluateAllocation(game: AllocationGame, allocation: Allocation): AllocationRule[] {
   const total = Object.values(allocation).reduce((sum, n) => sum + n, 0)
@@ -52,12 +59,9 @@ export function evaluateAllocation(game: AllocationGame, allocation: Allocation)
     if (!hasEducation && "education" in gameOptionIds(game)) fired.push("noEducation")
   }
 
-  if (
-    fired.length === 0 &&
-    used.length >= BALANCED_MIN_BUCKETS &&
-    largest < BALANCED_SPREAD_LIMIT
-  ) {
-    fired.push("balanced")
+  if (fired.length === 0) {
+    const spread = used.length >= BALANCED_MIN_BUCKETS && largest < BALANCED_SPREAD_LIMIT
+    fired.push(spread ? "balanced" : "narrow")
   }
 
   return fired.slice(0, 3)

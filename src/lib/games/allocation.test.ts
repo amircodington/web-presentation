@@ -103,7 +103,44 @@ describe("tokensLeft", () => {
   })
 })
 
+/**
+ * Every way `tokens` can be split across `options` — including the splits nobody
+ * thinks to write down by hand, which is where a gap between two thresholds hides.
+ */
+function everyAllocation(optionIds: readonly string[], tokens: number): Allocation[] {
+  if (optionIds.length === 0) return tokens === 0 ? [{}] : []
+  const [head, ...rest] = optionIds as [string, ...string[]]
+  const all: Allocation[] = []
+  for (let count = 0; count <= tokens; count += 1) {
+    for (const tail of everyAllocation(rest, tokens - count)) {
+      all.push(count > 0 ? { [head]: count, ...tail } : tail)
+    }
+  }
+  return all
+}
+
 describe("every allocation game in content", () => {
+  it("says something about every possible way the pot can be split", () => {
+    // The result panel renders one card per rule. A split that fires no rule shows
+    // a chart and nothing else, which reads as the game having broken.
+    for (const activity of content.activities.activities) {
+      if (activity.game?.kind !== "allocation") continue
+      const game = activity.game
+      const splits = everyAllocation(
+        game.options.map((option) => option.id),
+        game.tokens,
+      )
+      expect(splits.length).toBeGreaterThan(0)
+      for (const split of splits) {
+        const rules = evaluateAllocation(game, split)
+        expect(rules.length, `${activity.id}: ${JSON.stringify(split)}`).toBeGreaterThan(0)
+        for (const rule of rules) {
+          expect(game.feedback[rule], `${activity.id}: ${rule}`).toBeDefined()
+        }
+      }
+    }
+  })
+
   it("has feedback copy for every rule it can produce", () => {
     for (const activity of content.activities.activities) {
       if (activity.game?.kind !== "allocation") continue
