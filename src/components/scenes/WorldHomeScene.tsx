@@ -46,7 +46,7 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
   const done = experiences.filter((experience) => completed.includes(experience.id)).length
 
   return (
-    <div className="scene-surface flex h-full w-full flex-col gap-8 rounded-[48px] px-20 pt-12 pb-60">
+    <div className="scene-surface flex h-full w-full flex-col gap-5 rounded-[48px] px-20 pt-12 pb-60">
       <header className="flex items-center justify-between gap-8">
         <div className="flex items-center gap-6">
           <Logo height={72} />
@@ -93,8 +93,8 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
        * one experience and leaves should still have answered it.
        */}
       {world.qualifier ? (
-        <div className="flex items-center justify-center gap-5">
-          <span className="text-[27px] font-medium text-[var(--kiosk-muted)]">
+        <div className="flex items-center justify-center gap-4">
+          <span className="text-[25px] font-medium text-[var(--kiosk-muted)]">
             {world.qualifier.prompt}
           </span>
           {world.qualifier.options.map((option) => {
@@ -105,7 +105,7 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
                 type="button"
                 onClick={() => setAudience(option.audience)}
                 aria-label={`${world.qualifier!.prompt} ${option.label}`}
-                className="min-h-[88px] cursor-pointer rounded-full border-[4px] border-[var(--kiosk-border)] px-11 text-[28px] font-bold"
+                className="min-h-[88px] cursor-pointer rounded-full border-[4px] border-[var(--kiosk-border)] px-10 text-[26px] font-bold"
                 style={{
                   background: picked ? "var(--kiosk-accent)" : "var(--kiosk-card)",
                   color: picked ? "var(--kiosk-on-accent)" : "var(--kiosk-card-text)",
@@ -130,7 +130,7 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="flex min-h-[104px] cursor-pointer items-center gap-6 rounded-[32px] border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-accent)] px-10 text-start text-[var(--kiosk-on-accent)]"
+          className="flex min-h-[96px] shrink-0 cursor-pointer items-center gap-6 rounded-[32px] border-[4px] border-[var(--kiosk-border)] bg-[var(--kiosk-accent)] px-10 text-start text-[var(--kiosk-on-accent)]"
           style={{ boxShadow: "8px 8px 0 0 var(--kiosk-border)" }}
         >
           <Icon name="gift" size={42} />
@@ -143,7 +143,7 @@ export function WorldHomeScene({ state, camera, props }: SceneComponentProps) {
         <button
           type="button"
           onClick={() => camera.goTo(diagnostic.scene, "dive")}
-          className="mat flex min-h-[112px] cursor-pointer items-center gap-7 rounded-[32px] px-10 text-start"
+          className="mat flex min-h-[100px] shrink-0 cursor-pointer items-center gap-7 rounded-[32px] px-10 text-start"
         >
           <Icon name={diagnostic.icon} size={44} />
           <span className="flex flex-col">
@@ -198,7 +198,7 @@ function ExperienceCard({
       animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 0 }}
       transition={{ duration: 0.5, delay: step * 0.08, ease: [0.22, 1, 0.36, 1] }}
       whileTap={{ x: 9, y: 9, boxShadow: "0px 0px 0 0 var(--kiosk-border)" }}
-      className="mat relative flex min-h-0 cursor-pointer flex-col items-center justify-center gap-5 rounded-[36px] px-8 text-center"
+      className="mat relative flex min-h-0 cursor-pointer flex-col items-center justify-center gap-4 overflow-hidden rounded-[36px] px-8 py-7 text-center"
     >
       <span className="absolute start-6 top-5 text-[26px] font-black text-[var(--kiosk-card-muted)]">
         {toPersianDigits(step)}
@@ -209,6 +209,12 @@ function ExperienceCard({
         </span>
       ) : null}
 
+      {/*
+        The art is the one part of a card that can give up space, so it is sized by
+        the row rather than by a constant. A world carrying more rows below the grid
+        — adults carries three — leaves the grid shorter, and a fixed-height
+        character pushed the hook straight out through the bottom of the card.
+      */}
       <motion.span
         animate={isActive ? { y: [0, -12, 0] } : { y: 0 }}
         transition={{
@@ -216,12 +222,25 @@ function ExperienceCard({
           repeat: isActive ? Infinity : 0,
           ease: "easeInOut",
         }}
+        className="flex min-h-0 flex-1 items-center justify-center"
       >
-        <Mascot name={castFor(experience.icon)} mood={isDone ? "wow" : "happy"} size={130} />
+        <Mascot
+          name={castFor(experience.icon)}
+          mood={isDone ? "wow" : "happy"}
+          className="h-full max-h-[130px] w-auto"
+        />
       </motion.span>
 
-      <b className="text-[36px] leading-tight font-bold">{experience.title}</b>
-      <span className="text-[24px] leading-snug text-[var(--kiosk-card-muted)]">
+      {/*
+        Titles run to one line or two, and a title box that grows takes its height
+        out of the art above it — which left one card in a row with a character half
+        the size of its neighbours'. Reserving two lines everywhere keeps the row's
+        art on one baseline whatever the copy does.
+      */}
+      <b className="flex min-h-[2.3em] items-center text-[34px] leading-tight font-bold text-balance">
+        {experience.title}
+      </b>
+      <span className="flex min-h-[2.9em] items-start text-[23px] leading-snug text-[var(--kiosk-card-muted)]">
         {experience.hook}
       </span>
     </motion.button>

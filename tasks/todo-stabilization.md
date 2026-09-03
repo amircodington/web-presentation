@@ -58,7 +58,7 @@ Adults carries qualifier + reveal + diagnostic below the experience grid; the gr
 is squeezed and card text spills past the border.
 - [ ] Adults world at 1920×1080 shows all four hooks inside their cards
 - [ ] Kids and teens unchanged
-- [ ] The world CTA no longer overlaps the cards or the control bar
+- [ ] Card art sits on one baseline whatever the title length
 
 ### Checkpoint A — correctness
 - [ ] `lint`, `typecheck`, `test`, `validate:content` clean
@@ -90,8 +90,11 @@ stop it colliding with scene content.
 
 ### - [ ] Task 7 · Scale and spacing pass
 `fix/scene-scale` · M · deps: 6
-Every scene carries `pb-60` (240px) whether or not it needs it, leaving large dead
-areas while cards get squeezed (feedback §3.3).
+AGENTS.md §8 says the `pb-60` clearance is derived from the chrome's measured height
+and must be re-derived when the chrome changes. It never accounted for the subtitle
+bar, which sits above the tray and lands on the kids world's cards. The clearance is
+also applied in design pixels while the chrome is drawn in screen pixels, so the two
+disagree by the stage scale (feedback §3.3).
 - [ ] Bottom padding derives from the chrome's real height, not a fixed 240px
 - [ ] No scene has an unexplained empty band
 - [ ] Body text legible at 2–3 m on all 28 scenes

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react"
 import { useState } from "react"
 import type { MarketGame as MarketGameContent } from "@/content/schema/activities"
 import { priceAfter } from "@/lib/games/market"
+import { answerRound, countCorrect, emptyAnswers } from "@/lib/games/score"
 import { toPersianDigits } from "@/lib/format"
 import { PriceChart } from "@/components/charts/PriceChart"
 import { useSound } from "@/components/kiosk/AudioProvider"
@@ -31,25 +32,33 @@ interface Props {
 export function MarketGame({ game, onFinish, finishLabel }: Props) {
   const { play } = useSound()
   const [round, setRound] = useState(0)
-  const [guess, setGuess] = useState<"up" | "down">()
-  const [correct, setCorrect] = useState(0)
+  const [guesses, setGuesses] = useState(() => emptyAnswers<"up" | "down">(game.rounds.length))
 
   const current = game.rounds[round]
   const finished = round >= game.rounds.length
+  const guess = guesses[round]
   const answered = guess !== undefined
   // The candle for the round in play is drawn only once it has been answered.
   const roundsDrawn = round + (answered ? 1 : 0)
+  const correct = countCorrect(
+    guesses,
+    game.rounds.map((entry) => entry.effect),
+  )
 
-  /** Scores the guess and says so, because a verdict read is a verdict forgotten. */
-  const judge = (right: boolean) => {
-    if (right) setCorrect((value) => value + 1)
-    play(right ? "good" : "warn")
+  /**
+   * Records the guess and says whether it was right, because a verdict read is a
+   * verdict forgotten. The record is what the score is counted from, so a second
+   * touch on an already-answered round changes nothing and makes no sound.
+   */
+  const judge = (choice: "up" | "down") => {
+    if (answered) return
+    setGuesses((current) => answerRound(current, round, choice))
+    play(choice === game.rounds[round]?.effect ? "good" : "warn")
   }
 
   const restart = () => {
     setRound(0)
-    setGuess(undefined)
-    setCorrect(0)
+    setGuesses(emptyAnswers<"up" | "down">(game.rounds.length))
   }
 
   return (
@@ -142,31 +151,14 @@ export function MarketGame({ game, onFinish, finishLabel }: Props) {
                     {current.explain}
                   </p>
                 </div>
-                <Button
-                  onClick={() => {
-                    setRound((value) => value + 1)
-                    setGuess(undefined)
-                  }}
-                >
+                <Button onClick={() => setRound((value) => value + 1)}>
                   {round + 1 < game.rounds.length ? "خبر بعدی ←" : "نتیجه ←"}
                 </Button>
               </motion.div>
             ) : (
               <motion.div key="choices" exit={{ opacity: 0 }} className="grid grid-cols-2 gap-6">
-                <ChoiceButton
-                  direction="up"
-                  onClick={() => {
-                    setGuess("up")
-                    judge(current.effect === "up")
-                  }}
-                />
-                <ChoiceButton
-                  direction="down"
-                  onClick={() => {
-                    setGuess("down")
-                    judge(current.effect === "down")
-                  }}
-                />
+                <ChoiceButton direction="up" onClick={() => judge("up")} />
+                <ChoiceButton direction="down" onClick={() => judge("down")} />
               </motion.div>
             )}
           </AnimatePresence>
