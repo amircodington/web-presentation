@@ -17,7 +17,7 @@ import { sceneStates } from "./lifecycle"
 import { chromeClearancePx } from "./clearance"
 import { fitScale } from "./projection"
 import { useCamera, type CameraApi } from "./use-camera"
-import { useGestures } from "./use-gestures"
+import { useCanvasGuards } from "./use-canvas-guards"
 import type { SceneNode, SceneState, Size } from "./types"
 
 /** Props every scene component receives. */
@@ -71,7 +71,7 @@ export function SceneGraph({ scenes, initialSceneId, registry, overlay }: SceneG
   // content. Derived rather than chosen, and in the stage's own units — see
   // `clearance.ts` for why a fixed number of design pixels cannot be right.
   const chromeClearance = chromeClearancePx(scale)
-  useGestures(viewportRef, camera, scale)
+  useCanvasGuards(viewportRef)
 
   useEffect(() => {
     const element = viewportRef.current

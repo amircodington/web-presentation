@@ -36,7 +36,6 @@ export const kioskConfig = Object.freeze({
   idleTimeoutMs: readNumber("KIOSK_IDLE_TIMEOUT_MS", env.KIOSK_IDLE_TIMEOUT_MS, 75_000),
   successResetMs: readNumber("KIOSK_SUCCESS_RESET_MS", env.KIOSK_SUCCESS_RESET_MS, 9_000),
   qrResetMs: readNumber("KIOSK_QR_RESET_MS", env.KIOSK_QR_RESET_MS, 25_000),
-  gestureRecenterMs: readNumber("KIOSK_GESTURE_RECENTER_MS", env.KIOSK_GESTURE_RECENTER_MS, 6_000),
   /** How often the schedule countdown re-reads the clock. */
   scheduleTickMs: readNumber("KIOSK_SCHEDULE_TICK_MS", env.KIOSK_SCHEDULE_TICK_MS, 20_000),
   festivalOfferEnabled: readBoolean(
@@ -48,8 +47,6 @@ export const kioskConfig = Object.freeze({
   engine: Object.freeze({
     designWidth: readNumber("ENGINE_DESIGN_WIDTH", env.ENGINE_DESIGN_WIDTH, 1920),
     designHeight: readNumber("ENGINE_DESIGN_HEIGHT", env.ENGINE_DESIGN_HEIGHT, 1080),
-    minZoom: readNumber("ENGINE_MIN_ZOOM", env.ENGINE_MIN_ZOOM, 0.4),
-    maxZoom: readNumber("ENGINE_MAX_ZOOM", env.ENGINE_MAX_ZOOM, 2.5),
     /**
      * Screen pixels left bare around the stage, so the frame reads as a card on a
      * surround rather than as a full-bleed panel with nowhere to end. Set to 0 for

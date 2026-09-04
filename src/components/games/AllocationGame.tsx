@@ -324,7 +324,6 @@ function CoinTray({
           {Array.from({ length: shown }, (_, index) => (
             <motion.div
               key={`${left}-${index}`}
-              data-gesture
               drag
               dragSnapToOrigin
               dragMomentum={false}

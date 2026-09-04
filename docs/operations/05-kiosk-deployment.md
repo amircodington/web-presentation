@@ -48,9 +48,10 @@ chromium \
 ```
 
 Each flag earns its place. `--incognito` guarantees no state survives between visitors.
-`--disable-pinch` and `--overscroll-history-navigation=0` stop the browser hijacking gestures
-the app handles itself — without them, a two-finger swipe navigates *back* out of the kiosk,
-which is the most visible possible failure. `--autoplay-policy` is what lets background video
+`--disable-pinch` and `--overscroll-history-navigation=0` are the browser's half of a fixed
+frame: the app refuses every camera gesture of its own, and these stop Chrome from zooming or
+navigating on a stray two-finger touch — without them a sleeve against the glass navigates
+*back* out of the kiosk, which is the most visible possible failure. `--autoplay-policy` is what lets background video
 start without a tap. `--disable-session-crashed-bubble` prevents a "Chrome didn't shut down
 correctly" dialog from being the thing on screen after a power cut.
 

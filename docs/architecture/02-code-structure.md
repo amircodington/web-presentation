@@ -73,7 +73,7 @@ src/
 │   ├── Scene.tsx               # positions one scene in canvas space
 │   ├── SceneGraph.tsx          # renders all scenes from scenes.json
 │   ├── use-camera.ts           # imperative API: goTo, next, previous, home
-│   ├── use-gestures.ts         # pinch-zoom, drag-pan, swipe, double-tap
+│   ├── use-canvas-guards.ts    # suppresses native pinch/zoom/overscroll; no camera gestures
 │   ├── transitions.ts          # named easing/duration presets referenced by scenes.json
 │   ├── projection.ts           # pure maths: scene transform → inverse camera transform
 │   └── types.ts                # CameraState, SceneNode, TransitionSpec

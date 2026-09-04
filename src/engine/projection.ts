@@ -44,7 +44,8 @@ export function toCss(transform: CameraTransform): string {
 
 /**
  * Maps a point in canvas space to viewport space under the given camera.
- * Used by the gesture layer to keep a pinch anchored under the fingers.
+ * The inverse of the projection, used when a placement must be read back in
+ * screen terms — the QA harness measures with it.
  */
 export function canvasToViewport(
   point: { x: number; y: number },
@@ -59,11 +60,6 @@ export function canvasToViewport(
     x: camera.x + sx * cos - sy * sin,
     y: camera.y + sx * sin + sy * cos,
   }
-}
-
-/** Clamps a free-zoom factor to the configured range around a scene's authored scale. */
-export function clampZoom(scale: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, scale))
 }
 
 /**

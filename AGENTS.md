@@ -204,6 +204,9 @@ These come from the physical reality of an unattended screen in a loud hall:
   generic press.
 - **Idle reset.** No interaction for `KIOSK_IDLE_TIMEOUT_MS` → session cleared, camera returns
   to the attract scene. Session data must never leak between two visitors.
+- **The frame never moves by touch.** No swipe, pinch, drag-pan or double-tap gesture may move
+  the camera — only the tray's controls and the cards inside a scene. A sleeve against a 55"
+  screen must leave the scene exactly where it was; see `src/engine/use-canvas-guards.ts`.
 - **Touch targets ≥ 88px.** Fingers, on glass, at standing height. No hover-only affordances.
 - **A full-bleed tap target needs `pointer-events-none` on every layer above it.** Otherwise the
   headline swallows the tap aimed at the middle of the screen, which is where people aim.
@@ -384,7 +387,8 @@ same commit sequence that merges it. A branch with no row here is an incomplete 
 | `feat/game-content` | Games speak their world's language; instalment verdict; budget analysed, not discarded | merged |
 | `chore/qa-full` | Full 1080p QA sweep: every scene, every game to a result, idle reset, session isolation | merged |
 | `fix/ui-overlaps` | Attract screen removed, the gateway made the hub, four classes of frame overlap fixed | merged |
-| `fix/kiosk-touch-and-course-back` | Drags in the games stay in the game; back retraces the visitor's own route | open |
+| `fix/kiosk-touch-and-course-back` | Drags in the games stay in the game; back retraces the visitor's own route | merged |
+| `fix/fixed-camera` | The camera stopped answering to touch: no swipe, pinch, pan or double-tap | open |
 
 Current programme of work: [`tasks/plan-stabilization.md`](tasks/plan-stabilization.md).
 
