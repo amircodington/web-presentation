@@ -103,7 +103,6 @@ export function SortGame({ game, onFinish, finishLabel }: Props) {
         <AnimatePresence mode="popLayout">
           <motion.div
             key={current.id}
-            data-gesture
             drag
             dragSnapToOrigin
             dragMomentum={false}

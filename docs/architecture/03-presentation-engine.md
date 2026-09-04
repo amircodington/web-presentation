@@ -142,23 +142,29 @@ must retarget from its *current interpolated position* with preserved velocity, 
 the abandoned destination first. Motion's animation controls handle this natively — do not
 implement transitions as CSS classes, which cannot be interrupted gracefully.
 
-## Gestures — `use-gestures.ts`
+## Touch — `use-canvas-guards.ts`
 
-| Gesture | Result |
+| Touch | Result |
 |---|---|
-| Tap | Normal interaction, forwarded to the scene |
-| Swipe left/right | `next()` / `back()` |
-| Pinch | Free zoom, clamped to 0.4×–2.5× of the scene's authored scale |
-| Two-finger drag | Free pan, clamped to the canvas bounding box plus 20% margin |
-| Double-tap | Re-centre the current scene, cancelling any free pan or zoom |
-| Any free pan/zoom, then 6s idle | Eases back to the authored camera for the current scene |
+| Tap on a card or a control | Normal interaction, forwarded to the scene |
+| Anything else — swipe, pinch, two-finger drag, double-tap | Nothing. The frame does not move |
 
-That last rule is what keeps an exploratory kiosk from being left in a broken-looking state by
-a curious visitor. Free exploration is allowed; it is just always temporary.
+**The camera is fixed.** It moves only when a scene or the control tray calls `goTo`, `next`,
+`back`, `home` or `attract`, and it always rests on the authored framing of the current scene.
+There is no free pan, no free zoom, and nothing to re-centre.
 
-Touch events use Pointer Events with `touch-action: none` on the viewport. Suppress the
-browser's own pinch-zoom, double-tap-zoom, long-press menu, and overscroll — on a kiosk these
-are all failure modes, not features.
+An earlier build offered pinch-zoom, two-finger pan and swipe navigation, with a six-second
+timer to ease the frame back afterwards. On a 55" screen at standing height that was not
+exploration: a coat sleeve or a second visitor's hand moved the frame, the timer was far too
+slow to read as a correction, and the only way anyone found back was pressing «بازگشت» and
+walking into the scene again. A kiosk frame that can be moved by accident will be, and the
+visitor who moved it is never the one who knows how to put it back.
+
+What remains is defensive. Pointer Events with `touch-action: none` on the viewport, the
+document's viewport meta refusing user scaling, and this layer cancelling Safari's `gesture*`
+events, double-tap zoom and the long-press menu. Chrome's `--disable-pinch` and
+`--overscroll-history-navigation=0` cover the same ground at the browser level — see
+[05-kiosk-deployment.md](../operations/05-kiosk-deployment.md).
 
 ## Scene lifecycle
 
@@ -223,8 +229,8 @@ trap below: anything geometric must be expressed as a transform, not as layout
 alignment.
 
 Because the camera always works in design space, its maths is resolution
-independent. Only the gesture layer needs the stage scale, so a drag moves the
-canvas by the distance the finger actually travelled.
+independent. The stage scale is needed only where screen pixels and design pixels
+have to be reconciled — the chrome clearance in `clearance.ts`.
 
 ## Why there is no overview map
 
@@ -300,5 +306,6 @@ configured to allow them under `src/engine/` only.
 
 `projection.ts` is pure maths and gets exhaustive unit tests — identity, scale, rotation,
 composition order, and the property that `project()` always lands the scene's centre at the
-viewport centre. The gesture and lifecycle layers get Playwright tests. The camera itself is
-verified by visual snapshots at rest on each scene.
+viewport centre. `trail.ts` and `lifecycle.ts` are pure too and unit-tested beside it. The
+camera itself is verified by `scripts/shoot-scenes.mjs`, which walks every scene by touching
+what a visitor touches and fails when a frame is wrong.

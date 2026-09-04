@@ -6,7 +6,6 @@ export { TRANSITIONS, transitionSpec, type TransitionSpec } from "./transitions"
 export {
   canvasBounds,
   canvasToViewport,
-  clampZoom,
   fitScale,
   project,
   toCss,

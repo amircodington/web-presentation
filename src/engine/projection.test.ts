@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest"
 import {
   canvasBounds,
   canvasToViewport,
-  clampZoom,
   fitScale,
   project,
 } from "./projection"
@@ -62,17 +61,6 @@ describe("project — the defining property", () => {
     const projected = canvasToViewport({ x: p.x, y: p.y }, camera)
     expect(projected.x).toBeCloseTo(centre.x, 6)
     expect(projected.y).toBeCloseTo(centre.y, 6)
-  })
-})
-
-describe("clampZoom", () => {
-  it("holds values inside the range", () => {
-    expect(clampZoom(1.2, 0.4, 2.5)).toBe(1.2)
-  })
-
-  it("clamps both ends", () => {
-    expect(clampZoom(0.1, 0.4, 2.5)).toBe(0.4)
-    expect(clampZoom(9, 0.4, 2.5)).toBe(2.5)
   })
 })
 

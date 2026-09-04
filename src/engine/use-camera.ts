@@ -2,13 +2,17 @@
 
 import { useAnimate } from "motion/react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { kioskConfig } from "@/config/kiosk.config"
-import { canvasToViewport, project, toCss } from "./projection"
+import { project, toCss } from "./projection"
 import { transitionSpec } from "./transitions"
 import { canGoBack, remember, stepBack } from "./trail"
 import type { CameraTransform, SceneNode, Size, TransitionName } from "./types"
 
-/** Imperative control over the canvas camera. Every method is safe mid-transition. */
+/**
+ * Imperative control over the canvas camera. Every method is safe mid-transition.
+ *
+ * There is no free pan or zoom, by decision rather than by omission: see
+ * `use-canvas-guards.ts`. A scene is either the one being looked at or it is not.
+ */
 export interface CameraApi {
   goTo(sceneId: string, transition?: TransitionName): void
   next(): void
@@ -29,13 +33,8 @@ export interface CameraApi {
    * the screensaver.
    */
   attract(): void
-  /** Applies a free pan/zoom delta from the gesture layer, bypassing scene framing. */
-  nudge(delta: Partial<CameraTransform>): void
-  /** Eases back to the current scene's authored framing. */
-  recenter(): void
   readonly current: SceneNode
   readonly isMoving: boolean
-  readonly isFreeform: boolean
 }
 
 interface UseCameraOptions {
@@ -57,8 +56,6 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
   const [scope, animate] = useAnimate<HTMLDivElement>()
   const [currentId, setCurrentId] = useState(initialSceneId)
   const [isMoving, setIsMoving] = useState(false)
-  const [isFreeform, setIsFreeform] = useState(false)
-  const freeformTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   /**
    * The scenes the visitor came through, most recent last — see `trail.ts` for
    * why the authored `back` edges alone were not enough.
@@ -98,7 +95,6 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
       const options = { duration: spec.durationMs / 1000, ease: [...spec.ease] as const }
 
       setIsMoving(true)
-      setIsFreeform(false)
 
       // The apex leg pulls the camera back before descending onto the target.
       // Split as two animations on the same element so an interrupting call
@@ -177,34 +173,6 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
   const home = useCallback(() => restart(hubId), [restart, hubId])
   const attract = useCallback(() => restart(attractId), [attractId, restart])
 
-  const recenter = useCallback(() => {
-    setIsFreeform(false)
-    void flyTo(current, "glide")
-  }, [current, flyTo])
-
-  const nudge = useCallback(
-    (delta: Partial<CameraTransform>) => {
-      const base = readTransform(scope.current) ?? project(current.camera, viewport)
-      applyImmediate({
-        x: base.x + (delta.x ?? 0),
-        y: base.y + (delta.y ?? 0),
-        scale: base.scale * (delta.scale ?? 1),
-        rotate: base.rotate + (delta.rotate ?? 0),
-      })
-      setIsFreeform(true)
-    },
-    [applyImmediate, current.camera, scope, viewport],
-  )
-
-  // Free exploration is always temporary: a curious visitor must never be able to
-  // leave the screen in a state the next visitor cannot understand.
-  useEffect(() => {
-    clearTimeout(freeformTimer.current)
-    if (!isFreeform) return
-    freeformTimer.current = setTimeout(recenter, kioskConfig.gestureRecenterMs)
-    return () => clearTimeout(freeformTimer.current)
-  }, [isFreeform, recenter])
-
   // Frame the initial scene without animating, and reframe on viewport resize.
   useEffect(() => {
     applyImmediate(project(current.camera, viewport))
@@ -219,11 +187,8 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
     canBack: canGoBack(trailDepth, current),
     home,
     attract,
-    nudge,
-    recenter,
     current,
     isMoving,
-    isFreeform,
   }
 
   return { scope, camera: api }
@@ -295,5 +260,3 @@ function readTransform(element: HTMLElement | null): CameraTransform | null {
     rotate: (Math.atan2(matrix.b, matrix.a) * 180) / Math.PI,
   }
 }
-
-export { canvasToViewport }
