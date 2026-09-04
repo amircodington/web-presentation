@@ -8,6 +8,11 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.15.2] — 2026-09-04
+
+### Fixed
+- **engine:** fix the frame — touch no longer moves the camera (ca5a18f)
+
 ## [0.15.1] — 2026-09-04
 
 ### Fixed
