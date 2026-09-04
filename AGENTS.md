@@ -382,7 +382,9 @@ same commit sequence that merges it. A branch with no row here is an incomplete 
 | `fix/chrome-and-clearance` | Restyled control tray, derived chrome clearance, world home re-laid out | merged |
 | `feat/world-surfaces` | Three visual languages — toy, level, ledger — and the adults palette on the logo green | merged |
 | `feat/game-content` | Games speak their world's language; instalment verdict; budget analysed, not discarded | merged |
-| `chore/qa-full` | Full 1080p QA sweep: every scene, every game to a result, idle reset, session isolation | open |
+| `chore/qa-full` | Full 1080p QA sweep: every scene, every game to a result, idle reset, session isolation | merged |
+| `fix/ui-overlaps` | Attract screen removed, the gateway made the hub, four classes of frame overlap fixed | merged |
+| `fix/kiosk-touch-and-course-back` | Drags in the games stay in the game; back retraces the visitor's own route | open |
 
 Current programme of work: [`tasks/plan-stabilization.md`](tasks/plan-stabilization.md).
 
