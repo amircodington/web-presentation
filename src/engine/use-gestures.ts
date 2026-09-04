@@ -8,6 +8,9 @@ const SWIPE_MIN_DISTANCE = 90
 const SWIPE_MAX_DURATION_MS = 600
 const DOUBLE_TAP_WINDOW_MS = 320
 const TAP_SLOP = 12
+/** Selector for anything whose pointer gestures are its own, never the camera's. */
+const SCENE_CONTENT =
+  'button, a, input, select, textarea, [role="button"], [data-gesture]'
 
 interface Pointer {
   x: number
@@ -15,6 +18,11 @@ interface Pointer {
   startX: number
   startY: number
   startedAt: number
+  /**
+   * Whether this pointer went down on something that handles its own gesture, in
+   * which case the canvas must keep its hands off it entirely.
+   */
+  onContent: boolean
 }
 
 /**
@@ -25,6 +33,13 @@ interface Pointer {
  * and overscroll-back are all suppressed: on a kiosk each of those is a visible
  * failure, not a feature — an accidental overscroll navigates the browser out of
  * the app entirely.
+ *
+ * A gesture that begins on scene content is left to that content. The canvas used
+ * to read every pointer, so a child dragging a coin from the tray to the far
+ * bucket in «قلک من» covered more than the swipe threshold horizontally and was
+ * thrown out of the game the moment they let go: the coin landed and the camera
+ * left with it. Panning the board is a gesture on the board; anything starting on
+ * a button or on a piece you can pick up belongs to the scene.
  */
 export function useGestures(
   viewportRef: React.RefObject<HTMLElement | null>,
@@ -56,6 +71,7 @@ export function useGestures(
         startX: event.clientX,
         startY: event.clientY,
         startedAt: performance.now(),
+        onContent: startedOnContent(event.target),
       })
       // Capture only once a second finger lands. Capturing a single pointer on the
       // viewport retargets its pointerup, which swallows the click on whichever
@@ -95,7 +111,7 @@ export function useGestures(
           element.releasePointerCapture(event.pointerId)
         }
       }
-      if (!pointer) return
+      if (!pointer || pointer.onContent) return
 
       const dx = event.clientX - pointer.startX
       const dy = event.clientY - pointer.startY
@@ -145,6 +161,18 @@ export function useGestures(
       element.removeEventListener("dblclick", preventDefault)
     }
   }, [viewportRef])
+}
+
+/**
+ * Whether a pointer went down on something the scene itself handles.
+ *
+ * Buttons and form controls answer for their own taps, and anything marked
+ * `data-gesture` — the draggable coins and cards in the games — answers for its
+ * own drags.
+ */
+function startedOnContent(target: EventTarget | null): boolean {
+  if (!(target instanceof Element)) return false
+  return target.closest(SCENE_CONTENT) !== null
 }
 
 function pinchDistance(pointers: Map<number, Pointer>): number {
