@@ -38,7 +38,7 @@ export function KioskChrome() {
         style={{ bottom: "calc(var(--kiosk-stage-margin, 0px) + 52px)" }}
       >
         <Tray>
-          {!atAttract && camera.current.back ? (
+          {!atAttract && camera.canBack ? (
             <ChromeButton onClick={() => camera.back()} icon="back">
               بازگشت
             </ChromeButton>
@@ -48,7 +48,7 @@ export function KioskChrome() {
               خانه
             </ChromeButton>
           ) : null}
-          {!atAttract && (camera.current.back || !atHub) ? <Divider /> : null}
+          {!atAttract && (camera.canBack || !atHub) ? <Divider /> : null}
           <ChromeButton
             onClick={sound.toggleMuted}
             icon={sound.muted ? "mute" : "sound"}

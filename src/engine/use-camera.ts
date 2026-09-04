@@ -5,13 +5,20 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { kioskConfig } from "@/config/kiosk.config"
 import { canvasToViewport, project, toCss } from "./projection"
 import { transitionSpec } from "./transitions"
+import { canGoBack, remember, stepBack } from "./trail"
 import type { CameraTransform, SceneNode, Size, TransitionName } from "./types"
 
 /** Imperative control over the canvas camera. Every method is safe mid-transition. */
 export interface CameraApi {
   goTo(sceneId: string, transition?: TransitionName): void
   next(): void
+  /**
+   * Retraces the visitor's own route by one step, falling back to the scene's
+   * authored `back` edge when there is no route to retrace.
+   */
   back(): void
+  /** Whether there is anywhere to go back to, for the chrome to draw its control. */
+  readonly canBack: boolean
   /** Goes to the hub — the scene marked `meta.hub`. The visitor-facing "home". */
   home(): void
   /**
@@ -52,6 +59,16 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
   const [isMoving, setIsMoving] = useState(false)
   const [isFreeform, setIsFreeform] = useState(false)
   const freeformTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  /**
+   * The scenes the visitor came through, most recent last — see `trail.ts` for
+   * why the authored `back` edges alone were not enough.
+   *
+   * A ref, not state: it is read inside callbacks and never drawn, so a rerender
+   * on every step would be noise. `trailDepth` publishes only what the chrome
+   * needs, which is whether there is a way back to draw at all.
+   */
+  const trail = useRef<readonly string[]>([])
+  const [trailDepth, setTrailDepth] = useState(0)
 
   const byId = useMemo(
     () => new Map(scenes.map((scene) => [scene.id, scene])),
@@ -112,13 +129,18 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
     [flyToTransform, viewport],
   )
 
-  const goTo = useCallback(
-    (sceneId: string, transition?: TransitionName) => {
+  /** Moves the camera, recording where it came from unless told otherwise. */
+  const travel = useCallback(
+    (sceneId: string, transition: TransitionName | undefined, record: boolean) => {
       const scene = byId.get(sceneId)
       if (!scene) return
       if (sceneId === currentId) {
         void flyTo(scene, transition)
         return
+      }
+      if (record) {
+        trail.current = remember(trail.current, currentId)
+        setTrailDepth(trail.current.length)
       }
       setCurrentId(sceneId)
       void flyTo(scene, transition)
@@ -126,16 +148,34 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
     [byId, currentId, flyTo],
   )
 
+  const goTo = useCallback(
+    (sceneId: string, transition?: TransitionName) => travel(sceneId, transition, true),
+    [travel],
+  )
+
   const next = useCallback(() => {
     if (current.next) goTo(current.next)
   }, [current.next, goTo])
 
   const back = useCallback(() => {
-    if (current.back) goTo(current.back)
-  }, [current.back, goTo])
+    const step = stepBack(trail.current, current)
+    trail.current = step.trail
+    setTrailDepth(step.trail.length)
+    if (step.target !== undefined) travel(step.target, undefined, false)
+  }, [current, travel])
 
-  const home = useCallback(() => goTo(hubId, "home"), [goTo, hubId])
-  const attract = useCallback(() => goTo(attractId, "home"), [attractId, goTo])
+  /** Home and the attract loop are where a visit starts, so the trail ends there. */
+  const restart = useCallback(
+    (sceneId: string) => {
+      trail.current = []
+      setTrailDepth(0)
+      travel(sceneId, "home", false)
+    },
+    [travel],
+  )
+
+  const home = useCallback(() => restart(hubId), [restart, hubId])
+  const attract = useCallback(() => restart(attractId), [attractId, restart])
 
   const recenter = useCallback(() => {
     setIsFreeform(false)
@@ -176,6 +216,7 @@ export function useCamera({ scenes, initialSceneId, viewport }: UseCameraOptions
     goTo,
     next,
     back,
+    canBack: canGoBack(trailDepth, current),
     home,
     attract,
     nudge,
