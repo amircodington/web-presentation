@@ -8,6 +8,12 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.15.1] — 2026-09-04
+
+### Fixed
+- **engine:** send «بازگشت» back the way the visitor actually came (f0197b6)
+- **engine:** leave a gesture that starts on scene content to that content (374a7b1)
+
 ## [0.15.0] — 2026-09-03
 
 ### Fixed
